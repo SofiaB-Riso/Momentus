@@ -10,13 +10,11 @@ Sofie Cirino e Castro
 Stack do projeto:
 Front-end - HTML, CSS, JS, React - VScode, canva, figma /
 Backend - PHP, Laravel - VScode /
-Banco de dados - MySQL/
-
+Banco de dados - MySQL
 
 Descrição:
 O sistema vai auxiliar na organização de eventos, com foco em pessoas não especializadas na área, 
 ajuda pequenos eventos como aniversários, confraternizações, entre outros.
-
 
 Instruções: 
 cadastra usuário, cria evento, calcula orçamento, notifica usuário, confirmação de convidados, 
