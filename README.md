@@ -1,15 +1,22 @@
 Momentus
 
-Ana Clara Cardoso Vieira -
-Cicero Lucas Moreira de Paula -
-Lorenzo Nunes Saiani -
-Luiza Rocha Nunes Roque -
-Sofia Braga Riso -
-Sofie Cirino e Castro -
+Ana Clara Cardoso Vieira 
+
+Cicero Lucas Moreira de Paula 
+
+Lorenzo Nunes Saiani 
+
+Luiza Rocha Nunes Roque 
+
+Sofia Braga Riso 
+
+Sofie Cirino e Castro 
 
 Stack do projeto:
-Front-end - HTML, CSS, JS, React - VScode, canva, figma
-Backend - PHP, Laravel - VScode
+Front-end - HTML, CSS, JS, React - VScode, canva, figma 
+
+Backend - PHP, Laravel - VScode 
+
 Banco de dados - MySQL
 
 Descrição:
