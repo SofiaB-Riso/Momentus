@@ -1,0 +1,306 @@
+[2026-06-29 18:39:56] local.ERROR: Command "make:viw" is not defined.
+
+Did you mean one of these?
+    make:cache-table
+    make:cast
+    make:channel
+    make:class
+    make:command
+    make:component
+    make:config
+    make:controller
+    make:enum
+    make:event
+    make:exception
+    make:factory
+    make:interface
+    make:job
+    make:job-middleware
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:notifications-table
+    make:observer
+    make:policy
+    make:provider
+    make:queue-batches-table
+    make:queue-failed-table
+    make:queue-table
+    make:request
+    make:resource
+    make:rule
+    make:scope
+    make:seeder
+    make:session-table
+    make:test
+    make:trait
+    make:view {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"make:viw\" is not defined.
+
+Did you mean one of these?
+    make:cache-table
+    make:cast
+    make:channel
+    make:class
+    make:command
+    make:component
+    make:config
+    make:controller
+    make:enum
+    make:event
+    make:exception
+    make:factory
+    make:interface
+    make:job
+    make:job-middleware
+    make:listener
+    make:mail
+    make:middleware
+    make:migration
+    make:model
+    make:notification
+    make:notifications-table
+    make:observer
+    make:policy
+    make:provider
+    make:queue-batches-table
+    make:queue-failed-table
+    make:queue-table
+    make:request
+    make:resource
+    make:rule
+    make:scope
+    make:seeder
+    make:session-table
+    make:test
+    make:trait
+    make:view at C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php:785)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php(321): Symfony/Component/Console/Application->find('make:viw')
+#1 C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php(218): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#2 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#4 C:/Users/Cicero/Downloads/Momentus/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#5 {main}
+"} 
+[2026-06-29 19:07:57] local.ERROR: Invalid route action: [App\Http\Controllers\PaginasController]. {"exception":"[object] (UnexpectedValueException(code: 0): Invalid route action: [App\\Http\\Controllers\\PaginasController]. at C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteAction.php:92)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteAction.php(47): Illuminate/Routing/RouteAction::makeInvokable('App//Http//Contro...')
+#1 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(201): Illuminate/Routing/RouteAction::parse('/', Array)
+#2 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(182): Illuminate/Routing/Route->parseAction(Array)
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(685): Illuminate/Routing/Route->__construct(Array, '/', Array)
+#4 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(576): Illuminate/Routing/Router->newRoute(Array, '/', Array)
+#5 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(556): Illuminate/Routing/Router->createRoute(Array, '/', Array)
+#6 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(160): Illuminate/Routing/Router->addRoute(Array, '/', 'App//Http//Contro...')
+#7 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(363): Illuminate/Routing/Router->get('/', 'App//Http//Contro...')
+#8 C:/Users/Cicero/Downloads/Momentus/routes/web.php(6): Illuminate/Support/Facades/Facade::__callStatic('get', Array)
+#9 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteFileRegistrar.php(34): require('C://Users//Cicero...')
+#10 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(526): Illuminate/Routing/RouteFileRegistrar->register('C://Users//Cicero...')
+#11 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(480): Illuminate/Routing/Router->loadRoutes('C://Users//Cicero...')
+#12 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteRegistrar.php(224): Illuminate/Routing/Router->group(Array, 'C://Users//Cicero...')
+#13 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(261): Illuminate/Routing/RouteRegistrar->group('C://Users//Cicero...')
+#14 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Foundation/Configuration/ApplicationBuilder->{closure:Illuminate/Foundation/Configuration/ApplicationBuilder::buildRoutingCallback():210}()
+#15 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::{closure:Illuminate/Container/BoundMethod::call():35}()
+#16 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#17 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Object(Closure), Object(Closure))
+#18 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Object(Closure), Array, NULL)
+#19 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/RouteServiceProvider.php(162): Illuminate/Container/Container->call(Object(Closure))
+#20 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/RouteServiceProvider.php(59): Illuminate/Foundation/Support/Providers/RouteServiceProvider->loadRoutes()
+#21 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Foundation/Support/Providers/RouteServiceProvider->{closure:Illuminate/Foundation/Support/Providers/RouteServiceProvider::register():53}()
+#22 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::{closure:Illuminate/Container/BoundMethod::call():35}()
+#23 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#24 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Object(Closure), Object(Closure))
+#25 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Object(Closure), Array, NULL)
+#26 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Support/ServiceProvider.php(150): Illuminate/Container/Container->call(Object(Closure))
+#27 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1154): Illuminate/Support/ServiceProvider->callBootedCallbacks()
+#28 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1132): Illuminate/Foundation/Application->bootProvider(Object(Illuminate/Foundation/Support/Providers/RouteServiceProvider))
+#29 [internal function]: Illuminate/Foundation/Application->{closure:Illuminate/Foundation/Application::boot():1131}(Object(Illuminate/Foundation/Support/Providers/RouteServiceProvider), 'Illuminate//Foun...')
+#30 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1131): array_walk(Array, Object(Closure))
+#31 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php(17): Illuminate/Foundation/Application->boot()
+#32 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate/Foundation/Bootstrap/BootProviders->bootstrap(Object(Illuminate/Foundation/Application))
+#33 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(494): Illuminate/Foundation/Application->bootstrapWith(Array)
+#34 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate/Foundation/Console/Kernel->bootstrap()
+#35 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#36 C:/Users/Cicero/Downloads/Momentus/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#37 {main}
+"} 
+[2026-06-29 19:08:13] local.ERROR: Invalid route action: [App\Http\Controllers\PaginasController]. {"exception":"[object] (UnexpectedValueException(code: 0): Invalid route action: [App\\Http\\Controllers\\PaginasController]. at C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteAction.php:92)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteAction.php(47): Illuminate/Routing/RouteAction::makeInvokable('App//Http//Contro...')
+#1 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(201): Illuminate/Routing/RouteAction::parse('/', Array)
+#2 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(182): Illuminate/Routing/Route->parseAction(Array)
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(685): Illuminate/Routing/Route->__construct(Array, '/', Array)
+#4 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(576): Illuminate/Routing/Router->newRoute(Array, '/', Array)
+#5 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(556): Illuminate/Routing/Router->createRoute(Array, '/', Array)
+#6 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(160): Illuminate/Routing/Router->addRoute(Array, '/', 'App//Http//Contro...')
+#7 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(363): Illuminate/Routing/Router->get('/', 'App//Http//Contro...')
+#8 C:/Users/Cicero/Downloads/Momentus/routes/web.php(6): Illuminate/Support/Facades/Facade::__callStatic('get', Array)
+#9 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteFileRegistrar.php(34): require('C://Users//Cicero...')
+#10 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(526): Illuminate/Routing/RouteFileRegistrar->register('C://Users//Cicero...')
+#11 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(480): Illuminate/Routing/Router->loadRoutes('C://Users//Cicero...')
+#12 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/RouteRegistrar.php(224): Illuminate/Routing/Router->group(Array, 'C://Users//Cicero...')
+#13 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(261): Illuminate/Routing/RouteRegistrar->group('C://Users//Cicero...')
+#14 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Foundation/Configuration/ApplicationBuilder->{closure:Illuminate/Foundation/Configuration/ApplicationBuilder::buildRoutingCallback():210}()
+#15 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::{closure:Illuminate/Container/BoundMethod::call():35}()
+#16 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#17 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Object(Closure), Object(Closure))
+#18 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Object(Closure), Array, NULL)
+#19 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/RouteServiceProvider.php(162): Illuminate/Container/Container->call(Object(Closure))
+#20 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Support/Providers/RouteServiceProvider.php(59): Illuminate/Foundation/Support/Providers/RouteServiceProvider->loadRoutes()
+#21 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Foundation/Support/Providers/RouteServiceProvider->{closure:Illuminate/Foundation/Support/Providers/RouteServiceProvider::register():53}()
+#22 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::{closure:Illuminate/Container/BoundMethod::call():35}()
+#23 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(84): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#24 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Object(Closure), Object(Closure))
+#25 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Object(Closure), Array, NULL)
+#26 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Support/ServiceProvider.php(150): Illuminate/Container/Container->call(Object(Closure))
+#27 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1154): Illuminate/Support/ServiceProvider->callBootedCallbacks()
+#28 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1132): Illuminate/Foundation/Application->bootProvider(Object(Illuminate/Foundation/Support/Providers/RouteServiceProvider))
+#29 [internal function]: Illuminate/Foundation/Application->{closure:Illuminate/Foundation/Application::boot():1131}(Object(Illuminate/Foundation/Support/Providers/RouteServiceProvider), 'Illuminate//Foun...')
+#30 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1131): array_walk(Array, Object(Closure))
+#31 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php(17): Illuminate/Foundation/Application->boot()
+#32 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(342): Illuminate/Foundation/Bootstrap/BootProviders->bootstrap(Object(Illuminate/Foundation/Application))
+#33 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(494): Illuminate/Foundation/Application->bootstrapWith(Array)
+#34 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(196): Illuminate/Foundation/Console/Kernel->bootstrap()
+#35 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#36 C:/Users/Cicero/Downloads/Momentus/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#37 {main}
+"} 
+[2026-06-30 19:05:02] local.ERROR: Command "migration" is not defined.
+
+Did you mean one of these?
+    make:migration
+    migrate
+    migrate:fresh
+    migrate:install
+    migrate:refresh
+    migrate:reset
+    migrate:rollback
+    migrate:status {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"migration\" is not defined.
+
+Did you mean one of these?
+    make:migration
+    migrate
+    migrate:fresh
+    migrate:install
+    migrate:refresh
+    migrate:reset
+    migrate:rollback
+    migrate:status at C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php:785)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php(321): Symfony/Component/Console/Application->find('migration')
+#1 C:/Users/Cicero/Downloads/Momentus/vendor/symfony/console/Application.php(218): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#2 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#4 C:/Users/Cicero/Downloads/Momentus/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#5 {main}
+"} 
+[2026-07-01 00:10:02] local.ERROR: Call to undefined method App\Http\Controllers\PaginasController::edit() {"exception":"[object] (Error(code: 0): Call to undefined method App\\Http\\Controllers\\PaginasController::edit() at C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php:46)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(275): Illuminate/Routing/ControllerDispatcher->dispatch(Object(Illuminate/Routing/Route), Object(App/Http/Controllers/PaginasController), 'edit')
+#1 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(215): Illuminate/Routing/Route->runController()
+#2 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate/Routing/Route->run()
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate/Routing/Router->{closure:Illuminate/Routing/Router::runRouteWithinStack():821}(Object(Illuminate/Http/Request))
+#4 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(52): Illuminate/Pipeline/Pipeline->{closure:Illuminate/Pipeline/Pipeline::prepareDestination():178}(Object(Illuminate/Http/Request))
+#5 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Routing/Middleware/SubstituteBindings->handle(Object(Illuminate/Http/Request), Object(Closure))
+#6 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestForgery.php(104): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#7 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/PreventRequestForgery->handle(Object(Illuminate/Http/Request), Object(Closure))
+#8 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(48): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#9 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/View/Middleware/ShareErrorsFromSession->handle(Object(Illuminate/Http/Request), Object(Closure))
+#10 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(120): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#11 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(63): Illuminate/Session/Middleware/StartSession->handleStatefulRequest(Object(Illuminate/Http/Request), Object(Illuminate/Session/Store), Object(Closure))
+#12 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Session/Middleware/StartSession->handle(Object(Illuminate/Http/Request), Object(Closure))
+#13 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(36): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#14 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse->handle(Object(Illuminate/Http/Request), Object(Closure))
+#15 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(74): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#16 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Cookie/Middleware/EncryptCookies->handle(Object(Illuminate/Http/Request), Object(Closure))
+#17 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#18 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate/Pipeline/Pipeline->then(Object(Closure))
+#19 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate/Routing/Router->runRouteWithinStack(Object(Illuminate/Routing/Route), Object(Illuminate/Http/Request))
+#20 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate/Routing/Router->runRoute(Object(Illuminate/Http/Request), Object(Illuminate/Routing/Route))
+#21 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate/Routing/Router->dispatchToRoute(Object(Illuminate/Http/Request))
+#22 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate/Routing/Router->dispatch(Object(Illuminate/Http/Request))
+#23 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate/Foundation/Http/Kernel->{closure:Illuminate/Foundation/Http/Kernel::dispatchToRouter():197}(Object(Illuminate/Http/Request))
+#24 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate/Pipeline/Pipeline->{closure:Illuminate/Pipeline/Pipeline::prepareDestination():178}(Object(Illuminate/Http/Request))
+#25 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate/Foundation/Http/Middleware/TransformsRequest->handle(Object(Illuminate/Http/Request), Object(Closure))
+#26 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull->handle(Object(Illuminate/Http/Request), Object(Closure))
+#27 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#28 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate/Foundation/Http/Middleware/TransformsRequest->handle(Object(Illuminate/Http/Request), Object(Closure))
+#29 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/TrimStrings->handle(Object(Illuminate/Http/Request), Object(Closure))
+#30 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#31 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/ValidatePostSize->handle(Object(Illuminate/Http/Request), Object(Closure))
+#32 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#33 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance->handle(Object(Illuminate/Http/Request), Object(Closure))
+#34 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#35 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/HandleCors->handle(Object(Illuminate/Http/Request), Object(Closure))
+#36 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#37 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/TrustProxies->handle(Object(Illuminate/Http/Request), Object(Closure))
+#38 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#39 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks->handle(Object(Illuminate/Http/Request), Object(Closure))
+#40 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(28): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#41 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/ValidatePathEncoding->handle(Object(Illuminate/Http/Request), Object(Closure))
+#42 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#43 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate/Pipeline/Pipeline->then(Object(Closure))
+#44 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate/Foundation/Http/Kernel->sendRequestThroughRouter(Object(Illuminate/Http/Request))
+#45 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1220): Illuminate/Foundation/Http/Kernel->handle(Object(Illuminate/Http/Request))
+#46 C:/Users/Cicero/Downloads/Momentus/public/index.php(20): Illuminate/Foundation/Application->handleRequest(Object(Illuminate/Http/Request))
+#47 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('C://Users//Cicero...')
+#48 {main}
+"} 
+[2026-07-01 00:12:21] local.ERROR: compact(): Undefined variable $artistas {"exception":"[object] (ErrorException(code: 0): compact(): Undefined variable $artistas at C:/Users/Cicero/Downloads/Momentus/app/Http/Controllers/PaginasController.php:40)
+[stacktrace]
+#0 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php(263): Illuminate/Foundation/Bootstrap/HandleExceptions->handleError(2, 'compact(): Unde...', 'C://Users//Cicero...', 40)
+#1 [internal function]: Illuminate/Foundation/Bootstrap/HandleExceptions->{closure:Illuminate/Foundation/Bootstrap/HandleExceptions::forwardsTo():262}(2, 'compact(): Unde...', 'C://Users//Cicero...', 40)
+#2 C:/Users/Cicero/Downloads/Momentus/app/Http/Controllers/PaginasController.php(40): compact('evento', 'artistas')
+#3 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(46): App/Http/Controllers/PaginasController->edit('1')
+#4 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(275): Illuminate/Routing/ControllerDispatcher->dispatch(Object(Illuminate/Routing/Route), Object(App/Http/Controllers/PaginasController), 'edit')
+#5 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Route.php(215): Illuminate/Routing/Route->runController()
+#6 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(822): Illuminate/Routing/Route->run()
+#7 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate/Routing/Router->{closure:Illuminate/Routing/Router::runRouteWithinStack():821}(Object(Illuminate/Http/Request))
+#8 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(52): Illuminate/Pipeline/Pipeline->{closure:Illuminate/Pipeline/Pipeline::prepareDestination():178}(Object(Illuminate/Http/Request))
+#9 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Routing/Middleware/SubstituteBindings->handle(Object(Illuminate/Http/Request), Object(Closure))
+#10 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestForgery.php(104): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#11 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/PreventRequestForgery->handle(Object(Illuminate/Http/Request), Object(Closure))
+#12 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(48): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#13 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/View/Middleware/ShareErrorsFromSession->handle(Object(Illuminate/Http/Request), Object(Closure))
+#14 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(120): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#15 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(63): Illuminate/Session/Middleware/StartSession->handleStatefulRequest(Object(Illuminate/Http/Request), Object(Illuminate/Session/Store), Object(Closure))
+#16 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Session/Middleware/StartSession->handle(Object(Illuminate/Http/Request), Object(Closure))
+#17 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(36): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#18 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse->handle(Object(Illuminate/Http/Request), Object(Closure))
+#19 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(74): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#20 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Cookie/Middleware/EncryptCookies->handle(Object(Illuminate/Http/Request), Object(Closure))
+#21 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#22 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(821): Illuminate/Pipeline/Pipeline->then(Object(Closure))
+#23 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(800): Illuminate/Routing/Router->runRouteWithinStack(Object(Illuminate/Routing/Route), Object(Illuminate/Http/Request))
+#24 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(764): Illuminate/Routing/Router->runRoute(Object(Illuminate/Http/Request), Object(Illuminate/Routing/Route))
+#25 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Routing/Router.php(753): Illuminate/Routing/Router->dispatchToRoute(Object(Illuminate/Http/Request))
+#26 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate/Routing/Router->dispatch(Object(Illuminate/Http/Request))
+#27 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(180): Illuminate/Foundation/Http/Kernel->{closure:Illuminate/Foundation/Http/Kernel::dispatchToRouter():197}(Object(Illuminate/Http/Request))
+#28 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate/Pipeline/Pipeline->{closure:Illuminate/Pipeline/Pipeline::prepareDestination():178}(Object(Illuminate/Http/Request))
+#29 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate/Foundation/Http/Middleware/TransformsRequest->handle(Object(Illuminate/Http/Request), Object(Closure))
+#30 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull->handle(Object(Illuminate/Http/Request), Object(Closure))
+#31 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#32 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate/Foundation/Http/Middleware/TransformsRequest->handle(Object(Illuminate/Http/Request), Object(Closure))
+#33 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/TrimStrings->handle(Object(Illuminate/Http/Request), Object(Closure))
+#34 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#35 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/ValidatePostSize->handle(Object(Illuminate/Http/Request), Object(Closure))
+#36 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#37 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance->handle(Object(Illuminate/Http/Request), Object(Closure))
+#38 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(61): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#39 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/HandleCors->handle(Object(Illuminate/Http/Request), Object(Closure))
+#40 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#41 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/TrustProxies->handle(Object(Illuminate/Http/Request), Object(Closure))
+#42 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#43 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks->handle(Object(Illuminate/Http/Request), Object(Closure))
+#44 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(28): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#45 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(219): Illuminate/Http/Middleware/ValidatePathEncoding->handle(Object(Illuminate/Http/Request), Object(Closure))
+#46 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(137): Illuminate/Pipeline/Pipeline->{closure:{closure:Illuminate/Pipeline/Pipeline::carry():194}:195}(Object(Illuminate/Http/Request))
+#47 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate/Pipeline/Pipeline->then(Object(Closure))
+#48 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate/Foundation/Http/Kernel->sendRequestThroughRouter(Object(Illuminate/Http/Request))
+#49 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1220): Illuminate/Foundation/Http/Kernel->handle(Object(Illuminate/Http/Request))
+#50 C:/Users/Cicero/Downloads/Momentus/public/index.php(20): Illuminate/Foundation/Application->handleRequest(Object(Illuminate/Http/Request))
+#51 C:/Users/Cicero/Downloads/Momentus/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('C://Users//Cicero...')
+#52 {main}
+"} 
