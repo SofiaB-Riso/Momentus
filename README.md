@@ -17,9 +17,9 @@
 
 # 📖 Sobre o Projeto
 
-O **Momentus** é uma aplicação web desenvolvida com Laravel que permite cadastrar e gerenciar pequenos eventos.
+O **Momentus** é uma aplicação web desenvolvida com **Flask** (Python) que permite cadastrar e gerenciar pequenos eventos.
 
-O sistema foi criado com o objetivo de facilitar o planejamento de eventos, reunindo as principais informações em um único lugar.
+O sistema foi criado com o objetivo de facilitar o planejamento de eventos, reunindo as principais informações em um único lugar. O back-end expõe uma **API REST**, consumida por um front-end simples em HTML, CSS e JavaScript.
 
 ---
 
@@ -27,7 +27,8 @@ O sistema foi criado com o objetivo de facilitar o planejamento de eventos, reun
 
 - Cadastro de eventos
 - Listagem de eventos
-- Visualização dos detalhes de um evento
+- Busca de evento por ID
+- Busca de eventos por tipo
 - Edição de eventos
 - Exclusão de eventos
 
@@ -39,31 +40,28 @@ O sistema foi criado com o objetivo de facilitar o planejamento de eventos, reun
 
 ---
 
-# 🌐 Rotas CRUD
+# 🌐 Rotas da API
 
 | Método | Rota | Função |
 |---------|------|--------|
+| GET | / | Mensagem de status da API e lista de rotas disponíveis |
 | GET | /eventos | Lista todos os eventos |
-| GET | /eventos/create | Exibe o formulário de cadastro |
+| GET | /eventos/por-tipo?tipo_evento=Casamento | Lista eventos filtrados por tipo |
+| GET | /eventos/{id} | Exibe um evento específico |
 | POST | /eventos | Cadastra um novo evento |
-| GET | /eventos/{evento} | Exibe um evento |
-| GET | /eventos/{evento}/edit | Exibe o formulário de edição |
-| PUT | /eventos/{evento} | Atualiza um evento |
-| DELETE | /eventos/{evento} | Remove um evento |
+| PUT | /eventos/{id} | Atualiza um evento existente |
+| DELETE | /eventos/{id} | Remove um evento |
 
 ---
 
 # 🏗️ Arquitetura
 
-O projeto foi desenvolvido utilizando o padrão **MVC (Model-View-Controller)** com Laravel.
+O projeto foi desenvolvido utilizando uma arquitetura em camadas, separando responsabilidades entre:
 
-Estrutura principal:
-
-- Models
-- Controllers
-- Views (Blade)
-- Rotas
-- Migrations
+- **Models** — definição das entidades e regras de acesso ao banco (SQLAlchemy)
+- **Repositories** — consultas mais específicas ao banco de dados
+- **Services** — regras de negócio e validações
+- **Controllers** — recebem as requisições HTTP e retornam as respostas (Blueprints do Flask)
 
 ---
 
@@ -71,42 +69,45 @@ Estrutura principal:
 
 ## Back-end
 
-- PHP
-- Laravel
+- Python
+- Flask
+- Flask-SQLAlchemy
+- Flask-CORS
+- python-dotenv
 
 ## Front-end
 
 - HTML5
 - CSS3
 - JavaScript
-- Blade
 
 ## Banco de Dados
 
-- MySQL
+- SQLite (padrão, para facilitar os testes em sala)
+- MySQL (opcional, via PyMySQL)
 
 ---
 
 # 📂 Estrutura do Projeto
 
 ```text
-Momentus/
+Momentus Flask/
 │
-├── app/
-│   ├── Http/
-│   ├── Models/
-│   └── ...
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── repositories/
+│   ├── services/
+│   ├── database/
+│   │   └── create_database.sql
+│   ├── app.py
+│   ├── requirements.txt
+│   └── .env.example
 │
-├── database/
-│
-├── public/
-│
-├── resources/
-│   ├── views/
+├── frontend/
 │   ├── css/
-│   └── js/
-│
-├── routes/
+│   ├── js/
+│   └── index.html
 │
 └── README.md
 ```
@@ -117,33 +118,40 @@ Momentus/
 
 ## Pré-requisitos
 
-- PHP 8 ou superior
-- Composer
-- MySQL
+- Python 3.10 ou superior
+- pip
 
 ## Instalação
 
 ```bash
 git clone <url-do-repositório>
 
-cd Momentus
+cd "Momentus Flask/backend"
 
-composer install
+# cria e ativa o ambiente virtual
+python -m venv .venv
+.venv\Scripts\activate      # Windows
+source .venv/bin/activate   # Linux/Mac
 
+# instala as dependências
+pip install -r requirements.txt
+
+# copia o arquivo de variáveis de ambiente
 cp .env.example .env
 
-php artisan key:generate
-
-php artisan migrate
-
-php artisan serve
+# roda a aplicação
+python app.py
 ```
 
-A aplicação estará disponível em:
+A API estará disponível em:
 
 ```
-http://localhost:8000
+http://localhost:5000
 ```
+
+> Por padrão, o projeto usa **SQLite** e cria o banco automaticamente ao iniciar. Para usar MySQL, crie o banco com `backend/database/create_database.sql` e ajuste a `DATABASE_URL` no `.env`.
+
+Para usar a interface web, basta abrir o arquivo `frontend/index.html` no navegador com a API rodando.
 
 ---
 
