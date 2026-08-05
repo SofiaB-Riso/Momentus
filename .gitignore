@@ -1,0 +1,20 @@
+﻿# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Variaveis de ambiente
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Banco de dados local (gerado automaticamente)
+backend/instance/*.db
+
+# Editor / SO
+.vscode/
+*.swp
+.DS_Store
