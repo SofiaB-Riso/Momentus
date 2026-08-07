@@ -103,9 +103,6 @@
         });
     }
 
-    // Espera a primeira sincronização com o backend antes de desenhar a
-    // tela pela primeira vez (evita mostrar "nenhum evento" por engano
-    // enquanto a API ainda está respondendo).
     Momentus.aguardarEventosProntos().then(renderizar);
     document.addEventListener('momentus:eventos-alterados', renderizar);
     document.addEventListener('momentus:idioma-alterado', renderizar);
