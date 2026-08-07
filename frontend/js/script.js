@@ -287,11 +287,8 @@ if (gradeCalendario) {
         renderizarCalendario();
     });
 
-    // Espera a primeira sincronização com o backend antes da primeira
-    // renderização, senão o painel apareceria "vazio" por um instante
-    // enquanto a API ainda está respondendo.
     Momentus.aguardarEventosProntos().then(() => {
-        // Ao carregar, foca o calendário no mês do próximo evento (se houver)
+
         const prox0 = proximoEvento();
         if (prox0) {
             const [a, m] = prox0.data.split('-').map(Number);
@@ -345,9 +342,6 @@ document.querySelectorAll('.chipCategoria').forEach((chip) => {
 const formPlanejar = document.getElementById('formPlanejar');
 if (formPlanejar) {
     (async () => {
-    // Espera a primeira sincronização com o backend — importante no modo
-    // edição, para não desenhar um formulário vazio caso a página tenha
-    // sido aberta direto em planejar.html?id=... (recarregamento/link).
     await Momentus.aguardarEventosProntos();
 
     const paramsPlanejar = new URLSearchParams(window.location.search);
