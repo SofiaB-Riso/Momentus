@@ -462,7 +462,7 @@ if (formPlanejar) {
         const criado = await Momentus.salvarEvento(montarEventoDoFormulario('confirmado'));
         if (!criado) { botao.innerHTML = textoOriginalBotao; return; }
         botao.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ${Momentus.t('botaoSalvarEventoOk')}`;
-        setTimeout(() => { window.location.href = 'inicio.html'; }, 900);
+        setTimeout(() => { window.location.href = 'index.html'; }, 900);
     });
 
     const botaoRascunho = document.getElementById('botaoRascunho');
@@ -471,7 +471,7 @@ if (formPlanejar) {
             const criado = await Momentus.salvarEvento(montarEventoDoFormulario('rascunho'));
             if (!criado) return;
             botaoRascunho.textContent = Momentus.t('botaoRascunhoOk');
-            setTimeout(() => { window.location.href = 'inicio.html'; }, 900);
+            setTimeout(() => { window.location.href = 'index.html'; }, 900);
         });
     }
     })();
