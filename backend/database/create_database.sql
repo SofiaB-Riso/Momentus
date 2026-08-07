@@ -14,11 +14,6 @@ CREATE TABLE IF NOT EXISTS eventos (
     dados_evento TEXT NULL
 );
 
--- Se você já tinha o banco criado antes desta atualização, rode isto
--- para adicionar a coluna nova sem perder os dados existentes:
--- ALTER TABLE eventos ADD COLUMN dados_evento TEXT NULL;
--- ALTER TABLE eventos MODIFY endereco_evento VARCHAR(255) NULL DEFAULT '';
-
 DROP PROCEDURE IF EXISTS sp_eventos_por_tipo;
 
 DELIMITER //
