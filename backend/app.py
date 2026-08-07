@@ -35,8 +35,6 @@ def create_app():
         })
 
     with app.app_context():
-        # Cria as tabelas automaticamente para facilitar os testes em sala.
-        # Em produção, o ideal é usar migrations.
         db.create_all()
 
     return app
