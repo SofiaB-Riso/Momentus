@@ -1,9 +1,3 @@
-/* =========================================================
-   MOMENTUS — Núcleo do app
-   Tema (claro/escuro) · Idioma (PT/EN/ES) · Eventos (dados)
-   Tudo persistido em localStorage, compartilhado entre páginas
-========================================================= */
-
 const Momentus = (() => {
 
     const CHAVE_TEMA = 'momentus:tema';
