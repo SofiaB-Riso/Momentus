@@ -26,10 +26,6 @@
         const tpl = document.getElementById('templateEventoVazio');
         container.innerHTML = '';
         container.appendChild(tpl.content.cloneNode(true));
-        // "false" = só traduz o HTML que acabou de ser inserido; não é uma
-        // troca de idioma de verdade, então não deve disparar
-        // "momentus:idioma-alterado" (isso causava um loop infinito, já
-        // que esta própria página escuta esse evento para se redesenhar).
         Momentus.aplicarIdioma(Momentus.obterIdioma(), false);
     }
 
@@ -562,9 +558,6 @@
         });
     }
 
-    // Espera a primeira sincronização com o backend antes de desenhar a
-    // tela (senão o evento apareceria como "não encontrado" por um
-    // instante enquanto a API ainda está respondendo).
     Momentus.aguardarEventosProntos().then(() => {
         renderizarEvento();
         verificarConviteNaUrl();
