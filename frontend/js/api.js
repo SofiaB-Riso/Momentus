@@ -1,13 +1,3 @@
-/* =========================================================
-   MOMENTUS — Camada de acesso à API (backend Flask)
-   =========================================================
-   Este arquivo só conversa com o backend via fetch. Quem usa os
-   dados (app.js, eventos.js, evento.js, script.js) continua
-   falando só com "Momentus", que por baixo dos panos agora usa
-   isso aqui em vez do localStorage.
-
-   Se o backend estiver em outro endereço, altere API_BASE_URL.
-========================================================= */
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
 const MomentusAPI = (() => {
