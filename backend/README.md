@@ -46,6 +46,8 @@ Execute a API:
 python app.py
 ```
 
+Neste momento a api já está ligada e você pode ir para o frontend.
+
 A API ficará disponível em:
 
 ```text
