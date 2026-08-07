@@ -8,9 +8,7 @@ class AtualizarEventoService:
         if evento is None:
             return None
 
-        # Antes esta linha quebrava (erro 500) sempre que "data_evento"
-        # não vinha no payload, porque acessava dados["data_evento"]
-        # direto. Agora só converte quando o campo é realmente enviado.
+
         data_evento = date.fromisoformat(dados["data_evento"]) if dados.get("data_evento") else None
 
         evento.atualizar(
