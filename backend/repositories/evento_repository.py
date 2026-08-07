@@ -18,8 +18,6 @@ class EventoRepository:
 
             return [Evento(**dict(linha)) for linha in linhas]
 
-        # Fallback apenas para facilitar os testes locais com SQLite em sala.
-        # No MySQL, a consulta fica na procedure e o CALL fica neste Repository.
         return (
             Evento.query
             .filter(Evento.tipo_evento == tipo_evento)
