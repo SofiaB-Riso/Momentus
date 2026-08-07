@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f1fa">
+    <title>Início - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Podkova:wght@400..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function () {
+            var tema = localStorage.getItem('momentus:tema') || 'claro';
+            document.documentElement.setAttribute('data-tema', tema);
+        })();
+    </script>
+</head>
+
+<body>
+    <button class="botaoMenu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="overlayMenu" id="overlayMenu"></div>
+
+    <aside class="menulateral">
+
+        <div class="logo">
+            <img class="logoInicio" src="assets/Logo.png" alt="Logo do Momentus">
+        </div>
+
+        <div class="quadradotransparente"></div>
+
+        <div class="perfilMenu">
+            <div class="avatarPerfil">JM</div>
+            <div class="perfilTextos">
+                <div class="perfilNome">Juliana Martins</div>
+                <div class="perfilTag" data-i18n="contaPremium">Conta Premium</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="inicio.html" class="item ativo">
+                <img src="assets/paginaInicio/Home.png" alt="">
+                <span data-i18n="navInicio">Início</span>
+            </a>
+            <a href="planejar.html" class="item">
+                <img src="assets/paginaInicio/Plus circle.png" alt="">
+                <span data-i18n="navPlanejar">Planejar evento</span>
+            </a>
+            <a href="catalogo.html" class="item">
+                <img src="assets/paginaInicio/folder.png" alt="">
+                <span data-i18n="navCatalogo">Catálogo</span>
+            </a>
+            <a href="configuracoes.html" class="item">
+                <img src="assets/paginaInicio/Settings.png" alt="">
+                <span data-i18n="navConfig">Configurações</span>
+            </a>
+        </nav>
+
+        <div class="rodapeMenu">
+            <a href="#" class="linkSair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span data-i18n="sair">Sair da conta</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="linhaTopo">
+            <div id="divtitulo">
+                <span class="eyebrow"><svg class="sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg> <span data-i18n="iniPainel">Painel de controle</span></span>
+                <h1 class="titulo" id="tituloOla">Olá, Juliana!</h1>
+                <svg class="flourish" viewBox="0 0 180 14" fill="none"><path d="M2 8c14-9 24 9 38 2 12-6 20-9 34-1 13 7 24 3 36-3 13-6 24-4 34 2 9 5 18 3 32-4" stroke="url(#gradFlourish)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="gradFlourish" x1="0" y1="0" x2="180" y2="0"><stop offset="0" stop-color="#8a5cf6"/><stop offset="1" stop-color="#ff8f7a"/></linearGradient></defs></svg>
+                <p class="subtitulo" id="subtituloEventos">Você tem eventos se aproximando.</p>
+            </div>
+
+            <div class="acoesTopo">
+                <div class="buscaTopo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" data-i18n-placeholder="buscaTopoPlaceholder" placeholder="Buscar eventos, fornecedores...">
+                </div>
+                <div class="envoltoriaNotificacoes">
+                    <button class="botaoIcone" id="botaoNotificacoes" aria-label="Notificações">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="bolinha" id="bolinhaNotificacoes"></span>
+                    </button>
+                    <div class="painelNotificacoes" id="painelNotificacoes">
+                        <h4 data-i18n="notificacoesTitulo">Notificações</h4>
+                        <div id="corpoPainelNotificacoes"></div>
+                    </div>
+                </div>
+                <div class="avatarTopo">JM</div>
+            </div>
+        </div>
+
+        <section id="blocoEventos">
+
+            <div class="cardEvento cardIngresso" id="cardProximoEvento">
+                <!-- preenchido dinamicamente via script.js -->
+            </div>
+
+            <div class="blocoCriarEvento">
+                <div class="cabecalhoCard">
+                    <div>
+                        <span class="tituloBloco" data-i18n="planejarEvento">Planejar evento</span>
+                        <p class="descBloco" data-i18n="planejarDescZero">Comece do zero e monte um evento inesquecível</p>
+                    </div>
+                    <button class="botaoCriarEvento" onclick="window.location.href='planejar.html'"><img src="assets/Plus circle.png" alt=""></button>
+                </div>
+                <div class="chipsSugestao">
+                    <span data-i18n="chipCasamento">Casamento</span>
+                    <span data-i18n="chipCorporativo">Corporativo</span>
+                    <span data-i18n="chipFormatura">Formatura</span>
+                </div>
+            </div>
+
+            <div class="blocoCriarEvento">
+                <div class="cabecalhoCard">
+                    <div>
+                        <span class="tituloBloco" data-i18n="planejarEvento">Planejar evento</span>
+                        <p class="descBloco" data-i18n="planejarDescModelo">Use um modelo pronto e economize tempo</p>
+                    </div>
+                    <button class="botaoCriarEvento" onclick="window.location.href='planejar.html'"><img src="assets/Plus circle.png" alt=""></button>
+                </div>
+                <div class="chipsSugestao">
+                    <span data-i18n="catAniversario">Aniversário</span>
+                    <span data-i18n="catChaBebe">Chá de bebê</span>
+                    <span data-i18n="catChurrasco">Churrasco</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="grelhaStats">
+            <div class="cardStat">
+                <div class="iconeStat g1">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2 4 7v10l8 5 8-5V7l-8-5Z"/><path d="M4 7l8 5 8-5"/><path d="M12 22V12"/></svg>
+                </div>
+                <div class="textoStat"><div class="numeroStat" data-count="0" id="statEventos">0</div><div class="rotuloStat" data-i18n="statEventosAtivos">Eventos ativos</div></div>
+            </div>
+            <div class="cardStat">
+                <div class="iconeStat g2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="textoStat"><div class="numeroStat" data-count="0" id="statConvidados">0</div><div class="rotuloStat" data-i18n="statConvidados">Convidados confirmados</div></div>
+            </div>
+            <div class="cardStat">
+                <div class="iconeStat g3">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="textoStat"><div class="numeroStat" data-count="0" id="statDias">0</div><div class="rotuloStat" data-i18n="statDias">Dias até o próximo evento</div></div>
+            </div>
+            <div class="cardStat">
+                <div class="iconeStat g4">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="textoStat"><div class="numeroStat" data-count="0" data-prefix="R$ " id="statOrcamento">R$ 0</div><div class="rotuloStat" data-i18n="statOrcamento">Orçamento reservado</div></div>
+            </div>
+        </section>
+
+        <section class="grid-principal">
+
+            <div class="painel">
+                <div class="cabecalhoPainel">
+                    <h2 data-i18n="calendario">Calendário</h2>
+                    <div class="navMes">
+                        <button id="mesAnterior" aria-label="Mês anterior">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <span class="mesAno" id="mesAnoAtual">Abril 2026</span>
+                        <button id="mesProximo" aria-label="Próximo mês">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="calendario-topo">
+                    <span>Do</span><span>Se</span><span>Te</span><span>Qa</span><span>Qi</span><span>Se</span><span>Sa</span>
+                </div>
+                <div class="calendario-grid" id="calendarioGrid"></div>
+
+                <div class="listaProximos">
+                    <svg class="fioGuirlanda" viewBox="0 0 4 300" preserveAspectRatio="none"><path d="M2 0 C 40 40, -36 80, 2 120 S 40 200, 2 240 S -20 280, 2 300" stroke="#e7e2f5" stroke-width="2" fill="none" stroke-dasharray="1 9" stroke-linecap="round"/></svg>
+                    <div id="listaProximosEventos"></div>
+                    <a href="eventos.html" class="botaoSecundario" style="display:inline-flex; margin-top:1rem; font-size:.78rem; padding:.65rem 1.1rem;" data-i18n="verTodosEventos">Ver todos os eventos</a>
+                </div>
+            </div>
+
+            <aside class="painel">
+                <div class="cabecalhoPainel"><h2 data-i18n="pesquisar">Pesquisar</h2></div>
+                <div class="buscaCatalogo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="filtroCatalogoInicio" data-i18n-placeholder="buscaCatalogoPlaceholder" placeholder="Salgadinhos, bolo, decoração...">
+                </div>
+
+                <div class="listaCatalogo" id="listaCatalogoInicio">
+                    <div class="itemCatalogo">
+                        <div class="thumbCatalogo" style="background:var(--grad-2)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2 4 7v10l8 5 8-5V7l-8-5Z"/><path d="M4 7l8 5 8-5"/><path d="M12 22V12"/></svg>
+                        </div>
+                        <div class="infoCatalogo">
+                            <div class="nomeCatalogo">Salgadinhos da Jane</div>
+                            <div class="descCatalogo">Salgados para eventos</div>
+                            <div class="estrelas">★★★<span class="apagada">★★</span></div>
+                        </div>
+                        <div class="precoCatalogo">R$ 45</div>
+                    </div>
+
+                    <div class="itemCatalogo">
+                        <div class="thumbCatalogo" style="background:var(--grad-1)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="M8 15l-2 7h12l-2-7"/></svg>
+                        </div>
+                        <div class="infoCatalogo">
+                            <div class="nomeCatalogo">Boquinha Doceria</div>
+                            <div class="descCatalogo">Docinhos de festa</div>
+                            <div class="estrelas">★★★★<span class="apagada">★</span></div>
+                        </div>
+                        <div class="precoCatalogo">R$ 38</div>
+                    </div>
+
+                    <div class="itemCatalogo">
+                        <div class="thumbCatalogo" style="background:var(--grad-3)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.5-2.5-5C15 8.5 14 7 14 5a4 4 0 0 0-4 4c0 1-1 1.5-2 3a7 7 0 0 0-3 6 7 7 0 0 0 7 7Z"/></svg>
+                        </div>
+                        <div class="infoCatalogo">
+                            <div class="nomeCatalogo">Buffet Sabor & Arte</div>
+                            <div class="descCatalogo">Buffet completo para eventos</div>
+                            <div class="estrelas">★★★★★</div>
+                        </div>
+                        <div class="precoCatalogo">R$ 120</div>
+                    </div>
+
+                    <div class="itemCatalogo">
+                        <div class="thumbCatalogo" style="background:linear-gradient(135deg,#f0a63a,#f7cf6e)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 15c1.5 1.5 6.5 1.5 8 0"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                        </div>
+                        <div class="infoCatalogo">
+                            <div class="nomeCatalogo">Balões & Cia</div>
+                            <div class="descCatalogo">Decoração com balões</div>
+                            <div class="estrelas">★★★★<span class="apagada">★</span></div>
+                        </div>
+                        <div class="precoCatalogo">R$ 90</div>
+                    </div>
+                </div>
+            </aside>
+
+        </section>
+
+        <div class="rodapePagina">
+            <div class="marcaRodape"><span class="pontoRodape"></span><span data-i18n="rodapeMarca">Momentus — momentos planejados com carinho</span></div>
+            <div data-i18n="rodapeDireitos">© 2026 Momentus. Todos os direitos reservados.</div>
+        </div>
+
+    </main>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

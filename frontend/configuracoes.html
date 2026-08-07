@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f1fa">
+    <title>Configurações - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Podkova:wght@400..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function () {
+            var tema = localStorage.getItem('momentus:tema') || 'claro';
+            document.documentElement.setAttribute('data-tema', tema);
+        })();
+    </script>
+</head>
+
+<body>
+    <button class="botaoMenu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="overlayMenu" id="overlayMenu"></div>
+
+    <aside class="menulateral">
+
+        <div class="logo">
+            <img class="logoInicio" src="assets/Logo.png" alt="Logo do Momentus">
+        </div>
+
+        <div class="quadradotransparente"></div>
+
+        <div class="perfilMenu">
+            <div class="avatarPerfil">JM</div>
+            <div class="perfilTextos">
+                <div class="perfilNome">Juliana Martins</div>
+                <div class="perfilTag" data-i18n="contaPremium">Conta Premium</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="inicio.html" class="item">
+                <img src="assets/paginaConfiguracoes/Home.png" alt="">
+                <span data-i18n="navInicio">Início</span>
+            </a>
+            <a href="planejar.html" class="item">
+                <img src="assets/paginaConfiguracoes/Plus circle.png" alt="">
+                <span data-i18n="navPlanejar">Planejar evento</span>
+            </a>
+            <a href="catalogo.html" class="item">
+                <img src="assets/paginaConfiguracoes/folder.png" alt="">
+                <span data-i18n="navCatalogo">Catálogo</span>
+            </a>
+            <a href="configuracoes.html" class="item ativo">
+                <img src="assets/paginaConfiguracoes/Settings.png" alt="">
+                <span data-i18n="navConfig">Configurações</span>
+            </a>
+        </nav>
+
+        <div class="rodapeMenu">
+            <a href="#" class="linkSair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span data-i18n="sair">Sair da conta</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="linhaTopo">
+            <div id="divtitulo">
+                <span class="eyebrow"><svg class="sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg> <span data-i18n="confSuaConta">Sua conta</span></span>
+                <h1 class="titulo" data-i18n="confTitulo">Configurações</h1>
+                <svg class="flourish" viewBox="0 0 180 14" fill="none"><path d="M2 8c14-9 24 9 38 2 12-6 20-9 34-1 13 7 24 3 36-3 13-6 24-4 34 2 9 5 18 3 32-4" stroke="url(#gradFlourish)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="gradFlourish" x1="0" y1="0" x2="180" y2="0"><stop offset="0" stop-color="#8a5cf6"/><stop offset="1" stop-color="#ff8f7a"/></linearGradient></defs></svg>
+                <p class="subtitulo" data-i18n="confSubtitulo">Ajuste seu perfil, preferências e notificações.</p>
+            </div>
+        </div>
+
+        <section class="grid-config">
+
+            <div class="painel cardConfigPerfil">
+                <div class="avatarGrande" id="avatarGrandeConfig">
+                    JM
+                    <button class="editarAvatar" aria-label="Editar foto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+                    </button>
+                </div>
+                <h3 id="nomeGrandeConfig">Juliana Martins</h3>
+                <p id="emailGrandeConfig">juliana.martins@email.com</p>
+
+                <form id="formPerfil">
+                    <div class="campoForm" style="text-align:left; margin-top:1.75rem;">
+                        <label for="nomeConfig" data-i18n="confNomeCompleto">Nome completo</label>
+                        <input type="text" id="nomeConfig" value="Juliana Martins">
+                    </div>
+                    <div class="campoForm" style="text-align:left;">
+                        <label for="emailConfig" data-i18n="confEmail">E-mail</label>
+                        <input type="text" id="emailConfig" value="juliana.martins@email.com">
+                    </div>
+                    <div class="campoForm" style="text-align:left;">
+                        <label for="telefoneConfig" data-i18n="confTelefone">Telefone</label>
+                        <input type="text" id="telefoneConfig" value="(31) 99999-0000">
+                    </div>
+
+                    <button type="submit" class="botaoPrimario" style="width:100%; justify-content:center; margin-top:.5rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span data-i18n="confSalvarAlteracoes">Salvar alterações</span>
+                    </button>
+                </form>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:1.75rem;">
+
+                <div class="painel">
+                    <div class="cabecalhoPainel"><h2 data-i18n="confNotificacoes">Notificações</h2></div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:var(--grad-1)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confRsvpTitulo">Confirmações de convidados</div>
+                                <div class="descConfig" data-i18n="confRsvpDesc">Receba um aviso a cada RSVP</div>
+                            </div>
+                        </div>
+                        <label class="interruptor"><input type="checkbox" id="prefRsvp" checked><span class="trilhaInterruptor"></span></label>
+                    </div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:var(--grad-2)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confLembretesTitulo">Lembretes de eventos</div>
+                                <div class="descConfig" data-i18n="confLembretesDesc">Alertas 48h antes de cada evento</div>
+                            </div>
+                        </div>
+                        <label class="interruptor"><input type="checkbox" id="prefLembretes" checked><span class="trilhaInterruptor"></span></label>
+                    </div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:var(--grad-3)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confNovidadesTitulo">Novidades e promoções</div>
+                                <div class="descConfig" data-i18n="confNovidadesDesc">Ofertas de fornecedores parceiros</div>
+                            </div>
+                        </div>
+                        <label class="interruptor"><input type="checkbox" id="prefNovidades"><span class="trilhaInterruptor"></span></label>
+                    </div>
+                </div>
+
+                <div class="painel">
+                    <div class="cabecalhoPainel"><h2 data-i18n="confPreferencias">Preferências</h2></div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:linear-gradient(135deg,#f0a63a,#f7cf6e)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confTemaEscuro">Tema escuro</div>
+                                <div class="descConfig" data-i18n="confTemaEscuroDesc">Reduz o brilho da interface</div>
+                            </div>
+                        </div>
+                        <label class="interruptor"><input type="checkbox" data-controle-tema><span class="trilhaInterruptor"></span></label>
+                    </div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:linear-gradient(135deg,#6a8dff,#8a5cf6)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confIdioma">Idioma</div>
+                                <div class="descConfig" data-i18n="confIdiomaDesc">Português (Brasil)</div>
+                            </div>
+                        </div>
+                        <select style="border:1px solid var(--linha); border-radius:.7rem; padding:.5rem .8rem; font-family:inherit; font-size:.8rem; background:var(--fundo); color:var(--tinta);" data-controle-idioma>
+                            <option value="pt">Português</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+
+                    <div class="linhaConfig">
+                        <div class="linhaConfigEsquerda">
+                            <div class="iconeConfig" style="background:linear-gradient(135deg,#5ad1c9,#6a8dff)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            </div>
+                            <div class="textoConfig">
+                                <div class="nomeConfig" data-i18n="confPagamento">Método de pagamento</div>
+                                <div class="descConfig" data-i18n="confPagamentoDesc">Cartão terminado em 4471</div>
+                            </div>
+                        </div>
+                        <button class="botaoSecundario" style="padding:.55rem 1rem; font-size:.78rem;" data-i18n="confAlterar">Alterar</button>
+                    </div>
+                </div>
+
+                <div class="painel" style="border-color:#ffd7dd;">
+                    <div class="cabecalhoPainel"><h2 data-i18n="confZonaRisco">Zona de risco</h2></div>
+                    <div class="linhaConfig">
+                        <div class="textoConfig">
+                            <div class="nomeConfig" data-i18n="confExcluirTitulo">Excluir minha conta</div>
+                            <div class="descConfig" data-i18n="confExcluirDesc">Essa ação é permanente e não pode ser desfeita</div>
+                        </div>
+                        <button class="botaoSecundario" style="border-color:#ff5c7a; color:#ff5c7a;" data-i18n="confExcluir">Excluir</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <div class="rodapePagina">
+            <div class="marcaRodape"><span class="pontoRodape"></span><span data-i18n="rodapeMarca">Momentus — momentos planejados com carinho</span></div>
+            <div data-i18n="rodapeDireitos">© 2026 Momentus. Todos os direitos reservados.</div>
+        </div>
+
+    </main>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f1fa">
+    <title>Todos os eventos - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Podkova:wght@400..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function () {
+            var tema = localStorage.getItem('momentus:tema') || 'claro';
+            document.documentElement.setAttribute('data-tema', tema);
+        })();
+    </script>
+</head>
+
+<body>
+    <button class="botaoMenu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="overlayMenu" id="overlayMenu"></div>
+
+    <aside class="menulateral">
+
+        <div class="logo">
+            <img class="logoInicio" src="assets/Logo.png" alt="Logo do Momentus">
+        </div>
+
+        <div class="quadradotransparente"></div>
+
+        <div class="perfilMenu">
+            <div class="avatarPerfil">JM</div>
+            <div class="perfilTextos">
+                <div class="perfilNome">Juliana Martins</div>
+                <div class="perfilTag" data-i18n="contaPremium">Conta Premium</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="inicio.html" class="item">
+                <img src="assets/paginaPlanejar/Home.png" alt="">
+                <span data-i18n="navInicio">Início</span>
+            </a>
+            <a href="planejar.html" class="item">
+                <img src="assets/paginaPlanejar/Plus circle.png" alt="">
+                <span data-i18n="navPlanejar">Planejar evento</span>
+            </a>
+            <a href="catalogo.html" class="item">
+                <img src="assets/paginaPlanejar/folder.png" alt="">
+                <span data-i18n="navCatalogo">Catálogo</span>
+            </a>
+            <a href="configuracoes.html" class="item">
+                <img src="assets/paginaPlanejar/Settings.png" alt="">
+                <span data-i18n="navConfig">Configurações</span>
+            </a>
+        </nav>
+
+        <div class="rodapeMenu">
+            <a href="#" class="linkSair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span data-i18n="sair">Sair da conta</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="linhaTopo">
+            <div id="divtitulo">
+                <span class="eyebrow"><svg class="sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg> <span data-i18n="todosEventosEyebrow">Seus eventos</span></span>
+                <h1 class="titulo" data-i18n="todosEventosTitulo">Todos os eventos</h1>
+                <svg class="flourish" viewBox="0 0 180 14" fill="none"><path d="M2 8c14-9 24 9 38 2 12-6 20-9 34-1 13 7 24 3 36-3 13-6 24-4 34 2 9 5 18 3 32-4" stroke="url(#gradFlourish)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="gradFlourish" x1="0" y1="0" x2="180" y2="0"><stop offset="0" stop-color="#8a5cf6"/><stop offset="1" stop-color="#ff8f7a"/></linearGradient></defs></svg>
+                <p class="subtitulo" data-i18n="todosEventosSubtitulo">Acompanhe, edite ou apague os eventos que você já planejou.</p>
+            </div>
+
+            <div class="acoesTopo">
+                <button class="botaoPrimario" onclick="window.location.href='planejar.html'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span data-i18n="planejarEvento">Planejar evento</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="buscaTopo buscaEventosTopo" style="max-width:26rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="buscaEventos" data-i18n-placeholder="buscarEventosPlaceholder" placeholder="Buscar por nome, local ou tipo...">
+        </div>
+
+        <section>
+            <div class="grelhaEventos" id="grelhaEventos"></div>
+        </section>
+
+        <div class="rodapePagina">
+            <div class="marcaRodape"><span class="pontoRodape"></span><span data-i18n="rodapeMarca">Momentus — momentos planejados com carinho</span></div>
+            <div data-i18n="rodapeDireitos">© 2026 Momentus. Todos os direitos reservados.</div>
+        </div>
+
+    </main>
+
+    <div class="toastMomentus" id="toastMomentus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="toastTexto"></span>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+    <script src="script.js"></script>
+    <script src="eventos.js"></script>
+</body>
+
+</html>
