@@ -117,8 +117,40 @@ Para facilitar testes locais com SQLite, o Repository possui uma consulta equiva
 {
   "nome_evento": "Chá do Bebe",
   "tipo_evento": "Chá de bebe",
-  "data_evento": "01/01/2027",
+  "data_evento": "2027-01-01",
   "endereco_evento": "Rua do Bebe 123",
-  "orcamento_evento": "2"
+  "orcamento_evento": 200
 }
 ```
+
+`data_evento` precisa estar no formato ISO (`AAAA-MM-DD`), pois o serviço
+usa `date.fromisoformat`. Só `nome_evento`, `tipo_evento` e `data_evento`
+são obrigatórios — `endereco_evento` (padrão `""`) e `orcamento_evento`
+(padrão `0`) são opcionais.
+
+## Campo `dados_evento` (integração com o front-end)
+
+Foi adicionada uma coluna `dados_evento` (texto), opcional, que guarda um
+JSON com qualquer informação extra que o front-end precise persistir por
+evento (hora, lista de convidados, tarefas, colaboradores, itens do
+catálogo, rateio etc.) — tudo aquilo que não tem uma coluna própria na
+tabela `eventos`. O backend não entende nem valida esse conteúdo, só
+guarda e devolve como veio.
+
+```json
+{
+  "nome_evento": "Chá do Bebe",
+  "tipo_evento": "Chá de bebe",
+  "data_evento": "2027-01-01",
+  "endereco_evento": "Rua do Bebe 123",
+  "orcamento_evento": 200,
+  "dados_evento": "{\"hora\":\"15:00\",\"listaConvidados\":[]}"
+}
+```
+
+**Se você já tinha um banco criado antes desta atualização:**
+- SQLite: apague o arquivo `backend/instance/evento.db` (ou `backend/evento.db`,
+  dependendo de onde ele foi criado) e rode `python app.py` de novo — ele é
+  recriado automaticamente com a coluna nova.
+- MySQL: rode as duas linhas de `ALTER TABLE` que estão comentadas em
+  `backend/database/create_database.sql`.
