@@ -9,11 +9,6 @@ class Evento(db.Model):
     data_evento = db.Column(db.Date, nullable=False)
     endereco_evento = db.Column(db.String(255), nullable=True, default="")
     orcamento_evento = db.Column(db.Numeric(10,2), nullable=False, default=0)
-    # Guarda em JSON (texto) tudo que o front-end usa e que não tem uma
-    # coluna própria: hora, convidados, tarefas, colaboradores, itens do
-    # catálogo, rateio, itens compartilhados etc. Isso permite ao front
-    # (que antes usava localStorage) guardar seu modelo de dados completo
-    # sem precisar de uma tabela nova para cada recurso.
     dados_evento = db.Column(db.Text, nullable=True)
 
     def salvar(self):
