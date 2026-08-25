@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1b0d38">
+    <title>Entrar - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>(function(){document.documentElement.setAttribute('data-tema',localStorage.getItem('momentus:tema')||'claro');})();</script>
+</head>
+<body class="bodyAuth">
+    <span class="estrelaAuth e1">✦</span><span class="estrelaAuth e2">✦</span><span class="estrelaAuth e3">✦</span><span class="estrelaAuth e4">✦</span>
+    <main class="authShell">
+        <section class="authMarca">
+            <img src="assets/Logo.png" class="authLogo" alt="Momentus">
+            <h1>Transforme cada <em>segundo</em> em uma memória eterna.</h1>
+            <p>O planejamento do seu evento, elevado ao nível de obra de arte.</p>
+            <span class="authSelo">✦ CADA MOMENTO PERFEITAMENTE PLANEJADO</span>
+        </section>
+        <section class="authFormulario">
+            <div>
+                <h2>Bem-vindo</h2>
+                <p class="authSub">Acesse sua conta para continuar criando.</p>
+            </div>
+            <form id="formLogin" class="formAuth">
+                <label>E-mail<input type="email" id="loginEmail" autocomplete="email" required></label>
+                <label>Senha<input type="password" id="loginSenha" autocomplete="current-password" required></label>
+                <div class="authLinhaPequena"><label class="checkAuth"><input type="checkbox" id="mostrarSenhaLogin"> Mostrar senha</label><a href="cadastro.html">Criar conta</a></div>
+                <button class="authBotao" type="submit"><span>Voltar a planejar</span><b>→</b></button>
+                <p class="authErro" id="erroLogin" role="alert"></p>
+            </form>
+            <p class="authRodape">Novo por aqui? <a href="cadastro.html">Crie sua conta</a></p>
+        </section>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

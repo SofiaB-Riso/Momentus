@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite de colaboração - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>(function(){document.documentElement.setAttribute('data-tema',localStorage.getItem('momentus:tema')||'claro');})();</script>
+</head>
+<body class="bodyConvitePublico">
+    <main class="cartaoConvitePublico colaboracaoPublica">
+        <img src="assets/Logo.png" alt="Momentus" class="logoConvitePublico">
+        <span class="eyebrowConvite">COLABORAÇÃO ✦</span>
+        <div id="conviteCarregando">Carregando convite...</div>
+        <div id="conviteConteudo" hidden>
+            <p class="conviteSaudacao"><strong id="conviteOrganizador"></strong> convidou você para ajudar a organizar</p>
+            <h1 id="conviteEvento"></h1>
+            <div class="detalhesConvitePublico"><div><small>Data</small><strong id="conviteData">—</strong></div><div><small>Seu e-mail</small><strong id="conviteEmail">—</strong></div></div>
+            <p class="textoColaboracao">Colaboradores podem acompanhar tarefas e, quando autorizado, editar os detalhes do evento. Convidados comuns continuam separados e não precisam criar conta.</p>
+            <div id="conviteLoginNecessario" class="blocoLoginConvite" hidden>
+                <strong>Entre com o e-mail que recebeu este convite.</strong>
+                <span>Se ainda não tiver conta, crie uma conta de cliente usando o mesmo e-mail.</span>
+                <div><a id="linkEntrarConvite" class="botaoPrimarioParceiro" href="#">Entrar</a><a id="linkCriarConvite" class="botaoSecundarioConvite" href="#">Criar conta</a></div>
+            </div>
+            <div id="conviteAcoes" class="acoesConviteColab" hidden>
+                <button id="aceitarConvite" class="authBotao"><span>Aceitar colaboração</span><b>✓</b></button>
+                <button id="recusarConvite" class="botaoSecundarioConvite">Recusar</button>
+                <p class="authErro" id="conviteErro"></p>
+            </div>
+            <div id="conviteRespondido" class="rsvpSucesso" hidden></div>
+        </div>
+    </main>
+    <script src="js/api.js"></script><script src="js/convite.js"></script>
+</body>
+</html>

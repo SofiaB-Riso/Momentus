@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1b0d38">
+    <title>Criar conta - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>(function(){document.documentElement.setAttribute('data-tema',localStorage.getItem('momentus:tema')||'claro');})();</script>
+</head>
+<body class="bodyAuth">
+    <span class="estrelaAuth e1">✦</span><span class="estrelaAuth e2">✦</span><span class="estrelaAuth e3">✦</span><span class="estrelaAuth e4">✦</span>
+    <main class="authShell authShellCadastro">
+        <section class="authMarca">
+            <img src="assets/Logo.png" class="authLogo" alt="Momentus">
+            <h1>Transforme cada <em>segundo</em> em uma memória eterna.</h1>
+            <p>Crie sua conta e comece a planejar.</p>
+            <span class="authSelo">✦ CADA MOMENTO PERFEITAMENTE PLANEJADO</span>
+        </section>
+        <section class="authFormulario">
+            <div id="etapaCadastro">
+                <h2>Sua jornada</h2>
+                <p class="authSub">Preencha os detalhes para começar.</p>
+                <form id="formCadastro" class="formAuth formAuthCadastro">
+                    <label>Nome completo<input type="text" id="cadastroNome" autocomplete="name" required></label>
+                    <label>E-mail<input type="email" id="cadastroEmail" autocomplete="email" required></label>
+                    <label>Telefone<input type="tel" id="cadastroTelefone" autocomplete="tel"></label>
+                    <label>Senha<input type="password" id="cadastroSenha" minlength="6" autocomplete="new-password" required></label>
+                    <label>Confirmar senha<input type="password" id="cadastroSenha2" minlength="6" autocomplete="new-password" required></label>
+                    <button class="authBotao" type="submit"><span>Criar conta</span><b>→</b></button>
+                    <p class="authErro" id="erroCadastro" role="alert"></p>
+                </form>
+                <p class="authRodape">Já possui conta? <a href="index.html">Entre agora</a></p>
+            </div>
+        </section>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

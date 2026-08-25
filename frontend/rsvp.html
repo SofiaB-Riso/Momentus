@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar presença - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script>(function(){document.documentElement.setAttribute('data-tema',localStorage.getItem('momentus:tema')||'claro');})();</script>
+</head>
+<body class="bodyConvitePublico">
+    <span class="estrelaAuth e1">✦</span><span class="estrelaAuth e3">✦</span>
+    <main class="cartaoConvitePublico">
+        <img src="assets/Logo.png" alt="Momentus" class="logoConvitePublico">
+        <span class="eyebrowConvite">CONVITE ✦</span>
+        <div id="rsvpCarregando">Carregando seu convite...</div>
+        <div id="rsvpConteudo" hidden>
+            <p class="conviteSaudacao">Olá, <strong id="rsvpNome"></strong>.</p>
+            <h1 id="rsvpEvento"></h1>
+            <div class="detalhesConvitePublico">
+                <div><small>Data</small><strong id="rsvpData">—</strong></div>
+                <div><small>Horário</small><strong id="rsvpHora">—</strong></div>
+                <div class="linhaCompleta"><small>Local</small><strong id="rsvpLocal">—</strong></div>
+                <div class="linhaCompleta"><small>Organizado por</small><strong id="rsvpOrganizador">—</strong></div>
+            </div>
+            <div id="rsvpConfirmadosPublicos" class="confirmadosPublicos" hidden></div>
+            <section id="rsvpItensCompartilhados" class="itensPublicosRsvp" hidden>
+                <h2>Quer ajudar levando algo?</h2>
+                <p>Escolha um item da lista sem precisar virar colaborador do evento.</p>
+                <div id="rsvpListaItens"></div>
+            </section>
+            <form id="formRsvp" class="formRsvp">
+                <h2>Você vai?</h2>
+                <div class="opcoesRsvp">
+                    <label><input type="radio" name="status" value="confirmado" required><span>✓ Sim, estarei lá</span></label>
+                    <label><input type="radio" name="status" value="recusado"><span>Não poderei ir</span></label>
+                    <label><input type="radio" name="status" value="pendente"><span>Ainda não sei</span></label>
+                </div>
+                <label class="campoRestricaoRsvp">Restrição alimentar (opcional)<textarea id="rsvpRestricoes" rows="3" placeholder="Ex.: vegetariano, alergia a amendoim..."></textarea></label>
+                <button class="authBotao" type="submit"><span>Enviar resposta</span><b>→</b></button>
+                <p class="authErro" id="rsvpErro"></p>
+            </form>
+            <div class="rsvpSucesso" id="rsvpSucesso" hidden><strong>Presença atualizada!</strong><span>Sua resposta já apareceu para quem está organizando o evento.</span></div>
+        </div>
+    </main>
+    <script src="js/api.js"></script><script src="js/rsvp.js"></script>
+</body>
+</html>
