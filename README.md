@@ -110,10 +110,6 @@ FLASK_DEBUG=True
 - `itens_compartilhados`, `itens_evento`, `tarefas_evento`, `despesas_evento`, `fotos_evento` → dados operacionais do evento.
 - `notificacoes`, `favoritos_fornecedor`, `logs_evento` → funcionalidades auxiliares persistidas no banco.
 
-## Diagrama de Classes
-
-![App Screenshot](diagrama_classes_Momentus.png)
-
 ## Observações
 
 - O envio do convite é feito por **link copiável**. O projeto não configura um provedor de e-mail/SMS externo.
