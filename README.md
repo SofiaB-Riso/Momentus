@@ -112,7 +112,7 @@ FLASK_DEBUG=True
 
 ## Diagrama de Classes
 
-![App Screenshot]()
+![App Screenshot](diagrama_classes_Momentus.png)
 
 ## Observações
 
