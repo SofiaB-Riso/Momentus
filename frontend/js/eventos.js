@@ -75,7 +75,8 @@
         grelha.querySelectorAll('.abrirEvento').forEach((el) => {
             el.addEventListener('click', () => {
                 const id = el.closest('.cardEventoResumo').dataset.id;
-                window.location.href = 'evento.html?id=' + encodeURIComponent(id);
+                const evento = Momentus.obterEvento(id);
+                window.location.href = (evento?.status === 'rascunho' ? 'planejar.html?id=' : 'evento.html?id=') + encodeURIComponent(id);
             });
         });
 

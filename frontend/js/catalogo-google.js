@@ -8,104 +8,75 @@
     const inputCidade = document.getElementById('inputCidadeCatalogo');
     const botaoBuscarCidade = document.getElementById('botaoBuscarCidade');
     const statusLocalizacao = document.getElementById('statusLocalizacao');
+    const botaoMais = document.getElementById('carregarMaisCatalogo');
+    const statusPaginacao = document.getElementById('statusPaginacaoCatalogo');
+    const criterioMelhores = document.getElementById('criterioMelhores');
 
-    const escapeHTML = (v) => { const d = document.createElement('div'); d.textContent = String(v ?? ''); return d.innerHTML; };
+    const { escapeHTML, estrelas } = MomentusUtils;
 
-    const estado = { termo: '', lat: null, lng: null, cidade: '', ultimosResultados: [] };
+    const estado = { termo: '', lat: null, lng: null, cidade: '', precisao: null, ultimosResultados: [], proximaPagina: null, carregando: false, erro: '', pendentes: [], iniciouBusca: false, paginasVisitadas: new Set() };
     let temporizadorBusca = null;
+    let buscaAtual = 0;
+
+    const overlayEscolha = document.getElementById('overlayEscolherEvento');
+    const botaoFecharEscolha = document.getElementById('fecharEscolherEvento');
+    let focoAntesDaEscolha = null;
+
+    function fecharEscolha() {
+        if (!overlayEscolha) return;
+        overlayEscolha.classList.remove('aberto');
+        overlayEscolha.setAttribute('aria-hidden', 'true');
+        overlayEscolha.inert = true;
+        if (focoAntesDaEscolha?.isConnected) focoAntesDaEscolha.focus();
+    }
+    botaoFecharEscolha?.addEventListener('click', fecharEscolha);
+    overlayEscolha?.addEventListener('click', (e) => {
+        if (e.target === overlayEscolha) fecharEscolha();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (!overlayEscolha?.classList.contains('aberto')) return;
+        if (e.key === 'Escape') { e.preventDefault(); fecharEscolha(); }
+        if (e.key === 'Tab') {
+            const botoes = [...overlayEscolha.querySelectorAll('button:not(:disabled)')];
+            const primeiro = botoes[0], ultimo = botoes[botoes.length - 1];
+            if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo?.focus(); }
+            else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro?.focus(); }
+        }
+    });
 
     function categoriaAtiva() {
         const ativo = document.querySelector('.filtroChip.ativoFiltro');
-        return ativo ? ativo.dataset.filtro : 'todos';
-    }
-
-    function definirStatus(texto) {
-        if (statusLocalizacao) statusLocalizacao.textContent = texto || '';
+        return ativo ? ativo.dataset.filtro : 'melhores';
     }
 
     function chaveFornecedor(f) { return `google-${f.id}`; }
 
-    function estrelas(nota) {
-        const n = Math.max(0, Math.min(5, Math.round(Number(nota) || 0)));
-        return '★'.repeat(n) + '<span class="apagada">' + '★'.repeat(5 - n) + '</span>';
-    }
 
-    /* ---- Localização: reaproveitada de outra página, automática (com permissão) ou cidade digitada ---- */
-    function usarLocalizacaoSalva() {
-        if (typeof MomentusLocalizacao === 'undefined') return false;
-        const salva = MomentusLocalizacao.carregar();
-        if (!salva) return false;
-        estado.lat = salva.lat;
-        estado.lng = salva.lng;
-        estado.cidade = salva.cidade || '';
-        if (inputCidade && salva.cidade) inputCidade.value = salva.cidade;
-        definirStatus(salva.cidade ? `Usando fornecedores perto de ${salva.cidade}.` : 'Usando sua localização atual.');
-        carregar();
-        return true;
-    }
-
-    function forcarNovaLocalizacaoAutomatica() {
-        if (!('geolocation' in navigator)) {
-            definirStatus('Seu navegador não suporta localização automática — digite sua cidade abaixo.');
-            return;
-        }
-        definirStatus('Pedindo permissão de localização...');
-        navigator.geolocation.getCurrentPosition(
-            (posicao) => {
-                estado.lat = posicao.coords.latitude;
-                estado.lng = posicao.coords.longitude;
-                estado.cidade = '';
-                if (inputCidade) inputCidade.value = '';
-                definirStatus('Usando sua localização atual.');
-                if (typeof MomentusLocalizacao !== 'undefined') MomentusLocalizacao.salvar({ lat: estado.lat, lng: estado.lng, cidade: '' });
-                carregar();
-            },
-            () => definirStatus('Não conseguimos acessar sua localização — digite sua cidade abaixo.'),
-            { enableHighAccuracy: false, timeout: 8000 }
-        );
-    }
-
-    function pedirLocalizacaoAutomatica() {
-        if (usarLocalizacaoSalva()) return;
-        forcarNovaLocalizacaoAutomatica();
-    }
-
-    if (botaoLocalizacao) botaoLocalizacao.addEventListener('click', forcarNovaLocalizacaoAutomatica);
-
-    if (botaoBuscarCidade) {
-        botaoBuscarCidade.addEventListener('click', () => {
-            const cidade = (inputCidade.value || '').trim();
-            if (!cidade) { definirStatus('Digite o nome de uma cidade.'); return; }
-            estado.cidade = cidade;
-            estado.lat = null;
-            estado.lng = null;
-            definirStatus(`Buscando fornecedores em ${cidade}...`);
-            if (typeof MomentusLocalizacao !== 'undefined') MomentusLocalizacao.salvar({ lat: null, lng: null, cidade });
-            carregar();
-        });
-    }
-    if (inputCidade) {
-        inputCidade.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { e.preventDefault(); botaoBuscarCidade.click(); }
-        });
-    }
+    const iniciarLocalizacao = MomentusLocalizacao.conectar({
+        estado, inputCidade, botaoLocalizacao, botaoBuscarCidade, statusLocalizacao,
+        aoAlterar: carregar
+    });
 
     /* ---- Filtros de categoria e busca por texto ---- */
     filtros.forEach((chip) => {
         chip.addEventListener('click', () => {
             filtros.forEach((f) => f.classList.remove('ativoFiltro'));
             chip.classList.add('ativoFiltro');
-            if (chip.dataset.filtro === 'favoritos') {
-                renderizar(estado.ultimosResultados.filter((f) => Momentus.ehFavorito(chaveFornecedor(f))));
-            } else {
-                carregar();
-            }
+            clearTimeout(temporizadorBusca);
+            carregar();
         });
     });
 
     if (inputBusca) {
         inputBusca.addEventListener('input', () => {
             estado.termo = inputBusca.value.trim();
+            ++buscaAtual;
+            estado.carregando = false;
+            estado.proximaPagina = null;
+            estado.pendentes = [];
+            estado.iniciouBusca = false;
+            estado.erro = '';
+            atualizarPaginacao();
             clearTimeout(temporizadorBusca);
             temporizadorBusca = setTimeout(carregar, 500);
         });
@@ -132,34 +103,38 @@
                     preco: 0,
                 });
                 if (item) {
-                    overlay.classList.remove('aberto');
+                    fecharEscolha();
                     if (typeof window.mostrarToast === 'function') window.mostrarToast('Item adicionado ao evento.');
                 }
                 b.disabled = false;
             }));
         }
+        focoAntesDaEscolha = document.activeElement;
+        overlay.inert = false;
+        overlay.setAttribute('aria-hidden', 'false');
         overlay.classList.add('aberto');
+        botaoFecharEscolha?.focus();
     }
 
     /* ---- Renderização dos cards ---- */
     function renderizar(lista) {
         if (!lista.length) {
-            grade.innerHTML = '<p class="estadoVazioClaro"><strong>Nenhum fornecedor encontrado.</strong><br>Tente outra categoria, termo de busca ou cidade.</p>';
+            const texto = categoriaAtiva() === 'melhores' ? Momentus.t('catalogoSemMelhores') : Momentus.t('catalogoSemResultados');
+            grade.innerHTML = `<p class="estadoVazioClaro">${escapeHTML(texto)}${estado.proximaPagina ? '<br>' + escapeHTML(Momentus.t('catalogoProximaDisponivel')) : ''}</p>`;
             return;
         }
         grade.innerHTML = lista.map((f) => {
             const chave = chaveFornecedor(f);
-            const capaEstilo = f.foto_url
-                ? `background-image:url('${f.foto_url.replace(/'/g, "%27")}');background-size:cover;background-position:center`
-                : 'background:var(--grad-2)';
-            return `<article class="cardProduto" data-chave="${chave}">
-                <div class="capaProduto" style="${capaEstilo}">
+            return `<article class="cardProduto" data-chave="${escapeHTML(chave)}">
+                <div class="capaProduto" style="background:var(--grad-2)">
                     <button class="tagFavorito" aria-label="Favoritar">${Momentus.ehFavorito(chave) ? '♥' : '♡'}</button>
                 </div>
+                <div class="linksEstabelecimento"></div>
                 <div class="corpoProduto">
                     <div class="nomeProduto">${escapeHTML(f.nome_empresa)}</div>
                     <div class="descProduto">${escapeHTML(f.endereco || '')}</div>
-                    <div class="estrelas">${estrelas(f.avaliacao)} <span style="color:var(--tinta-suave)">(${f.total_avaliacoes || 0})</span></div>
+                    <div class="distanciaFornecedor">${escapeHTML(MomentusLocalizacao.distancia(f.distancia_metros))}</div>
+                    <div class="estrelas">${estrelas(f.avaliacao)} <span class="notaCatalogo">${escapeHTML(f.avaliacao == null ? '—' : Number(f.avaliacao).toLocaleString(undefined, { maximumFractionDigits: 1 }))}</span> <span style="color:var(--tinta-suave)">(${f.total_avaliacoes || 0})</span></div>
                 </div>
                 <div class="rodapeProduto">
                     <span class="precoCatalogo">via Google</span>
@@ -170,6 +145,7 @@
 
         grade.querySelectorAll('.cardProduto').forEach((card, i) => {
             const f = lista[i];
+            prepararLinks(card, f);
             const chave = card.dataset.chave;
             const fav = card.querySelector('.tagFavorito');
             fav.addEventListener('click', async () => {
@@ -180,33 +156,129 @@
         });
     }
 
-    /* ---- Busca no backend, que por sua vez fala com a Google Places API ---- */
-    async function carregar() {
+    function urlSegura(valor) {
+        if (!valor) return '';
+        try {
+            const url = new URL(valor, location.origin);
+            return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+        } catch { return ''; }
+    }
+
+    function prepararLinks(card, fornecedor) {
+        const links = card.querySelector('.linksEstabelecimento');
+        for (const [url, texto] of [
+            [fornecedor.google_maps_url, 'Google Maps'],
+            [fornecedor.street_view_url, Momentus.t('verStreetView')],
+        ]) {
+            const href = urlSegura(url);
+            if (!href) continue;
+            const link = document.createElement('a');
+            link.href = href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.textContent = texto;
+            links.appendChild(link);
+        }
+    }
+
+    const TAMANHO_LOTE = 20;
+
+    function temMaisResultados() {
+        return estado.pendentes.length > 0 || Boolean(estado.proximaPagina)
+            || Boolean(estado.erro && !estado.iniciouBusca);
+    }
+
+    function atualizarPaginacao() {
+        const favoritos = categoriaAtiva() === 'favoritos';
+        criterioMelhores.hidden = categoriaAtiva() !== 'melhores';
+        botaoMais.hidden = favoritos || !temMaisResultados();
+        botaoMais.disabled = estado.carregando;
+        botaoMais.textContent = Momentus.t(estado.carregando ? 'carregandoCatalogo' : 'carregarMaisCatalogo');
+        grade.setAttribute('aria-busy', String(estado.carregando));
+        if (favoritos || estado.carregando) { statusPaginacao.textContent = ''; return; }
+        if (estado.erro) { statusPaginacao.textContent = estado.erro; return; }
+        const total = estado.ultimosResultados.length;
+        statusPaginacao.textContent = total
+            ? Momentus.t('catalogoContagem', { quantidade: total }) + (temMaisResultados() ? '' : ' ' + Momentus.t('catalogoFim'))
+            : (temMaisResultados() ? Momentus.t('catalogoProximaDisponivel') : '');
+    }
+
+    function ordenarResultados(lista, categoria) {
+        return lista.sort((a, b) => {
+            if (categoria === 'melhores') {
+                const qualidade = (b.avaliacao - a.avaliacao) || (b.total_avaliacoes - a.total_avaliacoes);
+                if (qualidade) return qualidade;
+            }
+            return (a.distancia_metros ?? Infinity) - (b.distancia_metros ?? Infinity);
+        });
+    }
+
+    /* Completa lotes de 20 únicos, buscando mais páginas somente quando faltar completar o lote. */
+    async function carregar(mais = false) {
+        if (mais && (estado.carregando || !temMaisResultados())) return;
+        const pedidoBusca = ++buscaAtual;
         const categoria = categoriaAtiva();
+        estado.carregando = false;
+        estado.erro = '';
         if (categoria === 'favoritos') {
             renderizar(estado.ultimosResultados.filter((f) => Momentus.ehFavorito(chaveFornecedor(f))));
+            atualizarPaginacao();
             return;
+        }
+        if (!mais) {
+            estado.proximaPagina = null;
+            estado.ultimosResultados = [];
+            estado.pendentes = [];
+            estado.iniciouBusca = false;
+            estado.paginasVisitadas = new Set();
         }
         const temLocalizacao = estado.cidade || (estado.lat !== null && estado.lng !== null);
         if (!temLocalizacao) {
-            grade.innerHTML = '<p class="estadoVazioClaro">Toque em "Usar minha localização" ou digite sua cidade para ver fornecedores perto de você.</p>';
+            grade.innerHTML = '<p class="estadoVazioClaro">Toque em "Usar minha localização" ou digite seu bairro e cidade para ver fornecedores perto de você.</p>';
+            atualizarPaginacao();
             return;
         }
-        grade.innerHTML = '<p class="estadoVazioClaro">Buscando fornecedores...</p>';
+        estado.carregando = true;
+        atualizarPaginacao();
+        if (!mais) grade.innerHTML = '<p class="estadoVazioClaro">Buscando fornecedores...</p>';
         try {
-            const resultados = await MomentusAPI.fornecedoresPerto({
-                categoria,
-                q: estado.termo,
-                lat: estado.lat,
-                lng: estado.lng,
-                cidade: estado.cidade,
-            });
-            estado.ultimosResultados = resultados;
-            renderizar(resultados);
+            const visiveis = new Set(estado.ultimosResultados.map(f => f.id));
+            const candidatos = new Map(estado.pendentes.map(f => [f.id, f]));
+            while (candidatos.size < TAMANHO_LOTE && (!estado.iniciouBusca || estado.proximaPagina)) {
+                const paginaSolicitada = estado.iniciouBusca ? estado.proximaPagina : null;
+                const resultado = await MomentusAPI.fornecedoresPerto({
+                    categoria, q: estado.termo, lat: estado.lat, lng: estado.lng,
+                    cidade: estado.cidade, paginado: 1, pagina: paginaSolicitada,
+                });
+                if (pedidoBusca !== buscaAtual) return;
+                for (const fornecedor of resultado.fornecedores) {
+                    if (!visiveis.has(fornecedor.id)) candidatos.set(fornecedor.id, fornecedor);
+                }
+                // Preserva o que já foi recebido se uma página seguinte falhar.
+                estado.pendentes = [...candidatos.values()];
+                estado.iniciouBusca = true;
+                estado.paginasVisitadas.add(paginaSolicitada);
+                const proxima = resultado.proxima_pagina;
+                estado.proximaPagina = proxima && !estado.paginasVisitadas.has(proxima) ? proxima : null;
+            }
+            const ordenados = ordenarResultados([...candidatos.values()], categoria);
+            const novos = ordenados.slice(0, TAMANHO_LOTE);
+            estado.pendentes = ordenados.slice(TAMANHO_LOTE);
+            estado.ultimosResultados = ordenarResultados([...estado.ultimosResultados, ...novos], categoria);
+            renderizar(estado.ultimosResultados);
         } catch (e) {
-            grade.innerHTML = `<p class="estadoVazioClaro">${escapeHTML(e.message)}</p>`;
+            if (pedidoBusca !== buscaAtual) return;
+            estado.erro = e.message;
+            if (!mais) grade.innerHTML = `<p class="estadoVazioClaro">${escapeHTML(e.message)}</p>`;
+        } finally {
+            if (pedidoBusca === buscaAtual) {
+                estado.carregando = false;
+                atualizarPaginacao();
+            }
         }
     }
+
+    botaoMais.addEventListener('click', () => carregar(true));
 
     /* ---- Se o usuário veio de outra página com um termo pronto (?busca=...), já preenche ---- */
     (function aplicarBuscaDaURL() {
@@ -218,5 +290,10 @@
         }
     })();
 
-    Momentus.aguardarEventosProntos().then(pedirLocalizacaoAutomatica);
+    document.addEventListener('momentus:idioma-alterado', () => {
+        renderizar(categoriaAtiva() === 'favoritos' ? estado.ultimosResultados.filter((f) => Momentus.ehFavorito(chaveFornecedor(f))) : estado.ultimosResultados);
+        atualizarPaginacao();
+    });
+    atualizarPaginacao();
+    Momentus.aguardarEventosProntos().then(iniciarLocalizacao);
 })();

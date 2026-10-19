@@ -35,11 +35,7 @@ function formatarMoeda(valor) {
     return 'R$ ' + Number(valor || 0).toLocaleString(locale);
 }
 
-function formatarDataBR(valorISO) {
-    if (!valorISO) return '—';
-    const [ano, mes, dia] = valorISO.split('-');
-    return `${dia}/${mes}/${ano}`;
-}
+const { escapeHTML, formatarDataBR } = MomentusUtils;
 
 const STATUS_LABEL_CHAVE = {
     confirmado: 'statusConfirmado',
@@ -50,7 +46,8 @@ const STATUS_LABEL_CHAVE = {
 
 const TIPO_EMOJI = {
     aniversario: '🎂', casamento: '💍', churrasco: '🍖',
-    formatura: '🎓', corporativo: '🏢', chadebebe: '👶'
+    formatura: '🎓', corporativo: '🏢', chadebebe: '👶',
+    noivado: '💞', batizado: '🕊️', confraternizacao: '🥂', outro: '✨'
 };
 
 /* ================= TOAST GLOBAL ================= */
@@ -77,31 +74,31 @@ const gradeCalendario = document.getElementById('calendarioGrid');
 
 if (gradeCalendario) {
 
-    let mesAtual = 3;   // Abril (0-index) — mês em destaque no protótipo
-    let anoAtual = 2026;
+    let mesAtual = new Date().getMonth();
+    let anoAtual = new Date().getFullYear();
     let mesInicializado = false;
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
     function eventosOrdenados() {
-        return Momentus.obterEventos().slice().sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+        return Momentus.obterEventos().slice().sort((a, b) => (a.data + (a.hora === '—' ? '23:59' : a.hora)).localeCompare(b.data + (b.hora === '—' ? '23:59' : b.hora)));
     }
 
     function proximoEvento() {
-        const futuros = eventosOrdenados().filter((ev) => Momentus.diasEntre(ev.data) >= 0);
-        if (futuros.length) return futuros[0];
-        const todos = eventosOrdenados();
-        return todos.length ? todos[todos.length - 1] : null;
+        const ativos = eventosOrdenados().filter((ev) => ev.status !== 'rascunho');
+        return ativos.find((ev) => Momentus.diasEntre(ev.data) >= 0) || ativos[ativos.length - 1] || null;
     }
 
     function renderizarCabecalho() {
         const eventos = Momentus.obterEventos();
         const totalStr = document.getElementById('subtituloEventos');
         if (totalStr) {
-            const n = eventos.length;
+            const n = eventos.filter((ev) => ev.status !== 'rascunho').length;
             if (n === 0) totalStr.textContent = Momentus.t('iniSubtitulo0');
             else if (n === 1) totalStr.textContent = Momentus.t('iniSubtitulo1');
             else totalStr.textContent = Momentus.t('iniSubtituloN', { n });
+            const rascunhos = eventos.filter((ev) => ev.status === 'rascunho').length;
+            if (rascunhos) totalStr.textContent += ' ' + Momentus.t('resumoRascunhos', { n: rascunhos });
         }
         const tituloOla = document.getElementById('tituloOla');
         if (tituloOla) {
@@ -111,25 +108,60 @@ if (gradeCalendario) {
         }
     }
 
-    function renderizarCardIngresso() {
-        const container = document.getElementById('cardProximoEvento');
-        if (!container) return;
-        const evento = proximoEvento();
+    let assinaturaDestaques = '';
+    const faixa = document.getElementById('blocoEventos');
+    const anterior = document.getElementById('eventosAnterior');
+    const seguinte = document.getElementById('eventosProximo');
+    function atualizarSetas() {
+        if (!faixa || !anterior || !seguinte) return;
+        anterior.disabled = faixa.scrollLeft < 2;
+        seguinte.disabled = faixa.scrollLeft + faixa.clientWidth >= faixa.scrollWidth - 2;
+    }
+    for (const [botao, direcao] of [[anterior, -1], [seguinte, 1]]) {
+        botao?.addEventListener('click', () => {
+            const largura = faixa.firstElementChild?.getBoundingClientRect().width || faixa.clientWidth;
+            faixa.scrollBy({ left: direcao * (largura + 24), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+        });
+    }
+    faixa?.addEventListener('scroll', atualizarSetas, { passive: true });
+    window.addEventListener('resize', atualizarSetas);
 
-        if (!evento) {
-            container.classList.add('cardIngresso');
-            container.innerHTML = `
-                <div class="corpoIngresso" style="border-radius:var(--raio);">
-                    <div class="estadoVazio">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 2 4 7v10l8 5 8-5V7l-8-5Z"/><path d="M4 7l8 5 8-5"/><path d="M12 22V12"/></svg>
-                        <strong>${Momentus.t('semEventoTitulo')}</strong>
-                        <span>${Momentus.t('semEventoTexto')}</span>
-                    </div>
-                </div>`;
-            return;
+    function renderizarDestaquesInicio() {
+        const modelo = document.getElementById('modeloPlanejarEvento');
+        if (!faixa || !modelo || faixa.querySelector('.ingressoRasgando')) return;
+        const eventos = eventosOrdenados();
+        const assinatura = JSON.stringify([eventos, Momentus.obterIdioma()]);
+        if (assinatura === assinaturaDestaques) return;
+        assinaturaDestaques = assinatura;
+        const posicao = faixa.scrollLeft;
+        const foco = document.activeElement?.closest('[data-evento-id]')?.dataset.eventoId;
+        faixa.replaceChildren();
+        eventos.forEach((evento) => {
+            const card = document.createElement('article');
+            card.dataset.eventoId = evento.id;
+            if (evento.status === 'rascunho') {
+                card.className = 'cardRascunho';
+                card.innerHTML = `<span class="statusPill">${Momentus.t('statusRascunho')}</span>
+                    <h3>${escapeHTML(evento.nome || evento.tipoLabel)}</h3>
+                    <p>${Momentus.t('dataPrevista')}: ${formatarDataBR(evento.data)}</p>
+                    <a class="botaoSecundario" href="planejar.html?id=${encodeURIComponent(evento.id)}">${Momentus.t('continuarPlanejamento')}</a>`;
+            } else renderizarCardIngresso(card, evento);
+            faixa.appendChild(card);
+        });
+        const planejador = modelo.content.firstElementChild.cloneNode(true);
+        planejador.querySelectorAll('[data-i18n]').forEach((el) => el.textContent = Momentus.t(el.dataset.i18n));
+        planejador.querySelector('button')?.setAttribute('aria-label', Momentus.t('planejarEvento'));
+        faixa.appendChild(planejador);
+        faixa.scrollLeft = posicao;
+        if (foco) {
+            [...faixa.children].find((el) => el.dataset.eventoId === foco)?.querySelector('button, a')?.focus({ preventScroll: true });
         }
+        requestAnimationFrame(atualizarSetas);
+    }
 
-        const dias = Momentus.diasEntre(evento.criadoEm ? evento.criadoEm.slice(0, 10) : evento.data);
+    function renderizarCardIngresso(container, evento) {
+        container.className = 'cardEvento cardIngresso';
+        container.removeAttribute('aria-busy');
         const diasDesdeCriacao = Math.max(0, Math.round((hoje - new Date((evento.criadoEm || evento.data).slice(0, 10) + 'T00:00:00')) / 86400000));
         const dataObj = new Date(evento.data + 'T00:00:00');
         const meses = Momentus.obterMesesAbrev();
@@ -138,7 +170,7 @@ if (gradeCalendario) {
             <div class="corpoIngresso">
                 <div class="cabecalhoCard">
                     <div>
-                        <span class="tagCard">${Momentus.t('proximoEvento')}</span>
+                        <span class="tagCard">${Momentus.t(STATUS_LABEL_CHAVE[evento.status] || 'statusAgendado')}</span>
                         <div class="nomeEvento">${escapeHTML(evento.nome || evento.tipoLabel)}</div>
                     </div>
                 </div>
@@ -156,17 +188,70 @@ if (gradeCalendario) {
                     <div class="rotulo"><span>${Momentus.t('preparativos')}</span><span>${evento.progresso || 0}%</span></div>
                     <div class="trilhaProgresso"><div class="preenchimentoProgresso" style="width:${evento.progresso || 0}%"></div></div>
                 </div>
+                <span class="faixaRasgo" aria-hidden="true"><span class="bordaRasgo"></span></span>
             </div>
             <div class="canhotoIngresso">
+                <span class="faixaRasgo" aria-hidden="true"><span class="bordaRasgo"></span></span>
                 <span class="numeroCanhoto">Nº ${String(evento.numero || 1).padStart(3, '0')}</span>
-                <div class="setaCard">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </div>
+                <button type="button" class="setaCard" aria-label="${escapeHTML(Momentus.t('verEvento') + ': ' + (evento.nome || evento.tipoLabel))}">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
                 <span class="dataCanhoto">${dataObj.getDate()}<br>${meses[dataObj.getMonth()]}</span>
             </div>`;
         container.style.cursor = 'pointer';
-        container.onclick = () => { window.location.href = 'evento.html?id=' + encodeURIComponent(evento.id); };
+        const botaoIngresso = container.querySelector('.setaCard');
+        const previa = (ativa) => {
+            if (container.classList.contains('ingressoRasgando')) return;
+            const podeAnimar = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            container.classList.toggle('ingressoPreview', ativa && podeAnimar);
+        };
+        botaoIngresso.addEventListener('mouseenter', () => {
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) previa(true);
+        });
+        botaoIngresso.addEventListener('mouseleave', () => previa(false));
+        botaoIngresso.addEventListener('focus', () => previa(true));
+        botaoIngresso.addEventListener('blur', () => previa(false));
+        container.onclick = () => {
+            if (container.classList.contains('ingressoRasgando')) return;
+            const destino = 'evento.html?id=' + encodeURIComponent(evento.id);
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                window.location.href = destino;
+                return;
+            }
+
+            const canhoto = container.querySelector('.canhotoIngresso');
+            const botao = canhoto.querySelector('button');
+            let abriu = false;
+            let espera;
+            const abrirEvento = () => {
+                if (abriu) return;
+                abriu = true;
+                clearTimeout(espera);
+                window.location.href = destino;
+            };
+            canhoto.addEventListener('animationend', (e) => {
+                if (e.target === canhoto && e.animationName === 'destacarCanhoto') abrirEvento();
+            });
+            container.style.transform = '';
+            container.querySelector('.corpoIngresso').style.transform = '';
+            container.setAttribute('aria-busy', 'true');
+            botao.disabled = true;
+            container.classList.add('ingressoRasgando');
+            // Garante o acesso mesmo se o navegador não finalizar a animação.
+            espera = setTimeout(abrirEvento, 1000);
+        };
     }
+
+    // Ao voltar pelo navegador, permite destacar novamente um ingresso em cache.
+    window.addEventListener('pageshow', (e) => {
+        if (!e.persisted) return;
+        document.querySelectorAll('#blocoEventos .cardIngresso').forEach((card) => {
+            card.classList.remove('ingressoRasgando', 'ingressoPreview');
+            card.removeAttribute('aria-busy');
+        });
+        assinaturaDestaques = '';
+        renderizarDestaquesInicio();
+    });
 
     function classeGrupo(indice) {
         return ['g1', 'g2', 'g3'][indice % 3];
@@ -175,7 +260,7 @@ if (gradeCalendario) {
     function renderizarListaProximos() {
         const lista = document.getElementById('listaProximosEventos');
         if (!lista) return;
-        const proximos = eventosOrdenados().filter((ev) => Momentus.diasEntre(ev.data) >= -1).slice(0, 4);
+        const proximos = eventosOrdenados().filter((ev) => ev.status !== 'rascunho' && Momentus.diasEntre(ev.data) >= -1).slice(0, 4);
 
         if (!proximos.length) {
             lista.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('semProximos')}</p>`;
@@ -202,8 +287,8 @@ if (gradeCalendario) {
     }
 
     function renderizarEstatisticas() {
-        const eventos = Momentus.obterEventos();
-        const totalConvidados = eventos.reduce((soma, ev) => soma + (Number(ev.convidados) || 0), 0);
+        const eventos = Momentus.obterEventos().filter((ev) => ev.status !== 'rascunho');
+        const totalConvidados = eventos.reduce((soma, ev) => soma + (Number(ev.confirmados) || 0), 0);
         const totalOrcamento = eventos.reduce((soma, ev) => soma + (Number(ev.orcamento) || 0), 0);
         const prox = proximoEvento();
         const dias = prox ? Math.max(0, Momentus.diasEntre(prox.data)) : 0;
@@ -229,7 +314,7 @@ if (gradeCalendario) {
         document.getElementById('mesAnoAtual').textContent = `${meses[mesAtual]} ${anoAtual}`;
 
         const eventosCalendario = {};
-        Momentus.obterEventos().forEach((ev, i) => {
+        Momentus.obterEventos().filter((ev) => ev.status !== 'rascunho').forEach((ev, i) => {
             const [a, m, d] = ev.data.split('-').map(Number);
             const chave = `${a}-${m - 1}-${d}`;
             eventosCalendario[chave] = classeGrupo(i) === 'g2' ? 'evento2' : 'evento';
@@ -275,7 +360,7 @@ if (gradeCalendario) {
 
     function renderizarTudoInicio() {
         renderizarCabecalho();
-        renderizarCardIngresso();
+        renderizarDestaquesInicio();
         renderizarListaProximos();
         renderizarEstatisticas();
         renderizarCalendario();
@@ -308,11 +393,6 @@ if (gradeCalendario) {
     document.addEventListener('momentus:perfil-alterado', renderizarCabecalho);
 }
 
-function escapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = String(str == null ? '' : str);
-    return div.innerHTML;
-}
 
 /* ================= BUSCA NO CATÁLOGO (início) =================
    A busca em si (com dados reais do Google) é feita por js/inicio-fornecedores.js;
@@ -329,18 +409,41 @@ if (buscaTopoGeral) {
 /* ================= CATEGORIAS - PLANEJAR EVENTO ================= */
 const CATEGORIA_LABEL_CHAVE = {
     aniversario: 'catAniversario', casamento: 'catCasamento', churrasco: 'catChurrasco',
-    formatura: 'catFormatura', corporativo: 'catCorporativo', chadebebe: 'catChaBebe'
+    formatura: 'catFormatura', corporativo: 'catCorporativo', chadebebe: 'catChaBebe',
+    noivado: 'catNoivado', batizado: 'catBatizado', confraternizacao: 'catConfraternizacao', outro: 'catOutro'
 };
 
 let tipoSelecionado = 'aniversario';
+const campoTipoOutro = document.getElementById('campoTipoOutro');
+const tipoEventoOutro = document.getElementById('tipoEventoOutro');
+
+function rotuloTipoSelecionado() {
+    if (tipoSelecionado === 'outro') return tipoEventoOutro?.value.trim() || Momentus.t('catOutro');
+    return Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catOutro');
+}
+
+function atualizarTipoSelecionado() {
+    const outro = tipoSelecionado === 'outro';
+    if (campoTipoOutro) campoTipoOutro.hidden = !outro;
+    if (tipoEventoOutro) {
+        tipoEventoOutro.disabled = !outro;
+        tipoEventoOutro.required = outro;
+        tipoEventoOutro.setCustomValidity(outro && !tipoEventoOutro.value.trim() ? Momentus.t('erroTipoOutro') : '');
+    }
+    const resumoTipo = document.getElementById('resumoTipo');
+    if (resumoTipo) resumoTipo.textContent = rotuloTipoSelecionado();
+}
+
+tipoEventoOutro?.addEventListener('input', atualizarTipoSelecionado);
+document.addEventListener('momentus:idioma-alterado', atualizarTipoSelecionado);
+
 
 document.querySelectorAll('.chipCategoria').forEach((chip) => {
     chip.addEventListener('click', () => {
         document.querySelectorAll('.chipCategoria').forEach((c) => c.classList.remove('selecionado'));
         chip.classList.add('selecionado');
         tipoSelecionado = chip.dataset.tipo || 'aniversario';
-        const resumoTipo = document.getElementById('resumoTipo');
-        if (resumoTipo) resumoTipo.textContent = Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catAniversario');
+        atualizarTipoSelecionado();
     });
 });
 
@@ -363,9 +466,8 @@ if (formPlanejar) {
     const observacoes = document.getElementById('observacoes');
     const orcamento = document.getElementById('orcamento');
     const valorOrcamento = document.getElementById('valorOrcamento');
-    const resumoTipo = document.getElementById('resumoTipo');
 
-    if (resumoTipo) resumoTipo.textContent = Momentus.t('catAniversario');
+    atualizarTipoSelecionado();
 
     // Sugere uma data padrão a partir de hoje (em vez de uma data fixa do protótipo)
     (function sugerirDataPadrao() {
@@ -382,10 +484,13 @@ if (formPlanejar) {
         if (eyebrow) eyebrow.textContent = Momentus.t('editarEventoTitulo');
         if (titulo) titulo.textContent = eventoEmEdicao.nome || eventoEmEdicao.tipoLabel;
 
+        const tipoSalvo = eventoEmEdicao.tipo || 'aniversario';
+        const tipoPadrao = Object.hasOwn(CATEGORIA_LABEL_CHAVE, tipoSalvo);
+        tipoSelecionado = tipoPadrao ? tipoSalvo : 'outro';
+        if (tipoEventoOutro) tipoEventoOutro.value = tipoPadrao ? '' : tipoSalvo;
         document.querySelectorAll('.chipCategoria').forEach((chip) => {
-            chip.classList.toggle('selecionado', chip.dataset.tipo === eventoEmEdicao.tipo);
+            chip.classList.toggle('selecionado', chip.dataset.tipo === tipoSelecionado);
         });
-        tipoSelecionado = eventoEmEdicao.tipo || 'aniversario';
 
         nomeEvento.value = eventoEmEdicao.nome || '';
         dataEvento.value = eventoEmEdicao.data || dataEvento.value;
@@ -397,18 +502,18 @@ if (formPlanejar) {
             const encontrada = opcoes.find((op) => op.textContent.trim() === eventoEmEdicao.estilo);
             if (encontrada) estiloEvento.value = encontrada.value;
         }
-        orcamento.value = eventoEmEdicao.orcamento || orcamento.value;
+        orcamento.value = eventoEmEdicao.orcamento ?? orcamento.value;
         observacoes.value = eventoEmEdicao.observacoes || '';
 
-        document.getElementById('resumoTipo').textContent = Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catAniversario');
+        atualizarTipoSelecionado();
         document.getElementById('resumoNome').textContent = nomeEvento.value || '—';
         document.getElementById('resumoData').textContent = formatarDataBR(dataEvento.value);
         document.getElementById('resumoConvidados').textContent = convidados.value ? `${convidados.value} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
 
         const botaoSalvarSpan = formPlanejar.querySelector('.botaoPrimario span');
-        if (botaoSalvarSpan) botaoSalvarSpan.textContent = Momentus.t('salvarAlteracoesEvento');
+        if (botaoSalvarSpan) botaoSalvarSpan.textContent = Momentus.t(eventoEmEdicao.status === 'rascunho' ? 'finalizarEvento' : 'salvarAlteracoesEvento');
         const botaoRascunhoEl = document.getElementById('botaoRascunho');
-        if (botaoRascunhoEl) botaoRascunhoEl.style.display = 'none';
+        if (botaoRascunhoEl) botaoRascunhoEl.hidden = eventoEmEdicao.status !== 'rascunho';
     }
 
     nomeEvento.addEventListener('input', () => {
@@ -423,21 +528,23 @@ if (formPlanejar) {
         document.getElementById('resumoConvidados').textContent = convidados.value ? `${convidados.value} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
     });
 
-    function atualizarSliderOrcamento() {
-        const min = Number(orcamento.min), max = Number(orcamento.max), val = Number(orcamento.value);
-        const pct = ((val - min) / (max - min)) * 100;
-        orcamento.style.background = `linear-gradient(90deg, #7c5cff ${pct}%, var(--linha) ${pct}%)`;
-        valorOrcamento.textContent = formatarMoeda(val);
-        document.getElementById('resumoOrcamento').textContent = formatarMoeda(val);
+    function atualizarOrcamento() {
+        const val = Number(orcamento.value) || 0;
+        const idioma = Momentus.obterIdioma();
+        const locale = idioma === 'en' ? 'en-US' : idioma === 'es' ? 'es-ES' : 'pt-BR';
+        const moeda = 'R$ ' + val.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        valorOrcamento.textContent = moeda;
+        document.getElementById('resumoOrcamento').textContent = moeda;
     }
-    orcamento.addEventListener('input', atualizarSliderOrcamento);
-    atualizarSliderOrcamento();
+    orcamento.addEventListener('input', atualizarOrcamento);
+    document.addEventListener('momentus:idioma-alterado', atualizarOrcamento);
+    atualizarOrcamento();
 
     function montarEventoDoFormulario(status) {
         return {
-            tipo: tipoSelecionado,
-            tipoLabel: Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catAniversario'),
-            nome: nomeEvento.value.trim() || Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catAniversario'),
+            tipo: tipoSelecionado === 'outro' ? tipoEventoOutro.value.trim() : tipoSelecionado,
+            tipoLabel: rotuloTipoSelecionado(),
+            nome: nomeEvento.value.trim() || rotuloTipoSelecionado(),
             data: dataEvento.value || new Date().toISOString().slice(0, 10),
             hora: horaEvento.value.trim() || '—',
             local: localEvento.value.trim(),
@@ -452,11 +559,12 @@ if (formPlanejar) {
 
     formPlanejar.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!horaEvento.reportValidity() || !orcamento.reportValidity() || (tipoSelecionado === 'outro' && !tipoEventoOutro.reportValidity())) return;
         const botao = formPlanejar.querySelector('.botaoPrimario');
         const textoOriginalBotao = botao.innerHTML;
 
         if (eventoEmEdicao) {
-            const dadosAtualizados = montarEventoDoFormulario(eventoEmEdicao.status);
+            const dadosAtualizados = montarEventoDoFormulario(eventoEmEdicao.status === 'rascunho' ? 'confirmado' : eventoEmEdicao.status);
             dadosAtualizados.progresso = eventoEmEdicao.progresso || 0;
             const resultado = await Momentus.atualizarEvento(eventoEmEdicao.id, dadosAtualizados);
             if (!resultado) { botao.innerHTML = textoOriginalBotao; return; }
@@ -472,9 +580,11 @@ if (formPlanejar) {
     });
 
     const botaoRascunho = document.getElementById('botaoRascunho');
-    if (botaoRascunho && !eventoEmEdicao) {
+    if (botaoRascunho && (!eventoEmEdicao || eventoEmEdicao.status === 'rascunho')) {
         botaoRascunho.addEventListener('click', async () => {
-            const criado = await Momentus.salvarEvento(montarEventoDoFormulario('rascunho'));
+            if (!horaEvento.reportValidity() || !orcamento.reportValidity() || (tipoSelecionado === 'outro' && !tipoEventoOutro.reportValidity())) return;
+            const dados = montarEventoDoFormulario('rascunho');
+            const criado = eventoEmEdicao ? await Momentus.atualizarEvento(eventoEmEdicao.id, dados) : await Momentus.salvarEvento(dados);
             if (!criado) return;
             botaoRascunho.textContent = Momentus.t('botaoRascunhoOk');
             setTimeout(() => { window.location.href = 'inicio.html'; }, 900);
@@ -593,12 +703,13 @@ if (numerosStatEstaticos.length) {
 }
 
 /* ================= INCLINAÇÃO 3D SUAVE NOS CARDS ================= */
-const cardsComInclinacao = document.querySelectorAll('.cardEvento, .cardProduto, .blocoCriarEvento, .corpoIngresso');
+const cardsComInclinacao = document.querySelectorAll('.cardEvento:not(.cardIngresso), .cardProduto, .blocoCriarEvento');
 
 cardsComInclinacao.forEach((card) => {
     const alvo = card;
 
     card.addEventListener('mousemove', (e) => {
+        if (card.closest('.ingressoRasgando')) return;
         const retangulo = alvo.getBoundingClientRect();
         const x = (e.clientX - retangulo.left) / retangulo.width - 0.5;
         const y = (e.clientY - retangulo.top) / retangulo.height - 0.5;

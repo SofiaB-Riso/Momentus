@@ -36,28 +36,31 @@
         <div class="quadradotransparente"></div>
 
         <div class="perfilMenu">
-            <div class="avatarPerfil">JM</div>
+            <a href="configuracoes.html" class="avatarPerfil" data-i18n-aria="navConfig" aria-label="Configurações">JM</a>
             <div class="perfilTextos">
                 <div class="perfilNome">Usuário</div>
-                <div class="perfilTag">Organizador(a)</div>
             </div>
         </div>
 
         <nav>
             <a href="inicio.html" class="item ativo">
-                <img src="assets/paginaInicio/Home.png" alt="">
+                <img src="assets/icones/inicio-ativo.png" alt="">
                 <span data-i18n="navInicio">Início</span>
             </a>
+            <a href="eventos.html" class="item">
+                <svg class="iconeMenu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M7 14h3M14 14h3M7 17h3M14 17h3"/></svg>
+                <span data-i18n="todosEventosTitulo">Todos os eventos</span>
+            </a>
             <a href="planejar.html" class="item">
-                <img src="assets/paginaInicio/Plus circle.png" alt="">
+                <img src="assets/icones/planejar.png" alt="">
                 <span data-i18n="navPlanejar">Planejar evento</span>
             </a>
             <a href="catalogo.html" class="item">
-                <img src="assets/paginaInicio/folder.png" alt="">
+                <img src="assets/icones/catalogo.png" alt="">
                 <span data-i18n="navCatalogo">Catálogo</span>
             </a>
             <a href="configuracoes.html" class="item">
-                <img src="assets/paginaInicio/Settings.png" alt="">
+                <img src="assets/icones/configuracoes.png" alt="">
                 <span data-i18n="navConfig">Configurações</span>
             </a>
         </nav>
@@ -96,17 +99,22 @@
                         <div id="corpoPainelNotificacoes"></div>
                     </div>
                 </div>
-                <div class="avatarTopo">JM</div>
+                <a href="configuracoes.html" class="avatarTopo" data-i18n-aria="navConfig" aria-label="Configurações">JM</a>
             </div>
         </div>
 
-        <section id="blocoEventos">
-
-            <div class="cardEvento cardIngresso" id="cardProximoEvento">
-                <!-- preenchido dinamicamente via script.js -->
+        <div class="cabecalhoFaixaEventos">
+            <h2 data-i18n="seusEventos">Seus eventos</h2>
+            <div class="acoesFaixaEventos">
+                <button type="button" id="eventosAnterior" aria-controls="blocoEventos" data-i18n-aria="eventosAnteriores" aria-label="Eventos anteriores">‹</button>
+                <button type="button" id="eventosProximo" aria-controls="blocoEventos" data-i18n-aria="eventosSeguintes" aria-label="Próximos eventos">›</button>
             </div>
-
-            <div class="blocoCriarEvento">
+        </div>
+        <section id="blocoEventos" class="faixaEventos" tabindex="0" data-i18n-aria="seusEventos" aria-label="Seus eventos">
+            <!-- eventos em ordem de data, seguidos de Planejar evento -->
+        </section>
+        <template id="modeloPlanejarEvento">
+<div class="blocoCriarEvento" id="cardPlanejarPrincipal">
                 <div class="cabecalhoCard">
                     <div>
                         <span class="tituloBloco" data-i18n="planejarEvento">Planejar evento</span>
@@ -120,23 +128,7 @@
                     <span data-i18n="chipFormatura">Formatura</span>
                 </div>
             </div>
-
-            <div class="blocoCriarEvento">
-                <div class="cabecalhoCard">
-                    <div>
-                        <span class="tituloBloco" data-i18n="planejarEvento">Planejar evento</span>
-                        <p class="descBloco" data-i18n="planejarDescModelo">Use um modelo pronto e economize tempo</p>
-                    </div>
-                    <button class="botaoCriarEvento" onclick="window.location.href='planejar.html'"><img src="assets/Plus circle.png" alt=""></button>
-                </div>
-                <div class="chipsSugestao">
-                    <span data-i18n="catAniversario">Aniversário</span>
-                    <span data-i18n="catChaBebe">Chá de bebê</span>
-                    <span data-i18n="catChurrasco">Churrasco</span>
-                </div>
-            </div>
-
-        </section>
+        </template>
 
         <section class="grelhaStats">
             <div class="cardStat">
@@ -187,7 +179,7 @@
                 <div class="calendario-grid" id="calendarioGrid"></div>
 
                 <div class="listaProximos">
-                    <svg class="fioGuirlanda" viewBox="0 0 4 300" preserveAspectRatio="none"><path d="M2 0 C 40 40, -36 80, 2 120 S 40 200, 2 240 S -20 280, 2 300" stroke="#e7e2f5" stroke-width="2" fill="none" stroke-dasharray="1 9" stroke-linecap="round"/></svg>
+
                     <div id="listaProximosEventos"></div>
                     <a href="eventos.html" class="botaoSecundario" style="display:inline-flex; margin-top:1rem; font-size:.78rem; padding:.65rem 1.1rem;" data-i18n="verTodosEventos">Ver todos os eventos</a>
                 </div>
@@ -199,7 +191,7 @@
                 <div class="barraLocalizacao barraLocalizacaoCompacta" id="barraLocalizacaoInicio">
                     <button type="button" class="botaoLocalizacao" id="botaoUsarLocalizacaoInicio">📍 Usar minha localização</button>
                     <span class="ouLocalizacao">ou</span>
-                    <input type="text" id="inputCidadeCatalogoInicio" placeholder="Digite sua cidade...">
+                    <input type="text" id="inputCidadeCatalogoInicio" aria-label="Bairro e cidade" placeholder="Bairro e cidade">
                     <button type="button" class="botaoLocalizacaoSecundario" id="botaoBuscarCidadeInicio">Buscar</button>
                     <span class="statusLocalizacao" id="statusLocalizacaoInicio"></span>
                 </div>
@@ -230,6 +222,7 @@
         <span id="toastTexto"></span>
     </div>
 
+    <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>
     <script src="js/script.js"></script>

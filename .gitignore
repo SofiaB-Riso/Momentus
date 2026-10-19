@@ -1,4 +1,4 @@
-﻿# Ambiente virtual
+# Ambiente virtual
 .venv/
 venv/
 env/
@@ -22,3 +22,7 @@ backend/instance/*.db
 # Uploads gerados em runtime
 backend/uploads/*
 !backend/uploads/.gitkeep
+
+# Verificações locais
+.ruff_cache/
+.pytest_cache/

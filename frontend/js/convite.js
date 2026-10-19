@@ -1,7 +1,7 @@
 (function () {
     const token = new URLSearchParams(location.search).get('token');
     const $ = (id) => document.getElementById(id);
-    const dataBR = (iso) => iso ? new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : '—';
+    const dataBR = MomentusUtils.dataPorExtenso;
     if (!token) { $('conviteCarregando').textContent = 'Convite inválido.'; return; }
 
     let convite = null;

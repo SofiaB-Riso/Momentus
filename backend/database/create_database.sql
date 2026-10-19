@@ -200,6 +200,34 @@ CREATE TABLE IF NOT EXISTS logs_evento (
     CONSTRAINT fk_log_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+-- Extensões aditivas: não removem dados das tabelas existentes.
+CREATE TABLE IF NOT EXISTS avisos_convidado (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    convidado_id INT NOT NULL,
+    chave VARCHAR(150) NOT NULL,
+    titulo VARCHAR(180) NOT NULL,
+    mensagem TEXT NOT NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_aviso_convidado_chave (convidado_id, chave),
+    INDEX ix_avisos_convidado_convidado_id (convidado_id),
+    CONSTRAINT fk_aviso_convidado FOREIGN KEY (convidado_id) REFERENCES convidados(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS locais_evento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    evento_id INT NOT NULL,
+    chave VARCHAR(255) NOT NULL,
+    nome VARCHAR(180) NOT NULL,
+    endereco VARCHAR(255) NOT NULL,
+    cidade VARCHAR(120) NOT NULL,
+    capacidade INT NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    estilo VARCHAR(100) NOT NULL,
+    UNIQUE KEY uq_local_evento_chave (evento_id, chave),
+    INDEX ix_locais_evento_evento_id (evento_id),
+    CONSTRAINT fk_local_evento FOREIGN KEY (evento_id) REFERENCES eventos(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 DROP PROCEDURE IF EXISTS sp_eventos_por_tipo;
 DELIMITER //
 CREATE PROCEDURE sp_eventos_por_tipo(

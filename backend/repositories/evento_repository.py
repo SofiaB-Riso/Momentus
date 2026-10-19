@@ -1,6 +1,5 @@
-from sqlalchemy import text
-
 from models import Evento, db
+from sqlalchemy import text
 
 
 class EventoRepository:
@@ -18,11 +17,16 @@ class EventoRepository:
             ids = [linha["id"] for linha in linhas]
             if not ids:
                 return []
-            return Evento.query.filter(Evento.id.in_(ids)).order_by(Evento.nome_evento.asc()).all()
+            return (
+                Evento.query.filter(Evento.id.in_(ids))
+                .order_by(Evento.nome_evento.asc())
+                .all()
+            )
 
         return (
-            Evento.query
-            .filter(Evento.owner_id == usuario_id, Evento.tipo_evento == tipo_evento)
+            Evento.query.filter(
+                Evento.owner_id == usuario_id, Evento.tipo_evento == tipo_evento
+            )
             .order_by(Evento.nome_evento.asc())
             .all()
         )
