@@ -1,16 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from secrets import token_urlsafe
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from .crud import CrudModel
 from .database import db
 
 
 def utcnow():
-    return datetime.utcnow()
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
-class Usuario(db.Model):
+class Usuario(CrudModel, db.Model):
     __tablename__ = "usuarios"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -18,12 +19,21 @@ class Usuario(db.Model):
     email = db.Column(db.String(180), unique=True, nullable=False, index=True)
     telefone = db.Column(db.String(40), nullable=True, default="")
     senha_hash = db.Column(db.String(255), nullable=False)
-    tipo = db.Column(db.String(30), nullable=False, default="cliente")  # cliente | fornecedor
+    tipo = db.Column(
+        db.String(30), nullable=False, default="cliente"
+    )  # cliente | fornecedor
     ativo = db.Column(db.Boolean, nullable=False, default=True)
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
 
-    eventos = db.relationship("Evento", back_populates="owner", foreign_keys="Evento.owner_id")
-    fornecedor = db.relationship("Fornecedor", back_populates="usuario", uselist=False, cascade="all, delete-orphan")
+    eventos = db.relationship(
+        "Evento", back_populates="owner", foreign_keys="Evento.owner_id"
+    )
+    fornecedor = db.relationship(
+        "Fornecedor",
+        back_populates="usuario",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
 
     def definir_senha(self, senha):
         self.senha_hash = generate_password_hash(senha)
@@ -46,11 +56,16 @@ class Usuario(db.Model):
         return dados
 
 
-class Fornecedor(db.Model):
+class Fornecedor(CrudModel, db.Model):
     __tablename__ = "fornecedores"
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="CASCADE"), unique=True, nullable=False)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False,
+    )
     nome_empresa = db.Column(db.String(180), nullable=False)
     cpf_cnpj = db.Column(db.String(30), unique=True, nullable=False)
     tipo_servico = db.Column(db.String(100), nullable=False)
@@ -61,7 +76,9 @@ class Fornecedor(db.Model):
     ativo = db.Column(db.Boolean, nullable=False, default=True)
 
     usuario = db.relationship("Usuario", back_populates="fornecedor")
-    produtos = db.relationship("ProdutoFornecedor", back_populates="fornecedor", cascade="all, delete-orphan")
+    produtos = db.relationship(
+        "ProdutoFornecedor", back_populates="fornecedor", cascade="all, delete-orphan"
+    )
 
     def to_dict(self, incluir_usuario=True, incluir_produtos=True):
         dados = {
@@ -79,15 +96,22 @@ class Fornecedor(db.Model):
         if incluir_usuario and self.usuario:
             dados["usuario"] = self.usuario.to_dict(incluir_fornecedor=False)
         if incluir_produtos:
-            dados["produtos"] = [p.to_dict(incluir_fornecedor=False) for p in self.produtos if p.ativo]
+            dados["produtos"] = [
+                p.to_dict(incluir_fornecedor=False) for p in self.produtos if p.ativo
+            ]
         return dados
 
 
-class ProdutoFornecedor(db.Model):
+class ProdutoFornecedor(CrudModel, db.Model):
     __tablename__ = "produtos_fornecedor"
 
     id = db.Column(db.Integer, primary_key=True)
-    fornecedor_id = db.Column(db.Integer, db.ForeignKey("fornecedores.id", ondelete="CASCADE"), nullable=False, index=True)
+    fornecedor_id = db.Column(
+        db.Integer,
+        db.ForeignKey("fornecedores.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     nome = db.Column(db.String(160), nullable=False)
     descricao = db.Column(db.Text, nullable=True, default="")
     categoria = db.Column(db.String(100), nullable=False, default="outros")
@@ -118,18 +142,25 @@ class ProdutoFornecedor(db.Model):
         return dados
 
 
-class Convidado(db.Model):
+class Convidado(CrudModel, db.Model):
     __tablename__ = "convidados"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     nome = db.Column(db.String(160), nullable=False)
     email = db.Column(db.String(180), nullable=True, default="")
     telefone = db.Column(db.String(40), nullable=True, default="")
     vinculo = db.Column(db.String(100), nullable=True, default="")
     status = db.Column(db.String(20), nullable=False, default="pendente")
     restricoes_alimentares = db.Column(db.Text, nullable=True, default="")
-    token_rsvp = db.Column(db.String(120), unique=True, nullable=False, default=lambda: token_urlsafe(24))
+    token_rsvp = db.Column(
+        db.String(120), unique=True, nullable=False, default=lambda: token_urlsafe(24)
+    )
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
 
     evento = db.relationship("Evento", back_populates="convidados_rel")
@@ -151,16 +182,28 @@ class Convidado(db.Model):
         return dados
 
 
-class ColaboradorEvento(db.Model):
+class ColaboradorEvento(CrudModel, db.Model):
     __tablename__ = "colaboradores_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True, index=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
     nome = db.Column(db.String(160), nullable=False)
     email = db.Column(db.String(180), nullable=False)
     status = db.Column(db.String(20), nullable=False, default="pendente")
-    token = db.Column(db.String(120), unique=True, nullable=False, default=lambda: token_urlsafe(24))
+    token = db.Column(
+        db.String(120), unique=True, nullable=False, default=lambda: token_urlsafe(24)
+    )
     pode_editar = db.Column(db.Boolean, nullable=False, default=True)
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
 
@@ -180,11 +223,16 @@ class ColaboradorEvento(db.Model):
         }
 
 
-class ItemCompartilhado(db.Model):
+class ItemCompartilhado(CrudModel, db.Model):
     __tablename__ = "itens_compartilhados"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     nome = db.Column(db.String(160), nullable=False)
     quantidade = db.Column(db.Integer, nullable=False, default=1)
     responsavel_tipo = db.Column(db.String(30), nullable=True)
@@ -205,12 +253,21 @@ class ItemCompartilhado(db.Model):
         }
 
 
-class ItemEvento(db.Model):
+class ItemEvento(CrudModel, db.Model):
     __tablename__ = "itens_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
-    produto_id = db.Column(db.Integer, db.ForeignKey("produtos_fornecedor.id", ondelete="SET NULL"), nullable=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    produto_id = db.Column(
+        db.Integer,
+        db.ForeignKey("produtos_fornecedor.id", ondelete="SET NULL"),
+        nullable=True,
+    )
     chave_externa = db.Column(db.String(180), nullable=True)
     nome = db.Column(db.String(160), nullable=False)
     categoria = db.Column(db.String(100), nullable=True, default="outros")
@@ -223,7 +280,9 @@ class ItemEvento(db.Model):
     def to_dict(self):
         return {
             "id": str(self.id),
-            "produtoId": str(self.produto_id) if self.produto_id else (self.chave_externa or self.nome.lower()),
+            "produtoId": str(self.produto_id)
+            if self.produto_id
+            else (self.chave_externa or self.nome.lower()),
             "nome": self.nome,
             "categoria": self.categoria or "outros",
             "preco": float(self.preco or 0),
@@ -231,11 +290,16 @@ class ItemEvento(db.Model):
         }
 
 
-class TarefaEvento(db.Model):
+class TarefaEvento(CrudModel, db.Model):
     __tablename__ = "tarefas_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     titulo = db.Column(db.String(200), nullable=False)
     chave = db.Column(db.String(100), nullable=True)
     feita = db.Column(db.Boolean, nullable=False, default=False)
@@ -254,11 +318,16 @@ class TarefaEvento(db.Model):
         }
 
 
-class DespesaEvento(db.Model):
+class DespesaEvento(CrudModel, db.Model):
     __tablename__ = "despesas_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     descricao = db.Column(db.String(200), nullable=False)
     categoria = db.Column(db.String(100), nullable=True, default="geral")
     valor = db.Column(db.Numeric(10, 2), nullable=False, default=0)
@@ -275,18 +344,27 @@ class DespesaEvento(db.Model):
             "categoria": self.categoria or "geral",
             "valor": float(self.valor or 0),
             "comprovante": self.comprovante or "",
-            "comprovante_url": f"/uploads/{self.comprovante}" if self.comprovante else "",
+            "comprovante_url": f"/uploads/{self.comprovante}"
+            if self.comprovante
+            else "",
             "pago_por": self.pago_por or "",
             "criado_em": self.criado_em.isoformat() if self.criado_em else None,
         }
 
 
-class FotoEvento(db.Model):
+class FotoEvento(CrudModel, db.Model):
     __tablename__ = "fotos_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    usuario_id = db.Column(
+        db.Integer, db.ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True
+    )
     arquivo = db.Column(db.String(255), nullable=False)
     legenda = db.Column(db.String(255), nullable=True, default="")
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
@@ -303,15 +381,22 @@ class FotoEvento(db.Model):
         }
 
 
-class Notificacao(db.Model):
+class Notificacao(CrudModel, db.Model):
     __tablename__ = "notificacoes"
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     tipo = db.Column(db.String(60), nullable=False)
     titulo = db.Column(db.String(180), nullable=False)
     mensagem = db.Column(db.Text, nullable=False)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=True)
+    evento_id = db.Column(
+        db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=True
+    )
     referencia_id = db.Column(db.Integer, nullable=True)
     lida = db.Column(db.Boolean, nullable=False, default=False)
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
@@ -329,30 +414,116 @@ class Notificacao(db.Model):
         }
 
 
-class FavoritoFornecedor(db.Model):
+class FavoritoFornecedor(CrudModel, db.Model):
     __tablename__ = "favoritos_fornecedor"
-    __table_args__ = (db.UniqueConstraint("usuario_id", "chave", name="uq_favorito_usuario_chave"),)
+    __table_args__ = (
+        db.UniqueConstraint("usuario_id", "chave", name="uq_favorito_usuario_chave"),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False, index=True)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuarios.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     chave = db.Column(db.String(180), nullable=False)
 
 
-class LogEvento(db.Model):
+class LogEvento(CrudModel, db.Model):
     __tablename__ = "logs_evento"
 
     id = db.Column(db.Integer, primary_key=True)
-    evento_id = db.Column(db.Integer, db.ForeignKey("eventos.id", ondelete="CASCADE"), nullable=False, index=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    usuario_id = db.Column(
+        db.Integer, db.ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True
+    )
     acao = db.Column(db.String(100), nullable=False)
     detalhe = db.Column(db.Text, nullable=True, default="")
     criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
+    usuario = db.relationship("Usuario")
 
     def to_dict(self):
         return {
             "id": self.id,
             "usuario_id": self.usuario_id,
+            "autor": self.usuario.nome if self.usuario else "Convidado / sistema",
             "acao": self.acao,
             "detalhe": self.detalhe or "",
             "criado_em": self.criado_em.isoformat() if self.criado_em else None,
+        }
+
+
+class AvisoConvidado(CrudModel, db.Model):
+    __tablename__ = "avisos_convidado"
+    __table_args__ = (
+        db.UniqueConstraint("convidado_id", "chave", name="uq_aviso_convidado_chave"),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    convidado_id = db.Column(
+        db.Integer,
+        db.ForeignKey("convidados.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    chave = db.Column(db.String(150), nullable=False)
+    titulo = db.Column(db.String(180), nullable=False)
+    mensagem = db.Column(db.Text, nullable=False)
+    criado_em = db.Column(db.DateTime, nullable=False, default=utcnow)
+    convidado = db.relationship(
+        "Convidado", backref=db.backref("avisos", cascade="all, delete-orphan")
+    )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "titulo": self.titulo,
+            "mensagem": self.mensagem,
+            "criado_em": self.criado_em.isoformat() + "Z",
+        }
+
+
+class LocalEvento(CrudModel, db.Model):
+    """Orçamentos de espaços comparados pela organização; Google não fornece lotação/preço de aluguel."""
+
+    __tablename__ = "locais_evento"
+    __table_args__ = (
+        db.UniqueConstraint("evento_id", "chave", name="uq_local_evento_chave"),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    evento_id = db.Column(
+        db.Integer,
+        db.ForeignKey("eventos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    chave = db.Column(db.String(255), nullable=False)
+    nome = db.Column(db.String(180), nullable=False)
+    endereco = db.Column(db.String(255), nullable=False)
+    cidade = db.Column(db.String(120), nullable=False)
+    capacidade = db.Column(db.Integer, nullable=False)
+    preco = db.Column(db.Numeric(10, 2), nullable=False)
+    estilo = db.Column(db.String(100), nullable=False)
+    evento = db.relationship(
+        "Evento",
+        backref=db.backref("locais_rel", cascade="all, delete-orphan", lazy="selectin"),
+    )
+
+    def to_dict(self):
+        from utils.mapas import links_mapa
+
+        return {
+            "id": self.id,
+            "nome": self.nome,
+            "endereco": self.endereco,
+            "cidade": self.cidade,
+            "capacidade": self.capacidade,
+            "preco": float(self.preco),
+            "estilo": self.estilo,
+            "mapas": links_mapa(self.endereco, self.cidade),
         }

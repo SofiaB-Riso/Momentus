@@ -34,7 +34,14 @@
         return ativa ? ativa.dataset.aba : 'informacoes';
     }
 
-    function renderizarEvento() {
+    function renderizarEvento(atualizacao) {
+        const preservar = atualizacao?.detail?.automatico;
+        const valores = preservar ? [...container.querySelectorAll('input,select,textarea')].map(el => ({
+            id:el.id, valor:el.value, checked:el.checked, arquivo:el.type === 'file' ? el : null
+        })).filter(v => v.id) : [];
+        const detalhesAbertos = preservar ? [...container.querySelectorAll('details[open]')].map(el => el.id).filter(Boolean) : [];
+        const foco = preservar && container.contains(document.activeElement) ? document.activeElement.id : null;
+        const selecao = foco ? [document.activeElement.selectionStart, document.activeElement.selectionEnd] : null;
         const evento = Momentus.obterEvento(eventoId);
         if (!evento) { montarVazio(); return; }
 
@@ -48,7 +55,7 @@
 
         container.querySelector('#tagTipoEvento').textContent = evento.tipoLabel || '';
         container.querySelector('#tituloEvento').textContent = evento.nome || evento.tipoLabel;
-        container.querySelector('#localEventoTexto').textContent = evento.local || '—';
+        container.querySelector('#localEventoTexto').textContent = [evento.local, evento.cidade].filter(Boolean).join(', ') || '—';
         container.querySelector('#dataHoraEventoTexto').textContent = `${formatarDataBR(evento.data)}${evento.hora && evento.hora !== '—' ? ' · ' + evento.hora : ''}`;
 
         const statusChave = STATUS_LABEL_CHAVE[evento.status] || 'statusAgendado';
@@ -59,7 +66,7 @@
         container.querySelector('#progressoBarra').style.width = progresso + '%';
 
         // Informações
-        container.querySelector('#infoLocal').textContent = evento.local || '—';
+        container.querySelector('#infoLocal').textContent = [evento.local, evento.cidade].filter(Boolean).join(', ') || '—';
         container.querySelector('#infoDataHora').textContent = `${formatarDataBR(evento.data)}${evento.hora && evento.hora !== '—' ? ' · ' + evento.hora : ''}`;
         container.querySelector('#infoConvidados').textContent = evento.convidados ? `${evento.convidados} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
         container.querySelector('#infoEstilo').textContent = evento.estilo || '—';
@@ -101,6 +108,7 @@
         renderizarFinanceiro(evento);
         renderizarGaleria(evento);
         ligarRateio(evento);
+        MomentusPlanejamento.ligar(evento, container);
 
         // Botão de adicionar colaborador (dentro do template, precisa ser religado a cada render)
         const botaoAddColab = container.querySelector('#botaoAdicionarColaborador');
@@ -134,9 +142,27 @@
             if (evento.permissao === 'dono') privacidade.addEventListener('change', () => Momentus.atualizarEvento(evento.id, { privacidadeConvidados: privacidade.value }));
         }
         if (!podeEditarEvento) {
-            container.querySelectorAll('form').forEach((form) => { form.style.display = 'none'; });
-            container.querySelectorAll('.botaoRemoverConvidado, .removerFotoEvento').forEach((b) => { b.style.display = 'none'; });
+            container.querySelectorAll('form:not([data-consulta])').forEach((form) => { form.style.display = 'none'; });
+            container.querySelectorAll('.botaoRemoverConvidado, .removerFotoEvento, .botaoAssumirItem, .editarRestricoes').forEach((b) => { b.style.display = 'none'; });
+            container.querySelectorAll('#caixaRateio input').forEach(el => { el.disabled = true; });
+            container.querySelectorAll('.itemTarefaEvento').forEach(el => { el.style.pointerEvents = 'none'; });
             container.querySelectorAll('.selectStatusConvidado').forEach((el) => { if (el.id !== 'privacidadeListaConvidados') el.disabled = true; });
+        }
+
+        if (preservar && podeEditarEvento) {
+            valores.forEach(v => {
+                const novo = document.getElementById(v.id);
+                if (!novo || !container.contains(novo)) return;
+                if (v.arquivo) { novo.replaceWith(v.arquivo); return; }
+                // Não sobrescreve seletores de status/permissões com estado antigo.
+                if (novo.closest('form')) { novo.value = v.valor; novo.checked = v.checked; }
+            });
+            detalhesAbertos.forEach(id => { const el=document.getElementById(id); if(el) el.open=true; });
+            const el = foco && document.getElementById(foco);
+            if (el) {
+                el.focus({preventScroll:true});
+                if (selecao && el.setSelectionRange && ['text','search','tel','url','password'].includes(el.type)) el.setSelectionRange(...selecao);
+            }
         }
 
         // Mesmo motivo do comentário em montarVazio(): só re-traduz o DOM,
@@ -172,7 +198,23 @@
             raiz.querySelector('.contatoConvidado').textContent = conv.contato || '—';
             const restr = raiz.querySelector('.restricoesConvidado');
             if (restr) restr.textContent = conv.restricoes ? 'Restrições: ' + conv.restricoes : '';
+            const editar = raiz.querySelector('.editarRestricoes');
+            editar.addEventListener('click', () => {
+                if (raiz.querySelector('.formRestricoes')) return;
+                const form = document.createElement('form'); form.className='formRestricoes';
+                const input = document.createElement('textarea'); input.value=conv.restricoes || ''; input.maxLength=4000;
+                input.setAttribute('aria-label', 'Alergias e restrições de ' + conv.nome);
+                const salvar=document.createElement('button'); salvar.type='submit'; salvar.className='botaoSecundario'; salvar.textContent='Salvar restrições';
+                const cancelar=document.createElement('button'); cancelar.type='button'; cancelar.className='botaoSecundario'; cancelar.textContent='Cancelar'; cancelar.onclick=()=>form.remove();
+                form.append(input,salvar,cancelar); raiz.querySelector('.infoConvidado').append(form); input.focus();
+                form.onsubmit=async e=>{
+                    e.preventDefault(); salvar.disabled=true;
+                    try { await MomentusAPI.atualizarConvidado(evento.id,conv.id,{restricoes:input.value.trim()}); await Momentus.sincronizarEventos(); }
+                    catch(e) { mostrarToast(e.message,'erro'); } finally { salvar.disabled=false; }
+                };
+            });
             const copiar = raiz.querySelector('.copiarRsvp');
+            if (copiar && !conv.token_rsvp) copiar.hidden = true;
             if (copiar) copiar.addEventListener('click', async () => {
                 const link = new URL('rsvp.html?token=' + encodeURIComponent(conv.token_rsvp || ''), window.location.href).toString();
                 try { await navigator.clipboard.writeText(link); mostrarToast('Link de RSVP copiado!'); }
@@ -256,7 +298,7 @@
             pill.classList.add(colab.status || 'pendente');
 
             const botaoReenviar = raiz.querySelector('.botaoTextoReenviar');
-            if (colab.status === 'pendente') {
+            if (colab.status === 'pendente' && colab.token) {
                 botaoReenviar.style.display = '';
                 botaoReenviar.addEventListener('click', async () => {
                     const atual = Momentus.reenviarConviteColaborador(evento.id, colab.id) || colab;
@@ -309,7 +351,7 @@
                 const linha = document.createElement('div');
                 linha.className = 'itemRateioPessoa';
                 linha.innerHTML = `
-                    <span class="nomeRateioPessoa">${pessoa.nome}${pessoa.organizador ? `<span class="tagOrganizador">${Momentus.t('rateioVoce')}</span>` : ''}</span>
+                    <span class="nomeRateioPessoa">${escapeHTML(pessoa.nome)}${pessoa.organizador ? `<span class="tagOrganizador">Organizador</span>` : ''}</span>
                     <span class="valorRateioPessoa">${formatarMoeda(pessoa.valor)}</span>`;
                 listaEl.appendChild(linha);
             });
@@ -455,6 +497,7 @@
             botao.addEventListener('click', () => {
                 const escolhido = opcoes.find((op) => (op.id || '') === botao.dataset.id);
                 Momentus.assumirItemCompartilhado(evento.id, item.id, {
+                    responsavelTipo: escolhido && escolhido.id ? 'colaborador' : 'usuario',
                     responsavelId: escolhido && escolhido.id,
                     responsavelNome: escolhido ? escolhido.nome : ''
                 });
@@ -673,7 +716,7 @@
         if (inteligente) {
             inteligente.innerHTML = '<p class="estadoVazioClaro" style="text-align:left;padding-left:0;">Calculando sugestões...</p>';
             Momentus.obterResumoEvento(evento.id).then((resumo) => {
-                if (!resumo || !container.querySelector('#resumoInteligenteEvento')) return;
+                if (!resumo || !inteligente.isConnected) return;
                 const s = resumo.suprimentos || {};
                 const restricoes = (resumo.convidados && resumo.convidados.restricoes_alimentares) || [];
                 const fornecedores = resumo.fornecedores_recomendados || [];
@@ -688,8 +731,8 @@
                     </div>
                     <div style="margin-top:1rem;"><strong>Estimativa de orçamento base:</strong><div class="chipsSugestao" style="margin-top:.6rem;"><span>Alimentação ${formatarMoeda(ob.alimentacao || 0)}</span><span>Bebidas ${formatarMoeda(ob.bebidas || 0)}</span><span>Decoração ${formatarMoeda(ob.decoracao || 0)}</span><span>Local ${formatarMoeda(ob.local || 0)}</span><span><b>Total ${formatarMoeda(ob.total_estimado || 0)}</b></span></div></div>
                     <p style="margin-top:1rem;"><strong>Restrições alimentares:</strong> ${restricoes.length ? restricoes.map(escapeHTML).join(', ') : 'nenhuma informada'}</p>
-                    <p style="margin-top:.7rem;"><a class="botaoSecundario" target="_blank" rel="noopener" href="${escapeHTML(resumo.mapa_url || '#')}">Abrir local no mapa</a></p>
-                    ${locais.length ? `<div style="margin-top:1rem;"><strong>Espaços sugeridos${evento.cidade ? ` em ${escapeHTML(evento.cidade)}` : ''}:</strong><div class="chipsSugestao" style="margin-top:.6rem;">${locais.map((f) => `<span>${escapeHTML(f.nome_empresa)} · ★ ${Number(f.avaliacao || 0).toFixed(1)}</span>`).join('')}</div></div>` : ''}
+                    
+                    ${locais.length ? `<div style="margin-top:1rem;"><strong>Espaços sugeridos${evento.cidade ? ` em ${escapeHTML(evento.cidade)}` : ''}:</strong><div class="chipsSugestao" style="margin-top:.6rem;">${locais.map((f) => `<span>${escapeHTML(f.nome)} · ${f.capacidade} pessoas · ${formatarMoeda(f.preco)}</span>`).join('')}</div></div>` : ''}
                     ${fornecedores.length ? `<div style="margin-top:1rem;"><strong>Fornecedores recomendados:</strong><div class="chipsSugestao" style="margin-top:.6rem;">${fornecedores.map((f) => `<span>${escapeHTML(f.nome_empresa)} · ${escapeHTML(f.tipo_servico)}</span>`).join('')}</div></div>` : ''}`;
             });
         }
@@ -722,6 +765,40 @@
         renderizarEvento();
         verificarConviteNaUrl();
     });
-    document.addEventListener('momentus:eventos-alterados', renderizarEvento);
+    let atualizacaoPendente = null;
+    document.addEventListener('momentus:eventos-alterados', e => {
+        if (e.detail?.automatico && container.querySelector('.formRestricoes')) { atualizacaoPendente=e; return; }
+        renderizarEvento(e);
+    });
+    container.addEventListener('focusout', () => setTimeout(() => {
+        if (atualizacaoPendente && !container.querySelector('.formRestricoes')) {
+            const e=atualizacaoPendente; atualizacaoPendente=null; renderizarEvento(e);
+        }
+    }, 0));
+    let fluxo = null, revisao = null, sincronizando = false;
+    async function atualizarAoVivo() {
+        if (sincronizando || document.hidden) return;
+        sincronizando = true;
+        try { await Momentus.sincronizarEventos(true); await Momentus.sincronizarNotificacoes(); }
+        finally { sincronizando=false; }
+    }
+    function conectar() {
+        if (!eventoId || document.hidden || fluxo || !window.EventSource) return;
+        fluxo = new EventSource(`/eventos/${encodeURIComponent(eventoId)}/atualizacoes`);
+        fluxo.addEventListener('alteracao', e => {
+            const nova=JSON.parse(e.data).revisao;
+            if (nova !== revisao) { revisao=nova; atualizarAoVivo(); }
+        });
+        fluxo.addEventListener('encerrado', () => { fluxo.close(); fluxo=null; atualizarAoVivo(); });
+        fluxo.onerror = () => { const el=document.getElementById('atualizacaoEvento'); if(el) el.textContent='Reconectando atualizações...'; };
+        fluxo.onopen = () => { const el=document.getElementById('atualizacaoEvento'); if(el) el.textContent='Atualização automática ativa'; };
+    }
+    Momentus.aguardarEventosProntos().then(conectar);
+    document.addEventListener('visibilitychange', () => {
+        if(document.hidden) { fluxo?.close(); fluxo=null; }
+        else { conectar(); atualizarAoVivo(); }
+    });
+    window.addEventListener('pagehide', () => fluxo?.close());
+    setInterval(atualizarAoVivo, 15000);
     document.addEventListener('momentus:idioma-alterado', renderizarEvento);
 })();

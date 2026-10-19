@@ -20,9 +20,6 @@ const Momentus = (() => {
         if (meta) meta.setAttribute('content', tema === 'escuro' ? '#0d0818' : '#f3f1fa');
     }
 
-    function alternarTema() {
-        aplicarTema(obterTema() === 'escuro' ? 'claro' : 'escuro');
-    }
 
     /* ================= IDIOMA ================= */
 
@@ -65,13 +62,15 @@ const Momentus = (() => {
             planTitulo: 'Vamos planejar seu evento',
             planSubtitulo: 'Preencha os detalhes abaixo — você pode ajustar tudo depois.',
             planTipoEvento: 'Tipo de evento',
-            catAniversario: 'Aniversário', catCasamento: 'Casamento', catChurrasco: 'Churrasco', catFormatura: 'Formatura', catCorporativo: 'Corporativo', catChaBebe: 'Chá de bebê',
+            catAniversario: 'Aniversário', catCasamento: 'Casamento', catChurrasco: 'Churrasco', catFormatura: 'Formatura', catCorporativo: 'Corporativo', catChaBebe: 'Chá de bebê', catNoivado: 'Noivado', catBatizado: 'Batizado', catConfraternizacao: 'Confraternização', catOutro: 'Outro', labelTipoOutro: 'Qual é o tipo do evento?', placeholderTipoOutro: 'Ex.: Festa junina, bodas, encontro de amigos', erroTipoOutro: 'Informe o tipo do evento.',
             labelNomeEvento: 'Nome do evento', placeholderNomeEvento: 'Ex: Aniversário da Sofia',
             labelData: 'Data', labelHorario: 'Horário', placeholderHorario: '15:00',
+            selecionarHorario: 'Escolher horário', relogioHoras: 'Horas', relogioMinutos: 'Minutos', confirmarHorario: 'Confirmar', limparHorario: 'Sem horário',
+            fotoIndisponivel: 'Foto indisponível', fotoAnterior: 'Foto anterior', fotoSeguinte: 'Próxima foto', fotoGoogle: 'Ver foto no Google Maps', seusEventos: 'Seus eventos', eventosAnteriores: 'Eventos anteriores', eventosSeguintes: 'Próximos eventos', continuarPlanejamento: 'Continuar planejamento', finalizarEvento: 'Finalizar evento', dataPrevista: 'Data prevista', resumoRascunhos: '{n} rascunho(s) para continuar.', verStreetView: 'Ver no Street View',
             labelLocal: 'Local', placeholderLocal: 'Endereço ou nome do espaço',
             labelConvidados: 'Número de convidados', placeholderConvidados: '50',
             labelEstilo: 'Estilo', estiloIntimista: 'Intimista', estiloClassico: 'Clássico', estiloTematico: 'Temático', estiloArLivre: 'Ao ar livre',
-            labelOrcamento: 'Orçamento estimado', ajudaOrcamento: '(arraste para ajustar)',
+            labelOrcamento: 'Orçamento estimado', ajudaOrcamento: '(digite o valor em R$)',
             labelObservacoes: 'Observações', placeholderObservacoes: 'Conte um pouco mais sobre o clima que você imagina para o evento...',
             botaoSalvarEvento: 'Salvar evento', botaoSalvarEventoOk: 'Evento salvo!',
             botaoRascunho: 'Salvar como rascunho', botaoRascunhoOk: 'Rascunho salvo!',
@@ -126,7 +125,7 @@ const Momentus = (() => {
             dataEHora: 'Data e horário',
             estiloDoEvento: 'Estilo',
             orcamentoEstimadoLabel: 'Orçamento estimado',
-            orcamentoGastoLabel: 'Já reservado no catálogo',
+            orcamentoGastoLabel: 'Despesas e itens do catálogo',
             observacoesTitulo: 'Observações',
             semObservacoes: 'Nenhuma observação registrada.',
             convidadosTitulo: 'Lista de convidados',
@@ -152,7 +151,7 @@ const Momentus = (() => {
             semEventosParaAdicionarTexto: 'Crie um evento primeiro para poder adicionar itens do catálogo a ele.',
             criarEventoAgora: 'Criar evento agora',
             itemAdicionadoEvento: 'Adicionado a "{evento}"!',
-            filtroFavoritos: 'Favoritos ♥',
+            filtroFavoritos : 'Favoritos ♥', filtroMelhores: "Melhores avaliados", criterioMelhores: "Nota acima de 4 estrelas e mais de 200 avaliações. Maiores notas primeiro.", carregarMaisCatalogo: "Carregar mais 20", carregandoCatalogo: "Carregando...", catalogoContagem: "{quantidade} estabelecimentos carregados.", catalogoFim: "Você chegou ao fim dos resultados disponíveis.", catalogoSemMelhores: "Nenhum local com nota acima de 4 e mais de 200 avaliações encontrado nesta busca.", catalogoProximaDisponivel: "Use Carregar mais 20 para ver mais estabelecimentos.", catalogoSemResultados: "Nenhum fornecedor encontrado. Tente outra categoria ou busque por bairro e cidade.",
             nenhumFavorito: 'Você ainda não favoritou nenhum item. Toque no coração de um produto para salvá-lo aqui.',
             fecharModal: 'Fechar',
             totalItensEvento: 'Total em itens',
@@ -177,7 +176,7 @@ const Momentus = (() => {
             placeholderNomeColaborador: 'Nome do colaborador',
             labelEmailColaborador: 'E-mail',
             placeholderEmailColaborador: 'email@exemplo.com',
-            botaoEnviarConviteEmail: 'Enviar convite por e-mail',
+            botaoEnviarConviteEmail: 'Criar convite',
             botaoCopiarLinkConvite: 'Copiar link de convite',
             avisoLinkConvite: 'Compartilhe esse link por WhatsApp, e-mail ou onde preferir. Quem abrir vai poder aceitar o convite.',
             linkCopiado: 'Link copiado! Agora é só compartilhar.',
@@ -278,13 +277,15 @@ const Momentus = (() => {
             planTitulo: 'Let\u2019s plan your event',
             planSubtitulo: 'Fill in the details below — you can adjust everything later.',
             planTipoEvento: 'Event type',
-            catAniversario: 'Birthday', catCasamento: 'Wedding', catChurrasco: 'BBQ', catFormatura: 'Graduation', catCorporativo: 'Corporate', catChaBebe: 'Baby shower',
+            catAniversario: 'Birthday', catCasamento: 'Wedding', catChurrasco: 'BBQ', catFormatura: 'Graduation', catCorporativo: 'Corporate', catChaBebe: 'Baby shower', catNoivado: 'Engagement', catBatizado: 'Baptism', catConfraternizacao: 'Get-together', catOutro: 'Other', labelTipoOutro: 'What type of event is it?', placeholderTipoOutro: 'E.g.: Festival, anniversary, gathering with friends', erroTipoOutro: 'Enter the event type.',
             labelNomeEvento: 'Event name', placeholderNomeEvento: 'E.g.: Sofia\u2019s birthday',
             labelData: 'Date', labelHorario: 'Time', placeholderHorario: '3:00 PM',
+            selecionarHorario: 'Choose time', relogioHoras: 'Hours', relogioMinutos: 'Minutes', confirmarHorario: 'Confirm', limparHorario: 'No time',
+            fotoIndisponivel: 'Photo unavailable', fotoAnterior: 'Previous photo', fotoSeguinte: 'Next photo', fotoGoogle: 'View photo in Google Maps', seusEventos: 'Your events', eventosAnteriores: 'Previous events', eventosSeguintes: 'Next events', continuarPlanejamento: 'Continue planning', finalizarEvento: 'Finalize event', dataPrevista: 'Planned date', resumoRascunhos: '{n} draft(s) to continue.', verStreetView: 'View in Street View',
             labelLocal: 'Location', placeholderLocal: 'Address or venue name',
             labelConvidados: 'Number of guests', placeholderConvidados: '50',
             labelEstilo: 'Style', estiloIntimista: 'Intimate', estiloClassico: 'Classic', estiloTematico: 'Themed', estiloArLivre: 'Outdoor',
-            labelOrcamento: 'Estimated budget', ajudaOrcamento: '(drag to adjust)',
+            labelOrcamento: 'Estimated budget', ajudaOrcamento: '(enter the amount in R$)',
             labelObservacoes: 'Notes', placeholderObservacoes: 'Tell us a bit more about the mood you imagine for the event...',
             botaoSalvarEvento: 'Save event', botaoSalvarEventoOk: 'Event saved!',
             botaoRascunho: 'Save as draft', botaoRascunhoOk: 'Draft saved!',
@@ -339,7 +340,7 @@ const Momentus = (() => {
             dataEHora: 'Date and time',
             estiloDoEvento: 'Style',
             orcamentoEstimadoLabel: 'Estimated budget',
-            orcamentoGastoLabel: 'Already reserved in the catalog',
+            orcamentoGastoLabel: 'Expenses and catalog items',
             observacoesTitulo: 'Notes',
             semObservacoes: 'No notes recorded.',
             convidadosTitulo: 'Guest list',
@@ -365,7 +366,7 @@ const Momentus = (() => {
             semEventosParaAdicionarTexto: 'Create an event first so you can add catalog items to it.',
             criarEventoAgora: 'Create event now',
             itemAdicionadoEvento: 'Added to "{evento}"!',
-            filtroFavoritos: 'Favorites ♥',
+            filtroFavoritos: 'Favorites ♥', filtroMelhores: "Top rated", criterioMelhores: "Rating above 4 stars and more than 200 reviews. Highest ratings first.", carregarMaisCatalogo: "Load 20 more", carregandoCatalogo: "Loading...", catalogoContagem: "{quantidade} businesses loaded.", catalogoFim: "You have reached the end of the available results.", catalogoSemMelhores: "No places rated above 4 with more than 200 reviews found for this search.", catalogoProximaDisponivel: "Use Load 20 more to see more businesses.", catalogoSemResultados: "No businesses found. Try another category or search by neighborhood and city.",
             nenhumFavorito: 'You haven\u2019t favorited anything yet. Tap the heart on a product to save it here.',
             fecharModal: 'Close',
             totalItensEvento: 'Total in items',
@@ -390,7 +391,7 @@ const Momentus = (() => {
             placeholderNomeColaborador: 'Collaborator\u2019s name',
             labelEmailColaborador: 'Email',
             placeholderEmailColaborador: 'email@example.com',
-            botaoEnviarConviteEmail: 'Send invite by email',
+            botaoEnviarConviteEmail: 'Create invitation',
             botaoCopiarLinkConvite: 'Copy invite link',
             avisoLinkConvite: 'Share this link on WhatsApp, email, or wherever you like. Whoever opens it can accept the invite.',
             linkCopiado: 'Link copied! Now just share it.',
@@ -491,13 +492,15 @@ const Momentus = (() => {
             planTitulo: 'Vamos a planificar tu evento',
             planSubtitulo: 'Completa los datos a continuación — puedes ajustarlo todo después.',
             planTipoEvento: 'Tipo de evento',
-            catAniversario: 'Cumpleaños', catCasamento: 'Boda', catChurrasco: 'Parrillada', catFormatura: 'Graduación', catCorporativo: 'Corporativo', catChaBebe: 'Baby shower',
+            catAniversario: 'Cumpleaños', catCasamento: 'Boda', catChurrasco: 'Parrillada', catFormatura: 'Graduación', catCorporativo: 'Corporativo', catChaBebe: 'Baby shower', catNoivado: 'Compromiso', catBatizado: 'Bautizo', catConfraternizacao: 'Confraternización', catOutro: 'Otro', labelTipoOutro: '¿Qué tipo de evento es?', placeholderTipoOutro: 'Ej.: Festival, aniversario, reunión de amigos', erroTipoOutro: 'Escribe el tipo de evento.',
             labelNomeEvento: 'Nombre del evento', placeholderNomeEvento: 'Ej.: Cumpleaños de Sofía',
             labelData: 'Fecha', labelHorario: 'Hora', placeholderHorario: '15:00',
+            selecionarHorario: 'Elegir hora', relogioHoras: 'Horas', relogioMinutos: 'Minutos', confirmarHorario: 'Confirmar', limparHorario: 'Sin hora',
+            fotoIndisponivel: 'Foto no disponible', fotoAnterior: 'Foto anterior', fotoSeguinte: 'Siguiente foto', fotoGoogle: 'Ver foto en Google Maps', seusEventos: 'Tus eventos', eventosAnteriores: 'Eventos anteriores', eventosSeguintes: 'Próximos eventos', continuarPlanejamento: 'Continuar planificación', finalizarEvento: 'Finalizar evento', dataPrevista: 'Fecha prevista', resumoRascunhos: '{n} borrador(es) por continuar.', verStreetView: 'Ver en Street View',
             labelLocal: 'Lugar', placeholderLocal: 'Dirección o nombre del espacio',
             labelConvidados: 'Número de invitados', placeholderConvidados: '50',
             labelEstilo: 'Estilo', estiloIntimista: 'Íntimo', estiloClassico: 'Clásico', estiloTematico: 'Temático', estiloArLivre: 'Al aire libre',
-            labelOrcamento: 'Presupuesto estimado', ajudaOrcamento: '(arrastra para ajustar)',
+            labelOrcamento: 'Presupuesto estimado', ajudaOrcamento: '(escribe el importe en R$)',
             labelObservacoes: 'Observaciones', placeholderObservacoes: 'Cuéntanos un poco más sobre el ambiente que imaginas para el evento...',
             botaoSalvarEvento: 'Guardar evento', botaoSalvarEventoOk: '¡Evento guardado!',
             botaoRascunho: 'Guardar como borrador', botaoRascunhoOk: '¡Borrador guardado!',
@@ -552,7 +555,7 @@ const Momentus = (() => {
             dataEHora: 'Fecha y hora',
             estiloDoEvento: 'Estilo',
             orcamentoEstimadoLabel: 'Presupuesto estimado',
-            orcamentoGastoLabel: 'Ya reservado en el catálogo',
+            orcamentoGastoLabel: 'Gastos y artículos del catálogo',
             observacoesTitulo: 'Observaciones',
             semObservacoes: 'Ninguna observación registrada.',
             convidadosTitulo: 'Lista de invitados',
@@ -578,7 +581,7 @@ const Momentus = (() => {
             semEventosParaAdicionarTexto: 'Crea un evento primero para poder agregarle artículos del catálogo.',
             criarEventoAgora: 'Crear evento ahora',
             itemAdicionadoEvento: '¡Agregado a "{evento}"!',
-            filtroFavoritos: 'Favoritos ♥',
+            filtroFavoritos : 'Favoritos ♥', filtroMelhores: "Mejor valorados", criterioMelhores: "Nota superior a 4 estrellas y más de 200 opiniones. Mejores notas primero.", carregarMaisCatalogo: "Cargar 20 más", carregandoCatalogo: "Cargando...", catalogoContagem: "{quantidade} establecimientos cargados.", catalogoFim: "Has llegado al final de los resultados disponibles.", catalogoSemMelhores: "No se encontraron locales con nota superior a 4 y más de 200 opiniones en esta búsqueda.", catalogoProximaDisponivel: "Usa Cargar 20 más para ver más establecimientos.", catalogoSemResultados: "No se encontraron proveedores. Prueba otra categoría o busca por barrio y ciudad.",
             nenhumFavorito: 'Todavía no has marcado nada como favorito. Toca el corazón de un producto para guardarlo aquí.',
             fecharModal: 'Cerrar',
             totalItensEvento: 'Total en artículos',
@@ -603,7 +606,7 @@ const Momentus = (() => {
             placeholderNomeColaborador: 'Nombre del colaborador',
             labelEmailColaborador: 'Correo electrónico',
             placeholderEmailColaborador: 'correo@ejemplo.com',
-            botaoEnviarConviteEmail: 'Enviar invitación por correo',
+            botaoEnviarConviteEmail: 'Crear invitación',
             botaoCopiarLinkConvite: 'Copiar enlace de invitación',
             avisoLinkConvite: 'Comparte este enlace por WhatsApp, correo o donde prefieras. Quien lo abra podrá aceptar la invitación.',
             linkCopiado: '¡Enlace copiado! Ahora solo compártelo.',
@@ -766,7 +769,6 @@ const Momentus = (() => {
         }
     }
 
-    function aguardarSessaoPronta() { return _sessaoPronta; }
 
     function obterPerfil() {
         return Object.assign({}, _perfilCache);
@@ -793,9 +795,6 @@ const Momentus = (() => {
         const perfil = obterPerfil();
         document.querySelectorAll('.perfilNome').forEach((el) => { el.textContent = perfil.nome || 'Usuário'; });
         document.querySelectorAll('.avatarPerfil, .avatarTopo').forEach((el) => { el.textContent = iniciais(perfil.nome); });
-        document.querySelectorAll('.perfilTag').forEach((el) => {
-            el.textContent = 'Organizador(a)';
-        });
         document.querySelectorAll('.avatarGrande').forEach((el) => {
             if (el.firstChild && el.firstChild.nodeType === 3) el.firstChild.textContent = iniciais(perfil.nome) + ' ';
         });
@@ -891,6 +890,10 @@ const Momentus = (() => {
             despesas: registro.despesas || [],
             fotos: registro.fotos || [],
             rateio: registro.rateio || { ativo: false, modo: 'auto', valorFixo: 0 },
+            financeiro: registro.financeiro || null,
+            mapas: registro.mapas || {},
+            revisao: registro.revisao || 0,
+            locais: registro.locais || [],
             totalDespesas: Number(registro.total_despesas) || 0,
             confirmados: Number(registro.confirmados) || 0
         };
@@ -907,7 +910,8 @@ const Momentus = (() => {
         if (typeof window.mostrarToast === 'function') window.mostrarToast(texto, 'erro');
     }
 
-    async function sincronizarEventos() {
+    async function sincronizarEventos(silencioso = false) {
+        const antes = JSON.stringify(_eventosCache);
         try {
             const registros = await MomentusAPI.listarEventos();
             _eventosCache = (registros || []).map(eventoDaAPI);
@@ -915,7 +919,7 @@ const Momentus = (() => {
             if (erro.status === 401) redirecionarLogin();
             else avisarErro(erro, 'Não foi possível carregar os eventos do servidor.');
         } finally {
-            document.dispatchEvent(new CustomEvent('momentus:eventos-alterados'));
+            if (!silencioso || antes !== JSON.stringify(_eventosCache)) document.dispatchEvent(new CustomEvent('momentus:eventos-alterados', {detail:{automatico:silencioso}}));
             if (_primeiraSincronizacao) {
                 _primeiraSincronizacao = false;
                 _resolverEventosProntos();
@@ -1037,7 +1041,6 @@ const Momentus = (() => {
             document.dispatchEvent(new CustomEvent('momentus:notificacoes-alteradas'));
         } catch (_) { /* ignora */ }
     }
-    function marcarNotificacaoRespondida() { return true; }
 
     /* ---- Colaboradores ---- */
 
@@ -1115,24 +1118,13 @@ const Momentus = (() => {
     function calcularRateio(eventoId) {
         const evento = obterEvento(eventoId);
         if (!evento) return null;
-        const rateio = obterRateio(eventoId);
-        const totalDespesasRegistradas = (evento.despesas || []).reduce((s, d) => s + Number(d.valor || 0), 0);
-        const totalItens = (evento.itensCatalogo || []).reduce((s, i) => s + Number(i.preco || 0) * Number(i.qtd || 1), 0);
-        const totalDespesas = totalDespesasRegistradas + totalItens;
-        const colaboradoresAtivos = (evento.colaboradores || []).filter((c) => c.status === 'ativo');
-        const qtdPessoas = 1 + colaboradoresAtivos.length;
-        const valorPorPessoa = rateio.modo === 'fixo' ? Number(rateio.valorFixo || 0) : (qtdPessoas ? totalDespesas / qtdPessoas : 0);
-        const pessoas = [{ id: 'organizador', nome: obterPerfil().nome, valor: valorPorPessoa, organizador: true }]
-            .concat(colaboradoresAtivos.map((c) => ({ id: c.id, nome: c.nome, valor: valorPorPessoa, organizador: false })));
-        return { ativo: !!rateio.ativo, modo: rateio.modo, valorFixo: Number(rateio.valorFixo || 0), totalDespesas, qtdPessoas, valorPorPessoa, totalArrecadado: valorPorPessoa * qtdPessoas, pessoas };
+        const resumo = evento.financeiro;
+        if (!resumo) return null;
+        return Object.assign({}, resumo.rateio, {totalDespesas: resumo.total});
     }
 
     /* ---- Lista compartilhada ---- */
 
-    function obterItensCompartilhados(eventoId) {
-        const evento = obterEvento(eventoId);
-        return evento ? (evento.itensCompartilhados || []) : [];
-    }
 
     async function adicionarItemCompartilhado(eventoId, dados) {
         try {
@@ -1272,6 +1264,16 @@ const Momentus = (() => {
             sincronizarEventos();
             sincronizarNotificacoes();
             sincronizarFavoritos();
+            // A central acompanha avisos sem exigir reabertura da página.
+            let atualizando = false;
+            setInterval(async () => {
+                if (document.hidden || atualizando) return;
+                atualizando = true;
+                try {
+                    await sincronizarNotificacoes();
+                    if (!location.pathname.endsWith('evento.html')) await sincronizarEventos(true);
+                } finally { atualizando = false; }
+            }, 15000);
         } else if (_sessaoResolvida && _perfilCache.email) {
             sincronizarNotificacoes();
         } else if (_primeiraSincronizacao) {
@@ -1282,8 +1284,8 @@ const Momentus = (() => {
 
     return {
         t, obterIdioma, aplicarIdioma, obterMeses, obterMesesAbrev, obterSemanaCurta,
-        obterTema, aplicarTema, alternarTema,
-        obterPerfil, salvarPerfil, iniciais, aplicarPerfilNaTela, aguardarSessaoPronta, sair, excluirConta,
+        obterTema, aplicarTema, 
+        obterPerfil, salvarPerfil, iniciais, aplicarPerfilNaTela, sair, excluirConta,
         obterPreferencias, salvarPreferencias,
         obterEventos, salvarEvento, removerEvento, diasEntre,
         obterEvento, atualizarEvento, aguardarEventosProntos, sincronizarEventos,
@@ -1291,10 +1293,10 @@ const Momentus = (() => {
         adicionarItemCatalogo, removerItemCatalogo,
         alternarTarefa, adicionarTarefa, removerTarefa, tarefasPadrao,
         obterFavoritos, ehFavorito, alternarFavorito,
-        obterNotificacoes, marcarNotificacoesLidas, marcarNotificacaoRespondida, sincronizarNotificacoes,
+        obterNotificacoes, marcarNotificacoesLidas, sincronizarNotificacoes,
         obterColaboradores, adicionarColaborador, reenviarConviteColaborador,
         obterConvitePorToken, responderColaborador, definirPermissaoColaborador, removerColaborador,
-        obterItensCompartilhados, adicionarItemCompartilhado, assumirItemCompartilhado,
+        adicionarItemCompartilhado, assumirItemCompartilhado,
         liberarItemCompartilhado, removerItemCompartilhado,
         obterRateio, definirRateio, calcularRateio,
         adicionarDespesa, removerDespesa, enviarComprovanteDespesa, obterResumoEvento, enviarFoto, removerFoto

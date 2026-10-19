@@ -23,6 +23,8 @@
                 <div class="linhaCompleta"><small>Local</small><strong id="rsvpLocal">—</strong></div>
                 <div class="linhaCompleta"><small>Organizado por</small><strong id="rsvpOrganizador">—</strong></div>
             </div>
+            <div id="rsvpMapas" class="acoesDescoberta"></div>
+            <section id="rsvpAvisos" class="avisosConvite" aria-live="polite" hidden><h2>Avisos do seu evento</h2><ul id="rsvpListaAvisos"></ul></section>
             <div id="rsvpConfirmadosPublicos" class="confirmadosPublicos" hidden></div>
             <section id="rsvpItensCompartilhados" class="itensPublicosRsvp" hidden>
                 <h2>Quer ajudar levando algo?</h2>
@@ -36,13 +38,14 @@
                     <label><input type="radio" name="status" value="recusado"><span>Não poderei ir</span></label>
                     <label><input type="radio" name="status" value="pendente"><span>Ainda não sei</span></label>
                 </div>
-                <label class="campoRestricaoRsvp">Restrição alimentar (opcional)<textarea id="rsvpRestricoes" rows="3" placeholder="Ex.: vegetariano, alergia a amendoim..."></textarea></label>
+                <label class="campoRestricaoRsvp">Alergias e restrições alimentares (opcional)<textarea id="rsvpRestricoes" rows="3" maxlength="4000" placeholder="Ex.: vegetariano, alergia a amendoim..."></textarea></label>
                 <button class="authBotao" type="submit"><span>Enviar resposta</span><b>→</b></button>
                 <p class="authErro" id="rsvpErro"></p>
             </form>
             <div class="rsvpSucesso" id="rsvpSucesso" hidden><strong>Presença atualizada!</strong><span>Sua resposta já apareceu para quem está organizando o evento.</span></div>
         </div>
     </main>
+    <script src="js/utils.js"></script>
     <script src="js/api.js"></script><script src="js/rsvp.js"></script>
 </body>
 </html>

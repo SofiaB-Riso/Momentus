@@ -6,3 +6,7 @@ PyMySQL==1.1.1
 openpyxl==3.1.5
 reportlab==4.2.5
 requests==2.32.3
+
+# reportlab and requests share chardet; requests 2.32 supports versions below 6.
+chardet==5.2.0
+Pillow==12.3.0
