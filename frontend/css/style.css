@@ -11,9 +11,9 @@ html {
 
 :root {
     --tinta: #17102b;
-    --tinta-suave: #6d6485;
-    --roxo: #130a24;
-    --roxo-2: #1f1338;
+    --tinta-suave: #A9A4B5;
+    --roxo: #211440;
+    --roxo-2: #322357;
     --lilas: #7c5cff;
     --lilas-suave: #efe9ff;
     --fundo: #f3f1fa;
@@ -23,7 +23,7 @@ html {
     --grad-2: linear-gradient(135deg, #ff7a8a 0%, #ff9f5a 100%);
     --grad-3: linear-gradient(135deg, #5ad1c9 0%, #6a8dff 100%);
     --dourado: #f0a63a;
-    --dourado-claro: #f7cf6e;
+    --dourado-claro: #f7c95f;
     --sucesso: #218c7d;
     --sombra: 0 1.25rem 2.75rem -1.25rem rgba(23, 16, 43, .28);
     --sombra-sm: 0 0.5rem 1.5rem -0.75rem rgba(23, 16, 43, .22);
@@ -64,7 +64,7 @@ html[data-tema="escuro"] .menulateral {
 }
 
 html[data-tema="escuro"] .item.ativo {
-    color: #fff;
+    color: var(--superficie);
 }
 
 html[data-tema="escuro"] .estrelas .apagada {
@@ -128,7 +128,7 @@ body {
 
 ::selection {
     background: var(--lilas);
-    color: #fff;
+    color: var(--superficie);
 }
 
 ::-webkit-scrollbar {
@@ -147,6 +147,15 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #b4a6e0;
+}
+
+.formAuth input:-webkit-autofill, .formAuth input:-webkit-autofill:hover,  .formAuth input:-webkit-autofill:focus, .formAuth input:-webkit-autofill:active {
+    
+    -webkit-transition: color 9999s ease-in-out 0s, background-color 9999s ease-in-out 0s;
+    transition: color 9999s ease-in-out 0s, background-color 9999s ease-in-out 0s;
+    
+    
+    -webkit-text-fill-color: var(--superficie) !important; 
 }
 
 a {
@@ -198,7 +207,7 @@ button {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .avatarPerfil {
@@ -266,7 +275,7 @@ nav {
 
 .item:hover:not(.ativo) {
     background: rgba(255, 255, 255, .07);
-    color: #fff;
+    color: var(--superficie);
     transform: translateX(0.15rem);
 }
 
@@ -341,7 +350,7 @@ nav {
 }
 
 .linkSair:hover {
-    color: #fff;
+    color: var(--superficie);
     border-color: rgba(255,255,255,.4);
     background: rgba(255,255,255,.05);
 }
@@ -506,11 +515,11 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
     font-family: "Playfair Display", serif;
     font-weight: 700;
     box-shadow: var(--sombra-sm);
-    border: 2px solid #fff;
+    border: 2px solid var(--superficie);
     flex-shrink: 0;
 }
 
@@ -540,7 +549,7 @@ nav {
     background-image:
     radial-gradient(20rem 14rem at 100% 0%, rgba(124,92,255,.55), transparent 60%),
     radial-gradient(18rem 12rem at 0% 100%, rgba(209,91,192,.4), transparent 60%);
-    color: #fff;
+    color: var(--superficie);
     box-shadow: var(--sombra);
     display: flex;
     flex-direction: column;
@@ -756,7 +765,7 @@ nav {
 .iconeStat svg {
     width: 1.3rem;
     height: 1.3rem;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .iconeStat.g1 {
@@ -898,14 +907,14 @@ nav {
 
 .calendario-grid .dia.evento {
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
     font-weight: 700;
     box-shadow: 0 0.4rem 1rem -0.4rem rgba(124,92,255,.8);
 }
 
 .calendario-grid .dia.evento2 {
     background: var(--grad-2);
-    color: #fff;
+    color: var(--superficie);
     font-weight: 700;
     box-shadow: 0 0.4rem 1rem -0.4rem rgba(255,122,138,.7);
 }
@@ -943,7 +952,7 @@ nav {
     text-align: center;
     padding: .5rem .4rem;
     border-radius: .8rem;
-    color: #fff;
+    color: var(--superficie);
     font-size: .72rem;
     font-weight: 700;
     font-family: "Podkova", serif;
@@ -1051,7 +1060,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .thumbCatalogo svg {
@@ -1291,7 +1300,7 @@ nav {
     left: 50%;
     transform: translateX(-50%) translateY(1rem);
     background: var(--roxo);
-    color: #fff;
+    color: var(--superficie);
     padding: .85rem 1.4rem;
     border-radius: 1rem;
     font-size: .85rem;
@@ -1352,7 +1361,7 @@ nav {
 
 .capaEventoResumo {
     padding: 1.4rem;
-    color: #fff;
+    color: var(--superficie);
     position: relative;
     cursor: pointer;
 }
@@ -1493,7 +1502,7 @@ nav {
 .cabecalhoEvento {
     background: var(--roxo);
     background-image: radial-gradient(28rem 18rem at 100% 0%, rgba(124,92,255,.5), transparent 60%);
-    color: #fff;
+    color: var(--superficie);
     border-radius: 1.5rem;
     padding: 2rem;
     display: flex;
@@ -1533,7 +1542,7 @@ nav {
 .acoesCabecalhoEvento .botaoSecundario {
     background: rgba(255,255,255,.1);
     border-color: rgba(255,255,255,.25);
-    color: #fff;
+    color: var(--superficie);
 }
 
 .acoesCabecalhoEvento .botaoSecundario:hover {
@@ -1574,7 +1583,7 @@ nav {
 
 .abaEvento.abaAtiva {
     background: var(--roxo);
-    color: #fff;
+    color: var(--superficie);
     border-color: var(--roxo);
 }
 
@@ -1666,7 +1675,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
     font-weight: 700;
     font-family: "Playfair Display", serif;
     flex-shrink: 0;
@@ -1742,7 +1751,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .infoItemEvento {
@@ -1811,7 +1820,7 @@ nav {
 .checkTarefa svg {
     width: .85rem;
     height: .85rem;
-    color: #fff;
+    color: var(--superficie);
     opacity: 0;
     transition: opacity .15s ease;
 }
@@ -2097,7 +2106,7 @@ nav {
 
 .itemNotificacao .acoesNotificacao .botaoAceitarNotif {
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
     border: none;
 }
 
@@ -2200,7 +2209,7 @@ nav {
 
 .chipCategoria.selecionado {
     background: var(--roxo);
-    color: #fff;
+    color: var(--superficie);
     border-color: var(--roxo);
     box-shadow: var(--sombra-sm);
 }
@@ -2252,7 +2261,7 @@ nav {
 
 .campoForm input:focus, .campoForm select:focus, .campoForm textarea:focus {
     border-color: var(--lilas);
-    background: #fff;
+    background: var(--superficie);
     box-shadow: 0 0 0 4px var(--lilas-suave);
 }
 
@@ -2284,7 +2293,7 @@ nav {
     background: var(--grad-1);
     box-shadow: 0 0.2rem 0.6rem rgba(124,92,255,.5);
     cursor: pointer;
-    border: 2px solid #fff;
+    border: 2px solid var(--superficie);
 }
 
 .valorOrcamento {
@@ -2298,7 +2307,7 @@ nav {
 .botaoPrimario {
     border: none;
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
     padding: 1rem 1.75rem;
     border-radius: 1rem;
     font-weight: 600;
@@ -2345,7 +2354,7 @@ nav {
 .cardResumo {
     background: var(--roxo);
     background-image: radial-gradient(24rem 16rem at 100% 0%, rgba(124,92,255,.5), transparent 60%);
-    color: #fff;
+    color: var(--superficie);
     border-radius: 1.5rem;
     padding: 1.75rem;
     position: sticky;
@@ -2418,7 +2427,7 @@ nav {
     border-radius: .8rem;
     border: none;
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
     font-weight: 500;
     font-size: .82rem;
     white-space: nowrap;
@@ -2498,7 +2507,7 @@ nav {
 
 .filtroChip.ativoFiltro {
     background: var(--roxo);
-    color: #fff;
+    color: var(--superficie);
     border-color: var(--roxo);
 }
 
@@ -2531,7 +2540,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
     position: relative;
     overflow: hidden;
 }
@@ -2569,7 +2578,7 @@ nav {
 .tagFavorito svg {
     width: 1rem;
     height: 1rem;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .corpoProduto .nomeProduto {
@@ -2606,7 +2615,7 @@ nav {
 
 .botaoAdicionar:hover {
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
     transform: scale(1.08);
 }
 
@@ -2637,11 +2646,11 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
     font-family: "Playfair Display", serif;
     font-size: 2.1rem;
     font-weight: 700;
-    border: 3px solid #fff;
+    border: 3px solid var(--superficie);
     box-shadow: var(--sombra);
     position: relative;
 }
@@ -2653,7 +2662,7 @@ nav {
     width: 1.9rem;
     height: 1.9rem;
     border-radius: 50%;
-    background: #fff;
+    background: var(--superficie);
     border: 1px solid var(--linha);
     display: flex;
     align-items: center;
@@ -2708,7 +2717,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--superficie);
     margin-right: .9rem;
 }
 
@@ -2750,7 +2759,7 @@ nav {
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 50%;
-    background: #fff;
+    background: var(--superficie);
     left: .2rem;
     top: .2rem;
     transition: transform .25s ease;
@@ -2871,7 +2880,7 @@ nav {
     padding: .15rem .5rem;
     border-radius: 1rem;
     background: var(--grad-1);
-    color: #fff;
+    color: var(--superficie);
 }
 
 .itemRateioPessoa .valorRateioPessoa {
@@ -3027,7 +3036,7 @@ nav {
         width: 1.375rem;
         height: 0.125rem;
         border-radius: 0.125rem;
-        background: #fff;
+        background: var(--superficie);
         transition: transform .35s cubic-bezier(.19, 1, .22, 1), opacity .25s ease;
     }
 
@@ -3191,7 +3200,7 @@ body::before {
     justify-content: space-between;
     padding: 1.1rem 0;
     position: relative;
-    color: #fff;
+    color: var(--superficie);
     transform-origin: bottom left;
     transform: var(--inicioCanhoto);
     transition: transform 180ms ease-out;
@@ -3242,7 +3251,7 @@ body::before {
 }
 
 .canhotoIngresso .setaCard:focus-visible {
-    outline: 3px solid #fff;
+    outline: 3px solid var(--superficie);
     outline-offset: 4px;
 }
 
@@ -3430,7 +3439,7 @@ body::before {
 }
 
 .tagFavorito.favoritado svg {
-    fill: #fff;
+    fill: var(--superficie);
 }
 
 /* --- Profundidade 3D leve ao passar o mouse (tilt) --- */
@@ -3484,7 +3493,7 @@ body::before {
 .estadoVazio strong {
     font-family: "Playfair Display", serif;
     font-size: 1.1rem;
-    color: #fff;
+    color: var(--superficie);
 }
 
 .estadoVazio span {
@@ -3528,11 +3537,11 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     place-items: center;
     overflow-x: hidden;
     padding: 2rem;
-    color: #fff;
+    color: var(--superficie);
     background:
     radial-gradient(42rem 30rem at 78% 22%, rgba(238,163,144,.26), transparent 45%),
     radial-gradient(34rem 30rem at 74% 68%, rgba(136,92,246,.18), transparent 50%),
-    #1b0d38;
+    var(--roxo);
     position: relative;
 }
 
@@ -3574,7 +3583,6 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     min-height: 30rem;
     display: grid;
     grid-template-columns: 1.08fr .92fr;
-    border: 1px solid rgba(255,255,255,.08);
     border-radius: 1.55rem;
     overflow: hidden;
     position: relative;
@@ -3595,7 +3603,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     justify-content: center;
     background:
     radial-gradient(28rem 22rem at 8% 100%, rgba(124,92,255,.18), transparent 64%),
-    rgba(50,35,88,.96);
+    var(--roxo-2);
 }
 
 .authLogo {
@@ -3642,7 +3650,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: rgba(40,25,73,.72);
+    background: var(--roxo);
 }
 
 .authFormulario h2 {
@@ -3651,7 +3659,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 }
 
 .authSub {
-    color: rgba(255,255,255,.53);
+    color: var(--tinta-suave);
     font-size: .72rem;
     margin-bottom: 1.8rem;
 }
@@ -3664,7 +3672,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 .formAuth label {
     display: grid;
     gap: .42rem;
-    color: rgba(255,255,255,.66);
+    color: var(--tinta-suave);
     font-size: .65rem;
 }
 
@@ -3676,7 +3684,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     outline: none;
     padding: .6rem 0 .75rem;
     background: transparent;
-    color: #fff;
+    color: var(--superficie);
     font: inherit;
 }
 
@@ -3686,17 +3694,33 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 
 .formAuth option {
     background: #291a4b;
-    color: #fff;
+    color: var(--superficie);
 }
+.formAuth input:hover, .formAuth select:hover{
+    border-bottom-color: var(--superficie);
+}
+
+.formAuth input:hover::placeholder {
+    color: var(--superficie);
+    opacity: 1; /*Firefox */
+}
+
 
 .formAuth input:focus, .formAuth select:focus {
     border-bottom-color: var(--dourado);
 }
 
+.formAuth input:focus::placeholder {
+    color: var(--superficie);
+}
+
 .formAuthCadastro {
     max-height: 26rem;
-    overflow-y: auto;
     padding-right: .45rem;
+}
+
+.formAuthCadastro .authBotao {
+    margin-top: .5rem;
 }
 
 .authLinhaPequena {
@@ -3714,16 +3738,123 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 }
 
 .checkAuth {
-    display: flex !important;
-    grid-template-columns: auto 1fr !important;
-    align-items: center;
-    gap: .45rem !important;
+  /* Definição da sua cor principal */
+  --c: var(--dourado, #3b82f6);
+  font-size: var(--chk-size, 24px);
+  
+  /* Estrutura e Layout */
+  position: relative;
+  display: flex !important;
+  grid-template-columns: auto 1fr !important;
+  align-items: center;
+  gap: .45rem !important;
+  line-height: 1.3;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .checkAuth input {
-    width: .8rem !important;
-    accent-color: var(--dourado);
+  position: absolute;
+  inset: 0;
+  width: .8rem !important;
+  height: 100%;
+  margin: 0;
+  opacity: 0; /* O input nativo fica invisível para dar lugar ao olho SVG */
+  cursor: pointer;
+  z-index: 1;
 }
+
+.chk-eye-show-password-icon {
+  flex: none;
+  width: 1.6em;
+  height: 1.6em;
+  overflow: visible;
+  border-radius: 0.3em;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: color 0.25s ease;
+}
+
+.chk-eye-show-password-lid {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  transform: scaleY(-1);
+  transition: transform 0.35s cubic-bezier(0.5, 0, 0.3, 1.3);
+}
+
+.chk-eye-show-password-pupil {
+  fill: currentColor;
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition: transform 0.2s ease-in;
+}
+
+.chk-eye-show-password-lashes {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  transition: transform 0.25s ease 0.1s, opacity 0.2s ease 0.1s;
+}
+
+.chk-eye-show-password-text {
+  transition: color 0.25s ease;
+}
+
+/* --- Estados de Interação (.checkAuth) --- */
+
+/* Hover: Olho e Texto ficam brancos */
+.checkAuth:hover .chk-eye-show-password-icon,
+.checkAuth:hover .chk-eye-show-password-text {
+  color: #fff !important;
+}
+
+/* Checked: Quando marcado, ativa a sua cor dourada */
+.checkAuth input:checked ~ .chk-eye-show-password-text {
+  color: var(--c);
+}
+
+.checkAuth input:checked + .chk-eye-show-password-icon {
+  color: var(--c);
+}
+
+/* Animações do Olho ao Marcar (Checked) */
+.checkAuth input:checked + .chk-eye-show-password-icon .chk-eye-show-password-lid {
+  transform: scaleY(1);
+}
+
+.checkAuth input:checked + .chk-eye-show-password-icon .chk-eye-show-password-pupil {
+  transform: scale(1);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
+}
+
+.checkAuth input:checked + .chk-eye-show-password-icon .chk-eye-show-password-lashes {
+  opacity: 0;
+  transform: scaleY(0);
+  transition-delay: 0s;
+}
+
+/* Focus: Mantém a cor original do foco para acessibilidade */
+.checkAuth input:focus-visible + .chk-eye-show-password-icon {
+  outline: 0.12em solid var(--c);
+  outline-offset: 0.18em;
+}
+
+/* Acessibilidade de movimento */
+@media (prefers-reduced-motion: reduce) {
+  .checkAuth, .checkAuth *, .checkAuth::before, .checkAuth::after, .checkAuth *::before, .checkAuth *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
 .authBotao, .botaoPrimarioParceiro {
     border: 0;
@@ -3737,7 +3868,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     background: linear-gradient(90deg,var(--dourado),var(--dourado-claro));
     color: #28183e;
     font-weight: 700;
-    box-shadow: 0 .7rem 1.6rem rgba(240,166,58,.16);
+    box-shadow: 0 .3rem 1rem rgba(240,166,58,.20);
     text-decoration: none;
 }
 
@@ -3759,7 +3890,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 }
 
 .authErro {
-    color: #ff9a9a;
+    color: var(--superficie);
     min-height: 1em;
     font-size: .7rem;
 }
@@ -3785,7 +3916,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     border: 1px solid rgba(255,255,255,.08);
     background: rgba(255,255,255,.05);
     border-radius: .9rem;
-    color: #fff;
+    color: var(--superficie);
     text-align: left;
 }
 
@@ -3914,7 +4045,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
 .opcoesRsvp input:checked + span {
     border-color:var(--dourado);
     background:rgba(240,166,58,.11);
-    color:#fff;
+    color:var(--superficie);
 }
 
 .campoRestricaoRsvp {
@@ -3930,7 +4061,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     border-radius:.8rem;
     padding:.8rem;
     background:rgba(0,0,0,.12);
-    color:#fff;
+    color:var(--superficie);
     resize:vertical;
 }
 
@@ -3942,7 +4073,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     border:1px solid rgba(90,209,201,.22);
     display:grid;
     gap:.3rem;
-    color:#fff;
+    color:var(--superficie);
 }
 
 .rsvpSucesso strong {
@@ -3990,7 +4121,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     border:1px solid rgba(255,255,255,.18);
     border-radius:999px;
     background:transparent;
-    color:#fff;
+    color:var(--superficie);
     padding:.72rem 1.1rem;
     text-decoration:none;
     font:600 .72rem Poppins,sans-serif;
@@ -4105,7 +4236,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     bottom:0;
     padding:1.5rem 2.5rem .55rem .7rem;
     background:linear-gradient(transparent,rgba(0,0,0,.75));
-    color:#fff;
+    color:var(--superficie);
     font-size:.62rem;
     min-height:2.4rem
 }
@@ -4116,7 +4247,7 @@ AUTENTICAÇÃO, CONVITES E PAINEL DO PARCEIRO
     bottom:.45rem;
     border:0;
     background:rgba(255,255,255,.18);
-    color:#fff;
+    color:var(--superficie);
     width:1.7rem;
     height:1.7rem;
     border-radius:50%
@@ -4664,7 +4795,7 @@ html[data-tema="escuro"] .campoForm input[type="file"] {
 
 .modoRelogio button[aria-pressed="true"] {
     background: var(--lilas);
-    color: #fff;
+    color: var(--superficie);
     border-color: var(--lilas);
 }
 
@@ -4715,7 +4846,7 @@ html[data-tema="escuro"] .campoForm input[type="file"] {
 
 .numeroRelogio[aria-pressed="true"], .numeroRelogio:hover {
     background: var(--lilas);
-    color: #fff;
+    color: var(--superficie);
 }
 
 .dialogHorario button:focus-visible, .dialogHorario select:focus-visible, .campoHorario button:focus-visible {
