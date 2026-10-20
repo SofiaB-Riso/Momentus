@@ -26,9 +26,20 @@
                 <p class="authSub">Acesse sua conta para continuar criando.</p>
             </div>
             <form id="formLogin" class="formAuth">
-                <label>E-mail<input type="email" id="loginEmail" autocomplete="email" required></label>
-                <label>Senha<input type="password" id="loginSenha" autocomplete="current-password" required></label>
-                <div class="authLinhaPequena"><label class="checkAuth"><input type="checkbox" id="mostrarSenhaLogin"> Mostrar senha</label><a href="cadastro.html">Criar conta</a></div>
+                <input type="email" id="loginEmail" autocomplete="email" required placeholder="E-mail">
+                <input type="password" id="loginSenha" autocomplete="current-password" required placeholder="Senha">
+                <div class="authLinhaPequena">
+                    <label class="checkAuth"><input type="checkbox" id="mostrarSenhaLogin"> 
+                        <svg class="chk-eye-show-password-icon" viewBox="0 0 24 24" aria-hidden="true">
+                         <path d="M2.5 12c2.4 4.2 5.6 6.3 9.5 6.3s7.1-2.1 9.5-6.3"/>
+                         <path class="chk-eye-show-password-lid" d="M2.5 12c2.4-4.2 5.6-6.3 9.5-6.3s7.1 2.1 9.5 6.3"/>
+                         <circle class="chk-eye-show-password-pupil" cx="12" cy="12" r="3.2"/>
+                         <path class="chk-eye-show-password-lashes" d="M6.7 16.7l-1.3 2.1M12 18.3v2.5M17.3 16.7l1.3 2.1"/>
+                        </svg>
+                         <span class="chk-eye-show-password-text">Mostrar senha</span>
+                    </label>
+
+                    <a href="cadastro.html">Criar conta</a></div>
                 <button class="authBotao" type="submit"><span>Voltar a planejar</span><b>→</b></button>
                 <p class="authErro" id="erroLogin" role="alert"></p>
             </form>
