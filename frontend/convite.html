@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convite de colaboração - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+<body class="bodyConvitePublico paginaConvite">
+    <main class="cartaoConvitePublico colaboracaoPublica">
+        <a href="index.html" class="marcaConvite" aria-label="Momentus — início"><img src="assets/Logo.png" alt="Momentus" class="logoConvitePublico"></a>
+        <span class="eyebrowConvite">COLABORAÇÃO ✦</span>
+        <div id="conviteCarregando" role="status">Carregando convite...</div>
+        <div id="conviteErroCarregamento" class="erroCarregamentoConvite" hidden>
+            <h1>Não foi possível abrir o convite</h1>
+            <p id="conviteErroMensagem" role="alert"></p>
+            <button type="button" id="tentarConviteNovamente" class="botaoSecundarioConvite">Tentar novamente</button>
+        </div>
+        <div id="conviteConteudo" hidden>
+            <p class="conviteSaudacao"><strong id="conviteOrganizador"></strong> convidou você para ajudar a organizar</p>
+            <h1 id="conviteEvento"></h1>
+            <div class="detalhesConvitePublico">
+                <div><small>Data</small><strong id="conviteData">—</strong></div>
+                <div><small>Horário</small><strong id="conviteHora">—</strong></div>
+                <div class="linhaCompleta"><small>E-mail deste convite</small><strong id="conviteEmail">—</strong></div>
+            </div>
+            <div class="comoFuncionaColaboracao">
+                <h2>Organizem esse momento juntos</h2>
+                <p>Acompanhe as tarefas, combine quem leva cada item e participe do rateio. A edição do evento depende da permissão definida pelo responsável.</p>
+                <p>Para responder, use uma conta com o e-mail indicado neste convite.</p>
+            </div>
+            <div id="conviteLoginNecessario" class="blocoLoginConvite" hidden>
+                <strong id="conviteTituloAcesso">Entre para responder ao convite</strong>
+                <span id="conviteTextoAcesso">Se ainda não tiver conta, cadastre-se com o e-mail deste convite. Você voltará para esta página.</span>
+                <div>
+                    <a id="linkEntrarConvite" class="botaoPrimarioParceiro" href="#">Entrar</a>
+                    <a id="linkCriarConvite" class="botaoSecundarioConvite" href="#">Criar conta</a>
+                    <button type="button" id="trocarContaConvite" class="botaoPrimarioParceiro" hidden>Entrar com outra conta</button>
+                </div>
+            </div>
+            <div id="conviteAcoes" class="acoesConviteColab" hidden>
+                <button type="button" id="aceitarConvite" class="authBotao"><span>Aceitar colaboração</span><b aria-hidden="true">✓</b></button>
+                <button type="button" id="recusarConvite" class="botaoSecundarioConvite">Recusar</button>
+            </div>
+            <p class="authErro" id="conviteErro" role="alert"></p>
+            <div id="conviteRespondido" class="rsvpSucesso" role="status" hidden></div>
+        </div>
+    </main>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script><script src="js/convite.js"></script>
+<footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</body>
+</html>

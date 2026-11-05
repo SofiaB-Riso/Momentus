@@ -1,0 +1,45 @@
+classDiagram
+direction TB
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class PlanejamentoEvento {
+    +int evento_id
+    +int duracao_minutos
+    +int limite_vagas
+    +bool cronograma_ativo
+    +DateTime cronograma_gerado_em
+}
+class EntradaEspera {
+    +int id
+    +int evento_id
+    +int convidado_id
+    +DateTime solicitado_em
+    +bool ativo
+}
+class Convidado {
+    +int id
+    +int evento_id
+    +String nome
+    +String status
+    +String restricoes_alimentares
+    +String token_rsvp
+}
+class TarefaEvento {
+    +int id
+    +int evento_id
+    +String titulo
+    +bool feita
+    +DateTime prazo
+    +int ordem
+}
+Evento "1" *-- "0..1" PlanejamentoEvento : duracao vagas e cronograma
+Evento "1" *-- "0..*" EntradaEspera : fila
+Convidado "1" *-- "0..1" EntradaEspera : solicitacao
+Evento "1" *-- "0..*" TarefaEvento : etapas manuais e geradas

@@ -1,0 +1,25 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class PrivacidadeUsuario {
+    +int usuario_id
+    +String foto_arquivo
+    +String termos_versao
+    +DateTime aceito_em
+}
+class RecuperacaoSenha {
+    +int id
+    +int usuario_id
+    +String token_hash
+    +String email
+    +DateTime expira_em
+    +DateTime usado_em
+}
+Usuario "1" *-- "0..1" PrivacidadeUsuario : perfil e aceite
+Usuario "1" *-- "0..*" RecuperacaoSenha : links de recuperacao

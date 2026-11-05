@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f1fa">
+    <title>Evento - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Podkova:wght@400..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/evento.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+
+<body class="paginaEvento">
+    <button class="botaoMenu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="overlayMenu" id="overlayMenu"></div>
+
+    <aside class="menulateral">
+
+        <div class="logo">
+            <img class="logoInicio" src="assets/Logo.png" alt="Logo do Momentus">
+        </div>
+
+        <div class="quadradotransparente"></div>
+
+        <div class="perfilMenu">
+            <a href="configuracoes.html" class="avatarPerfil" data-i18n-aria="navConfig" aria-label="Configurações">JM</a>
+            <div class="perfilTextos">
+                <div class="perfilNome">Usuário</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="inicio.html" class="item">
+                <img src="assets/icones/inicio.png" alt="">
+                <span data-i18n="navInicio">Início</span>
+            </a>
+            <a href="eventos.html" class="item ativo">
+                <svg class="iconeMenu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M7 14h3M14 14h3M7 17h3M14 17h3"/></svg>
+                <span data-i18n="todosEventosTitulo">Todos os eventos</span>
+            </a>
+            <a href="planejar.html" class="item">
+                <img src="assets/icones/planejar.png" alt="">
+                <span data-i18n="navPlanejar">Planejar evento</span>
+            </a>
+            <a href="catalogo.html" class="item">
+                <img src="assets/icones/catalogo.png" alt="">
+                <span data-i18n="navCatalogo">Catálogo</span>
+            </a>
+            <a href="configuracoes.html" class="item">
+                <img src="assets/icones/configuracoes.png" alt="">
+                <span data-i18n="navConfig">Configurações</span>
+            </a>
+        </nav>
+
+        <div class="rodapeMenu">
+            <a href="#" class="linkSair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span data-i18n="sair">Sair da conta</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="topoPaginaEvento">
+            <div class="caminhoEvento"><button class="botaoSecundario" id="botaoVoltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m10 5-7 7 7 7M3 12h18"/></svg><span data-i18n="voltarEventos">Voltar</span></button><span class="separadorCaminho" aria-hidden="true">/</span><span>Painel do evento</span></div>
+            <span class="acessoEvento" id="acessoEventoTexto">Seu planejamento</span>
+        </div>
+
+        <div id="conteudoEvento"></div>
+
+        <div class="rodapePagina">
+            <div class="marcaRodape"><span class="pontoRodape"></span><span data-i18n="rodapeMarca">Momentus — momentos planejados com carinho</span></div>
+            <div data-i18n="rodapeDireitos">© 2026 Momentus. Todos os direitos reservados.</div>
+        </div>
+
+    <footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+    </main>
+
+    <!-- Template escondido do conteúdo completo do evento -->
+    <template id="templateEvento">
+        <header class="cabecalhoEvento">
+            <div class="apresentacaoEvento">
+                <div class="etiquetasEvento"><span class="tagCard" id="tagTipoEvento">Seu evento</span><span class="statusPill" id="statusPillEvento">Confirmado</span></div>
+                <h1 id="tituloEvento">Nome do evento</h1>
+                <p class="assinaturaEvento">Cada detalhe aproxima o seu grande momento.</p>
+                <div class="infoEvento">
+                    <div class="linhaInfo"><span data-icone-evento="calendario" aria-hidden="true"></span><span id="dataHoraEventoTexto">—</span></div>
+                    <div class="linhaInfo"><span data-icone-evento="local" aria-hidden="true"></span><span id="localEventoTexto">—</span></div>
+                </div>
+                <div class="estadoConexaoEvento"><span class="pontoConexaoEvento" aria-hidden="true"></span><small class="statusAtualizacao" id="atualizacaoEvento" role="status">Conectando atualizações...</small></div>
+            </div>
+            <div class="resumoHeroEvento">
+                <div class="progressoEvento">
+                    <div class="anelProgressoEvento" id="progressoBarra" role="progressbar" aria-label="Preparativos concluídos" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="--progresso:0%"><span id="progressoTexto">0%</span></div>
+                    <div class="legendaProgressoEvento"><strong data-i18n="progressoPreparativos">Preparativos concluídos</strong><span id="resumoProgressoEvento">Seu checklist, passo a passo.</span></div>
+                </div>
+                <div class="acoesCabecalhoEvento">
+                    <button type="button" class="botaoSecundario" id="botaoEditarEvento"><span data-icone-evento="editar" aria-hidden="true"></span><span data-i18n="botaoEditar">Editar</span></button>
+                    <button type="button" class="botaoSecundario botaoApagarEvento" id="botaoApagarEvento"><span data-icone-evento="lixeira" aria-hidden="true"></span><span data-i18n="botaoApagar">Apagar</span></button>
+                </div>
+            </div>
+        </header>
+
+        <section class="indicadoresEvento" aria-label="Resumo do planejamento">
+            <article class="indicadorEvento"><span class="iconeIndicadorEvento" data-icone-evento="pessoas" aria-hidden="true"></span><div><span class="rotuloIndicadorEvento">Presenças confirmadas</span><strong id="resumoConfirmadosEvento">0</strong><small id="resumoConvidadosEvento">Nenhum convite ainda</small></div></article>
+            <article class="indicadorEvento"><span class="iconeIndicadorEvento" data-icone-evento="tarefas" aria-hidden="true"></span><div><span class="rotuloIndicadorEvento">Tarefas concluídas</span><strong id="resumoTarefasEvento">0 de 0</strong><small>Um passo de cada vez</small></div></article>
+            <article class="indicadorEvento"><span class="iconeIndicadorEvento" data-icone-evento="carteira" aria-hidden="true"></span><div><span class="rotuloIndicadorEvento">Orçamento estimado</span><strong id="resumoOrcamentoEvento">A definir</strong><small>Valor definido por você</small></div></article>
+            <article class="indicadorEvento"><span class="iconeIndicadorEvento" data-icone-evento="despesa" aria-hidden="true"></span><div><span class="rotuloIndicadorEvento">Despesas registradas</span><strong id="resumoDespesasEvento">R$ 0</strong><small>Lançamentos nas finanças</small></div></article>
+        </section>
+
+        <div class="workspaceEvento">
+            <aside class="navegacaoEvento" aria-label="Seções do evento">
+                <div class="cabecalhoNavegacaoEvento"><span class="marcaNavegacaoEvento" aria-hidden="true">✦</span><div><strong>Seu evento</strong><small>Do primeiro plano à memória.</small></div></div>
+                <div class="abasEvento" role="tablist" aria-label="Seções do planejamento" aria-orientation="vertical">
+                    <div class="grupoAbasEvento" role="presentation"><p class="rotuloGrupoEvento" aria-hidden="true">Visão geral</p>
+                        <button type="button" class="abaEvento" id="abaEvento-informacoes" data-aba="informacoes" role="tab" aria-controls="painelEvento-informacoes" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="visao" aria-hidden="true"></span><span class="nomeAbaEvento" data-i18n="abaInformacoes">Informações</span><span class="contadorAbaEvento" data-contador-aba="informacoes" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-convidados" data-aba="convidados" role="tab" aria-controls="painelEvento-convidados" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="pessoas" aria-hidden="true"></span><span class="nomeAbaEvento" data-i18n="abaConvidados">Convidados</span><span class="contadorAbaEvento" data-contador-aba="convidados" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-colaboracao" data-aba="colaboracao" role="tab" aria-controls="painelEvento-colaboracao" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="colaboracao" aria-hidden="true"></span><span class="nomeAbaEvento" data-i18n="abaColaboracao">Colaboração</span><span class="contadorAbaEvento" data-contador-aba="colaboracao" aria-hidden="true" hidden></span></button>
+                    </div>
+                    <div class="grupoAbasEvento" role="presentation"><p class="rotuloGrupoEvento" aria-hidden="true">Planejamento</p>
+                        <button type="button" class="abaEvento" id="abaEvento-tarefas" data-aba="tarefas" role="tab" aria-controls="painelEvento-tarefas" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="tarefas" aria-hidden="true"></span><span class="nomeAbaEvento" data-i18n="abaTarefas">Tarefas</span><span class="contadorAbaEvento" data-contador-aba="tarefas" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-itens" data-aba="itens" role="tab" aria-controls="painelEvento-itens" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="itens" aria-hidden="true"></span><span class="nomeAbaEvento" data-i18n="abaItens">Salvos do catálogo</span><span class="contadorAbaEvento" data-contador-aba="itens" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-descobrir" data-aba="descobrir" role="tab" aria-controls="painelEvento-descobrir" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="local" aria-hidden="true"></span><span class="nomeAbaEvento">Fornecedores e espaços</span><span class="contadorAbaEvento" data-contador-aba="descobrir" aria-hidden="true" hidden></span></button>
+                    </div>
+                    <div class="grupoAbasEvento" role="presentation"><p class="rotuloGrupoEvento" aria-hidden="true">Orçamento</p>
+                        <button type="button" class="abaEvento" id="abaEvento-financeiro" data-aba="financeiro" role="tab" aria-controls="painelEvento-financeiro" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="carteira" aria-hidden="true"></span><span class="nomeAbaEvento">Finanças</span><span class="contadorAbaEvento" data-contador-aba="financeiro" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-propostas" data-aba="propostas" role="tab" aria-controls="painelEvento-propostas" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="propostas" aria-hidden="true"></span><span class="nomeAbaEvento">Comparar propostas</span><span class="contadorAbaEvento" data-contador-aba="propostas" aria-hidden="true" hidden></span></button>
+                    </div>
+                    <div class="grupoAbasEvento" role="presentation"><p class="rotuloGrupoEvento" aria-hidden="true">Memórias</p>
+                        <button type="button" class="abaEvento" id="abaEvento-galeria" data-aba="galeria" role="tab" aria-controls="painelEvento-galeria" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="galeria" aria-hidden="true"></span><span class="nomeAbaEvento">Galeria</span><span class="contadorAbaEvento" data-contador-aba="galeria" aria-hidden="true" hidden></span></button>
+                        <button type="button" class="abaEvento" id="abaEvento-historico" data-aba="historico" role="tab" aria-controls="painelEvento-historico" aria-selected="false" tabindex="-1"><span class="iconeAbaEvento" data-icone-evento="historico" aria-hidden="true"></span><span class="nomeAbaEvento">Histórico</span><span class="contadorAbaEvento" data-contador-aba="historico" aria-hidden="true" hidden></span></button>
+                    </div>
+                </div>
+                <div class="notaNavegacaoEvento"><span data-icone-evento="ampulheta" aria-hidden="true"></span><span>Planeje no seu tempo.<br>Viva cada momento.</span></div>
+            </aside>
+            <div class="areaConteudoEvento">
+                <div class="navegacaoEventoCompacta"><label for="seletorAbaEvento">Explorar evento</label><div class="campoSecaoEvento"><span id="iconeSecaoEvento" aria-hidden="true"></span><select id="seletorAbaEvento" aria-controls="paineisEvento">
+                        <option value="informacoes" data-i18n="abaInformacoes">Informações</option>
+                        <option value="convidados" data-i18n="abaConvidados">Convidados</option>
+                        <option value="colaboracao" data-i18n="abaColaboracao">Colaboração</option>
+                        <option value="tarefas" data-i18n="abaTarefas">Tarefas</option>
+                        <option value="itens" data-i18n="abaItens">Salvos do catálogo</option>
+                        <option value="descobrir">Fornecedores e espaços</option>
+                        <option value="financeiro">Finanças</option>
+                        <option value="propostas">Comparar propostas</option>
+                        <option value="galeria">Galeria</option>
+                        <option value="historico">Histórico</option>
+                </select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></div>
+                <div id="paineisEvento">
+        <!-- INFORMAÇÕES -->
+        <section class="painel painelAba ativoPainel" data-painel="informacoes">
+            <div class="cabecalhoPainel"><h2 data-i18n="detalhesEvento">Detalhes do evento</h2></div>
+            <div class="panoramaEvento">
+                <div class="destaqueMomentoEvento">
+                    <div class="topoDestaqueEvento"><span>NA SUA AGENDA</span><span data-icone-evento="calendario" aria-hidden="true"></span></div>
+                    <div class="relogioDestaqueEvento"><div class="folhaCalendarioEvento" aria-hidden="true"><span id="mesDestaqueEvento">—</span><strong id="diaDestaqueEvento">—</strong></div><div><h3 id="contagemMomentoEvento">Seu momento está chegando</h3><p id="dataDestaqueEvento"></p></div></div>
+                    <button type="button" class="atalhoDestaqueEvento" data-abrir-aba="convidados">Ver lista de convidados <span aria-hidden="true">↗</span></button>
+                </div>
+                <div class="proximoPassoEvento">
+                    <div class="topoProximoPasso"><span data-icone-evento="tarefas" aria-hidden="true"></span><span>UM PASSO DE CADA VEZ</span></div>
+                    <h3 id="proximoPassoTitulo">Seu próximo preparativo</h3><p id="proximoPassoPrazo"></p>
+                    <button type="button" class="atalhoProximoPasso" data-abrir-aba="tarefas">Abrir checklist <span aria-hidden="true">→</span></button>
+                </div>
+            </div>
+            <div class="atalhosVisaoEvento" aria-label="Atalhos do evento">
+                <button type="button" data-abrir-aba="colaboracao"><span data-icone-evento="colaboracao" aria-hidden="true"></span>Organizar em conjunto <span aria-hidden="true">↗</span></button>
+                <button type="button" data-abrir-aba="financeiro"><span data-icone-evento="carteira" aria-hidden="true"></span>Acompanhar gastos <span aria-hidden="true">↗</span></button>
+                <button type="button" data-abrir-aba="galeria"><span data-icone-evento="galeria" aria-hidden="true"></span>Guardar memórias <span aria-hidden="true">↗</span></button>
+            </div>
+            <div class="grelhaInfoEvento">
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo" data-i18n="localDoEvento">Local</div>
+                    <div class="valorInfo" id="infoLocal">—</div><div class="acoesDescoberta" id="mapasEvento"></div>
+                </div>
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo" data-i18n="dataEHora">Data e horário</div>
+                    <div class="valorInfo" id="infoDataHora">—</div>
+                </div>
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo">Convidados previstos</div>
+                    <div class="valorInfo" id="infoConvidados">—</div>
+                </div>
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo" data-i18n="estiloDoEvento">Estilo</div>
+                    <div class="valorInfo" id="infoEstilo">—</div>
+                </div>
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo" data-i18n="orcamentoEstimadoLabel">Orçamento estimado</div>
+                    <div class="valorInfo" id="infoOrcamento">—</div>
+                </div>
+                <div class="blocoInfoEvento">
+                    <div class="rotuloInfo">Despesas registradas</div>
+                    <div class="valorInfo" id="infoGasto">—</div>
+                </div>
+            </div>
+            <div class="blocoObservacoesEvento"><div class="cabecalhoPainel"><h2 data-i18n="observacoesTitulo">Observações</h2></div>
+            <p id="infoObservacoes">—</p></div>
+        </section>
+
+        <!-- CONVIDADOS -->
+        <section class="painel painelAba" data-painel="convidados">
+            <div class="cabecalhoPainel"><h2 data-i18n="convidadosTitulo">Lista de convidados</h2></div>
+            <section class="blocoRecurso" aria-labelledby="tituloVagas">
+                <h3 id="tituloVagas">Vagas e lista de espera</h3>
+                <p>O limite é separado da estimativa de convidados. Respostas acima do limite entram na fila; uma desistência confirma automaticamente a próxima pessoa.</p>
+                <form id="formVagas" class="formRecurso">
+                    <label class="opcaoRecurso"><input type="checkbox" id="limitarVagas">Limitar confirmações</label>
+                    <div class="campoForm"><label for="limiteVagas">Número de vagas</label><input type="number" id="limiteVagas" min="1" max="1000000" value="50" disabled></div>
+                    <button type="submit" class="botaoSecundario">Salvar vagas</button>
+                </form>
+                <p id="statusVagas" role="status"></p>
+                <ol id="listaEsperaEvento" class="listaFila"></ol>
+            </section>
+
+            <form class="formConvidado" id="formConvidado">
+                <div class="campoForm">
+                    <label for="nomeNovoConvidado" data-i18n="nomeConvidadoLabel">Nome</label>
+                    <input type="text" id="nomeNovoConvidado" data-i18n-placeholder="placeholderNomeConvidado" placeholder="Nome do convidado" required>
+                </div>
+                <div class="campoForm">
+                    <label for="contatoNovoConvidado" data-i18n="contatoConvidadoLabel">Contato (e-mail ou telefone)</label>
+                    <input type="text" id="contatoNovoConvidado" data-i18n-placeholder="placeholderContatoConvidado" placeholder="email@exemplo.com ou (31) 90000-0000">
+                </div>
+                <div class="campoForm">
+                    <label for="restricoesNovoConvidado">Preferências alimentares</label>
+                    <input type="text" id="restricoesNovoConvidado" maxlength="4000" placeholder="Vegetariano, sem carne…">
+                </div>
+                <label class="aceiteCadastro declaracaoPreferencias"><input type="checkbox" id="preferenciasSemSaudeConvidado"><span>Confirmo que estas preferências não contêm informações de saúde. Para alergias e intolerâncias, compartilhe o RSVP para o titular ou responsável preencher.</span></label>
+                <button type="submit" class="botaoPrimario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span data-i18n="botaoAdicionarConvidado">Adicionar convidado</span>
+                </button>
+            </form>
+
+            <div class="linhaConfig" style="margin:1rem 0;">
+                <div class="linhaConfigEsquerda"><div class="textoConfig"><div class="nomeConfig">Privacidade da lista</div><div class="descConfig">Escolha se a lista de confirmados também aparece para convidados no RSVP.</div></div></div>
+                <select id="privacidadeListaConvidados" aria-label="Quem pode ver a lista de convidados" class="selectStatusConvidado" style="min-width:11rem;">
+                    <option value="organizador">Somente organização</option>
+                    <option value="todos">Organização + convidados</option>
+                </select>
+            </div>
+            <div class="listaConvidadosResumo" id="resumoConvidadosLinha"></div>
+            <div id="listaConvidados"></div>
+        </section>
+
+        <!-- COLABORAÇÃO (colaboradores + lista compartilhada / junta-panelas) -->
+        <section class="painel painelAba" data-painel="colaboracao">
+            <div class="cabecalhoPainel">
+                <div>
+                    <h2 data-i18n="colaboradoresTitulo">Colaboradores do evento</h2>
+                    <p class="textoAuxiliarPainel" data-i18n="colaboradoresTexto">Convide pessoas para ajudar a organizar e dividir os itens deste evento.</p>
+                </div>
+                <button class="botaoPrimario" id="botaoAdicionarColaborador">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span data-i18n="botaoAdicionarColaborador">Adicionar colaborador</span>
+                </button>
+            </div>
+            <div id="listaColaboradores"></div>
+
+            <!-- Módulo: Rateio de despesas -->
+            <div class="caixaRateio" id="caixaRateio">
+                <div class="linhaConfig linhaRateioToggle">
+                    <div class="linhaConfigEsquerda">
+                        <div class="iconeConfig" style="background: var(--grad-1);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <div class="textoConfig">
+                            <div class="nomeConfig" data-i18n="rateioTitulo">Rateio de despesas</div>
+                            <div class="descConfig" data-i18n="rateioTexto">Planeje a divisão entre o responsável e os colaboradores que aceitaram o convite.</div>
+                        </div>
+                    </div>
+                    <label class="interruptor"><input type="checkbox" id="checkboxAtivarRateio" aria-label="Ativar rateio" data-i18n-aria="rateioAtivarLabel"><span class="trilhaInterruptor"></span></label>
+                </div>
+
+                <div class="opcoesRateio" id="opcoesRateio" style="display:none;">
+                    <div class="orientacaoRateio">
+                        <strong data-i18n="rateioQuemParticipa">Quem participa desta divisão?</strong>
+                        <p id="rateioEscopoResumo"></p>
+                        <p data-i18n="rateioEscopoTexto">Os convidados da festa não entram no rateio. Convites de colaboração pendentes só entram depois de aceitos.</p>
+                        <button type="button" class="botaoSecundario" id="convidarNoRateio" data-i18n="rateioConvidar">Convidar colaborador para dividir</button>
+                    </div>
+                    <div class="campoForm">
+                        <span id="rateioModoLabel" class="rotuloModoRateio" data-i18n="rateioModoLabel">Como calcular o valor</span>
+                        <div class="opcoesModoRateio" role="radiogroup" aria-labelledby="rateioModoLabel">
+                            <label class="opcaoModoRateio">
+                                <input type="radio" name="modoRateio" value="auto" id="radioRateioAuto" checked>
+                                <span><strong data-i18n="rateioModoAuto">Dividir as despesas</strong><small data-i18n="rateioModoAutoDetalhe">Total registrado em Finanças dividido pelos participantes do rateio.</small></span>
+                            </label>
+                            <label class="opcaoModoRateio">
+                                <input type="radio" name="modoRateio" value="fixo" id="radioRateioFixo">
+                                <span><strong data-i18n="rateioModoFixo">Valor fixo por pessoa</strong><small data-i18n="rateioModoFixoDetalhe">Uma cota igual para cada participante, independente das despesas.</small></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="campoForm" id="campoValorFixoRateio" style="display:none;">
+                        <label for="valorFixoRateio" data-i18n="labelValorFixoRateio">Valor fixo por pessoa (R$)</label>
+                        <input type="number" id="valorFixoRateio" min="0" step="0.01" data-i18n-placeholder="placeholderValorFixoRateio" placeholder="Ex: 50,00">
+                    </div>
+
+                    <div class="resumoRateio" id="resumoRateio">
+                        <h3 data-i18n="rateioResumoTitulo">Resumo do rateio</h3>
+                        <div class="linhaRateioResumo"><span data-i18n="rateioTotalDespesas">Total de despesas</span><span id="rateioTotalDespesasValor">R$ 0</span></div>
+                        <div class="linhaRateioResumo"><span data-i18n="rateioQtdPessoas">Participantes do rateio</span><span id="rateioQtdPessoasValor">1</span></div>
+                        <div class="linhaRateioResumo linhaRateioDestaque"><span data-i18n="rateioValorPorPessoa">Valor por pessoa</span><span id="rateioValorPorPessoaValor">R$ 0</span></div>
+                        <div class="linhaRateioResumo"><span data-i18n="rateioTotalCotas">Total das cotas planejadas</span><span id="rateioTotalCotasValor">R$ 0</span></div>
+                        <p class="explicacaoRateio" id="rateioCalculoTexto"></p>
+                        <p class="explicacaoRateio" id="rateioCentavosTexto" data-i18n="rateioCentavos" hidden>Os centavos restantes são distribuídos entre os participantes para a soma fechar com o total.</p>
+                        <div class="orientacaoRateio" id="rateioAvisoSemDespesas" hidden>
+                            <p data-i18n="rateioAvisoSemDespesas">Registre as despesas em Finanças para calcular a divisão automática. Salvar um estabelecimento do catálogo não registra um gasto.</p>
+                            <button type="button" class="botaoSecundario" id="verFinancasRateio" data-i18n="rateioVerFinancas">Ver Finanças</button>
+                        </div>
+
+                        <h4 data-i18n="rateioListaTitulo">Divisão por pessoa</h4>
+                        <div id="listaRateioPessoas"></div>
+                        <p class="explicacaoRateio" data-i18n="rateioCotasPlanejadas">Este quadro planeja cotas; ele não cobra nem confirma pagamentos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cabecalhoPainel" style="margin-top:2rem;">
+                <div>
+                    <h2 data-i18n="itensCompartilhadosTitulo">Lista compartilhada (junta-panelas)</h2>
+                    <p class="textoAuxiliarPainel" data-i18n="itensCompartilhadosTexto">Combine com os colaboradores quem leva cada item — sem duplicar esforço.</p>
+                </div>
+            </div>
+            <form class="formItemCompartilhado" id="formItemCompartilhado">
+                <div class="campoForm">
+                    <label for="nomeNovoItemCompartilhado" data-i18n="labelNomeItemCompartilhado">Item</label>
+                    <input type="text" id="nomeNovoItemCompartilhado" data-i18n-placeholder="placeholderNomeItemCompartilhado" placeholder="Ex: Refrigerante 2L" required>
+                </div>
+                <div class="campoForm campoQtdCompartilhado">
+                    <label for="qtdNovoItemCompartilhado" data-i18n="labelQtdItemCompartilhado">Quantidade</label>
+                    <input type="number" id="qtdNovoItemCompartilhado" min="1" value="1">
+                </div>
+                <button type="submit" class="botaoPrimario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span data-i18n="botaoAdicionarItemCompartilhado">Adicionar à lista</span>
+                </button>
+            </form>
+            <div id="listaItensCompartilhados"></div>
+        </section>
+
+        <!-- ITENS DO CATÁLOGO -->
+        <section class="painel painelAba" data-painel="itens">
+            <div class="cabecalhoPainel">
+                <h2 data-i18n="itensCatalogoTitulo">Salvos do catálogo</h2>
+                <a href="catalogo.html" class="botaoSecundario" style="font-size:.78rem; padding:.6rem 1rem;" data-i18n="irParaCatalogo">Ir para o catálogo</a>
+            </div>
+            <p class="textoAuxiliarPainel" data-i18n="itensCatalogoTexto">Estabelecimentos que você salvou para este evento. Consulte produtos, disponibilidade e valores diretamente com o fornecedor. Salvar aqui não registra uma despesa.</p>
+            <div id="listaItensEvento"></div>
+            <div class="rodapeTotalItens" id="rodapeTotalItens" style="display:none;">
+                <span data-i18n="totalItensEvento">Total dos itens com preço informado</span>
+                <span id="totalItensValor">R$ 0</span>
+            </div>
+        </section>
+
+        <section class="painel painelAba" data-painel="propostas">
+            <div class="cabecalhoPainel"><h2>Comparador de propostas</h2><button type="button" id="novaProposta" class="botaoPrimario">+ Cadastrar proposta</button></div>
+            <p class="textoAuxiliarPainel">Registre valores confirmados com os fornecedores. Compare opções da mesma categoria, com desconto, taxas, serviços inclusos e parcelamento.</p>
+            <form id="formCompararPropostas" data-consulta class="formRecurso blocoRecurso">
+                <div class="campoForm"><label for="categoriaComparacao">Categoria para comparar</label><select id="categoriaComparacao"><option value="buffet">Buffet</option><option value="decoracao">Decoração</option><option value="musica">Música</option><option value="doces">Doces</option><option value="bebidas">Bebidas</option><option value="espacos">Espaços</option><option value="outros">Outros</option></select></div>
+                <div class="campoForm"><label for="tetoComparacao">Teto desta comparação (R$)</label><input id="tetoComparacao" type="number" min="0" max="99999999.99" step=".01" placeholder="Saldo do evento"></div>
+                <fieldset class="servicosRecurso"><legend>Serviços necessários</legend><label><input type="checkbox" id="requerEquipe" name="necessarios" value="equipe">Equipe</label><label><input type="checkbox" id="requerMontagem" name="necessarios" value="montagem">Montagem</label><label><input type="checkbox" id="requerTransporte" name="necessarios" value="transporte">Transporte</label><label><input type="checkbox" id="requerLimpeza" name="necessarios" value="limpeza">Limpeza</label><label><input type="checkbox" id="requerMateriais" name="necessarios" value="materiais">Materiais</label></fieldset>
+                <button class="botaoSecundario" type="submit">Comparar propostas</button>
+            </form>
+            <p class="notaPrivacidade">Teto vazio usa o saldo disponível do evento, quando há orçamento definido. A comparação não contrata serviços nem lança despesas.</p>
+            <p id="statusComparacao" role="status"></p>
+            <div id="listaComparacaoPropostas" class="gradePropostas"></div>
+            <section id="detalhesNovaProposta" class="blocoRecurso" aria-labelledby="tituloFormProposta"><h3 id="tituloFormProposta">Cadastrar proposta</h3><p>Preencha o orçamento recebido. Depois de salvar, ele aparece nos cards para comparação.</p>
+                <form id="formProposta" class="formRecurso">
+                    <input id="propostaEdicao" type="hidden">
+                    <div class="campoForm"><label for="nomeProposta">Fornecedor</label><input id="nomeProposta" required minlength="2" maxlength="160"></div>
+                    <div class="campoForm"><label for="categoriaProposta">Categoria</label><select id="categoriaProposta"><option value="buffet">Buffet</option><option value="decoracao">Decoração</option><option value="musica">Música</option><option value="doces">Doces</option><option value="bebidas">Bebidas</option><option value="espacos">Espaços</option><option value="outros">Outros</option></select></div>
+                    <div class="campoForm"><label for="valorProposta">Valor inicial (R$)</label><input id="valorProposta" type="number" min=".01" max="99999999.99" step=".01" required></div>
+                    <div class="campoForm"><label for="descontoProposta">Desconto (R$)</label><input id="descontoProposta" type="number" min="0" max="99999999.99" step=".01" value="0" required></div>
+                    <div class="campoForm"><label for="taxasProposta">Taxas adicionais (R$)</label><input id="taxasProposta" type="number" min="0" max="99999999.99" step=".01" value="0" required></div>
+                    <div class="campoForm"><label for="parcelasProposta">Parcelas</label><input id="parcelasProposta" type="number" min="1" max="120" value="1" required></div>
+                    <fieldset class="servicosRecurso"><legend>Inclusos na proposta</legend><label><input type="checkbox" id="incluiEquipe" name="servicos" value="equipe">Equipe</label><label><input type="checkbox" id="incluiMontagem" name="servicos" value="montagem">Montagem</label><label><input type="checkbox" id="incluiTransporte" name="servicos" value="transporte">Transporte</label><label><input type="checkbox" id="incluiLimpeza" name="servicos" value="limpeza">Limpeza</label><label><input type="checkbox" id="incluiMateriais" name="servicos" value="materiais">Materiais</label></fieldset>
+                    <div class="campoForm campoRecursoInteiro"><label for="observacoesProposta">Serviços e condições de pagamento</label><textarea id="observacoesProposta" rows="3" maxlength="4000"></textarea></div>
+                    <button type="submit" class="botaoPrimario">Salvar proposta</button><button type="button" class="botaoSecundario" id="cancelarEdicaoProposta">Limpar edição</button>
+                    <p id="statusProposta" role="status" class="campoRecursoInteiro"></p>
+                </form>
+            </section>
+        </section>
+
+        <!-- TAREFAS / CRONOGRAMA -->
+        <section class="painel painelAba" data-painel="tarefas">
+            <div class="cabecalhoPainel">
+                <div><h2 data-i18n="tarefasTitulo">Lista de tarefas</h2><p class="textoAuxiliarPainel">Checklist e cronograma do pré-evento.</p></div>
+            </div>
+            <section class="blocoRecurso" aria-labelledby="tituloCronograma">
+                <h3 id="tituloCronograma">Cronograma automático</h3>
+                <p>Distribua seis etapas entre hoje e o evento, de acordo com o tempo disponível e o tipo de festa. O checklist existente é reaproveitado. Mudar a data, o horário ou o tipo recalcula somente as etapas automáticas pendentes.</p>
+                <button type="button" id="gerarCronograma" class="botaoSecundario">Gerar cronograma</button>
+                <p id="statusCronograma" role="status"></p>
+            </section>
+            <form class="formConvidado" id="formNovaTarefa" style="margin-bottom:1rem;">
+                <div class="campoForm"><label for="tituloNovaTarefa">Nova tarefa</label><input id="tituloNovaTarefa" placeholder="Ex: confirmar horário do buffet"></div>
+                <div class="campoForm"><label for="prazoNovaTarefa">Prazo</label><input id="prazoNovaTarefa" type="datetime-local"></div>
+                <button class="botaoPrimario" type="submit">Adicionar</button>
+            </form>
+            <div class="listaTarefasEvento" id="listaTarefasEvento"></div>
+        </section>
+
+        <!-- FINANÇAS -->
+        <section class="painel painelAba" data-painel="financeiro">
+            <div class="cabecalhoPainel">
+                <div>
+                    <h2>Controle financeiro</h2>
+                    <p class="textoAuxiliarPainel">Registre despesas reais, acompanhe o teto e exporte relatórios.</p>
+                </div>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+                    <a class="botaoSecundario" id="baixarPdfEvento" href="#">PDF</a>
+                    <a class="botaoSecundario" id="baixarExcelEvento" href="#">Excel</a>
+                </div>
+            </div>
+            <div class="grelhaInfoEvento" id="resumoFinanceiroEvento">
+                <div class="blocoInfoEvento"><div class="rotuloInfo">Orçamento</div><div class="valorInfo" id="finOrcamento">R$ 0</div></div>
+                <div class="blocoInfoEvento"><div class="rotuloInfo">Gasto real + itens</div><div class="valorInfo" id="finGasto">R$ 0</div></div>
+                <div class="blocoInfoEvento"><div class="rotuloInfo">Restante</div><div class="valorInfo" id="finRestante">R$ 0</div></div>
+                <div class="blocoInfoEvento"><div class="rotuloInfo">Situação</div><div class="valorInfo" id="finSituacao">Dentro do orçamento</div></div>
+            </div>
+            <form class="formConvidado" id="formDespesaEvento">
+                <div class="campoForm"><label for="descDespesaEvento">Despesa</label><input id="descDespesaEvento" placeholder="Ex: sinal do salão" required></div>
+                <div class="campoForm"><label for="categoriaDespesaEvento">Categoria</label><input id="categoriaDespesaEvento" placeholder="Ex: decoração"></div>
+                <div class="campoForm"><label for="valorDespesaEvento">Valor (R$)</label><input id="valorDespesaEvento" type="number" min="0.01" step="0.01" required></div>
+                <div class="campoForm"><label for="comprovanteDespesaEvento">Nota/recibo (opcional)</label><input id="comprovanteDespesaEvento" type="file" accept="image/*,.pdf"></div>
+                <button type="submit" class="botaoPrimario">Registrar</button>
+            </form>
+            <div id="listaDespesasEvento" style="margin-top:1rem;"></div>
+
+            <div class="cabecalhoPainel" style="margin-top:2rem;"><div><h2>Planejamento inteligente</h2><p class="textoAuxiliarPainel">Estimativas automáticas de suprimentos, restrições e fornecedores.</p></div></div>
+            <div id="resumoInteligenteEvento"></div>
+        </section>
+
+        <!-- FORNECEDORES E ESPAÇOS: extensão dos componentes existentes -->
+        <section class="painel painelAba" data-painel="descobrir">
+            <div class="cabecalhoPainel"><div><h2>Encontre quem faz acontecer</h2><p class="textoAuxiliarPainel">Sugestões para o tipo, a cidade e o estilo do seu evento, ordenadas por avaliação.</p></div></div>
+            <form class="formConvidado" id="formFornecedoresEvento" data-consulta>
+                <div class="campoForm"><label for="categoriaBuscaEvento">O que você procura?</label><select id="categoriaBuscaEvento" name="categoria"><option value="buffet">Buffet</option><option value="musica">Música e DJs</option><option value="decoracao">Decoração</option><option value="doces">Doces e bolos</option><option value="bebidas">Bebidas e bar</option><option value="espacos">Espaços para festas</option></select></div>
+                <div class="campoForm"><label for="cidadeBuscaEvento">Cidade</label><input id="cidadeBuscaEvento" name="cidade" maxlength="120" required placeholder="Ex.: Belo Horizonte, MG"></div>
+                <button type="submit" class="botaoPrimario">Buscar sugestões</button>
+            </form>
+            <p id="avisoFornecedores" class="textoAuxiliarPainel" role="status">Escolha uma categoria para descobrir opções.</p>
+            <div id="fornecedoresEvento" class="grelhaDescoberta"></div>
+            <div class="cabecalhoPainel espacamentoSecao"><div><h2>Um espaço que combina com a festa</h2><p class="textoAuxiliarPainel">Compare opções salvas com preço, capacidade e estilo confirmados com o local.</p></div></div>
+            <form class="formConvidado filtrosLocais" id="formBuscaLocais" data-consulta>
+                <div class="campoForm"><label for="filtroCidadeLocal">Cidade</label><input id="filtroCidadeLocal" name="cidade" maxlength="120"></div>
+                <div class="campoForm"><label for="filtroOrcamentoLocal">Teto para locação (R$)</label><input id="filtroOrcamentoLocal" name="orcamento" type="number" min="0" max="99999999.99" step="0.01" placeholder="Sem limite"></div>
+                <div class="campoForm"><label for="filtroCapacidadeLocal">Pessoas</label><input id="filtroCapacidadeLocal" name="capacidade" type="number" min="1" max="1000000" step="1" required></div>
+                <div class="campoForm"><label for="filtroEstiloLocal">Estilo</label><input id="filtroEstiloLocal" name="estilo" maxlength="100" placeholder="Ex.: rústico"></div>
+                <button type="submit" class="botaoPrimario">Filtrar espaços</button>
+            </form>
+            <p id="contagemLocais" class="textoAuxiliarPainel" role="status"></p>
+            <div id="locaisCompativeis" class="grelhaDescoberta"></div>
+            <details class="detalhesEspacos" id="cadastroEspaco"><summary>Salvar um espaço com orçamento confirmado</summary>
+                <form class="formConvidado formEspaco" id="formSalvarLocal">
+                    <div class="campoForm"><label for="nomeEspaco">Nome do espaço</label><input id="nomeEspaco" name="nome" maxlength="180" required></div>
+                    <div class="campoForm"><label for="enderecoEspaco">Endereço completo</label><input id="enderecoEspaco" name="endereco" maxlength="255" required></div>
+                    <div class="campoForm"><label for="cidadeEspaco">Cidade</label><input id="cidadeEspaco" name="cidade" maxlength="120" required></div>
+                    <div class="campoForm"><label for="capacidadeEspaco">Capacidade de pessoas</label><input id="capacidadeEspaco" name="capacidade" type="number" min="1" max="1000000" step="1" required></div>
+                    <div class="campoForm"><label for="precoEspaco">Preço de locação (R$)</label><input id="precoEspaco" name="preco" type="number" min="0" max="99999999.99" step="0.01" required></div>
+                    <div class="campoForm"><label for="estiloEspaco">Estilo</label><input id="estiloEspaco" name="estilo" maxlength="100" required placeholder="Ex.: rústico, ao ar livre"></div>
+                    <button type="submit" class="botaoPrimario">Salvar espaço</button>
+                </form>
+            </details>
+            <p id="mensagemDescoberta" class="authErro" role="alert"></p>
+            <details class="detalhesEspacos"><summary>Todas as opções salvas</summary><div id="todosLocaisSalvos"></div></details>
+        </section>
+        <section class="painel painelAba" data-painel="historico">
+            <div class="cabecalhoPainel"><div><h2>Cada passo da organização</h2><p class="textoAuxiliarPainel">Últimas 100 alterações, com autoria e horário.</p></div></div>
+            <ol id="historicoEvento" class="listaHistorico" aria-live="polite"></ol>
+        </section>
+
+        <!-- GALERIA -->
+        <section class="painel painelAba" data-painel="galeria">
+            <div class="cabecalhoPainel"><div><h2>Galeria compartilhada</h2><p class="textoAuxiliarPainel">Organizadores e colaboradores podem guardar fotos do evento.</p></div></div>
+            <form class="formConvidado" id="formFotoEvento" enctype="multipart/form-data">
+                <div class="campoForm"><label for="arquivoFotoEvento">Imagem</label><input id="arquivoFotoEvento" type="file" accept="image/png,image/jpeg,image/webp,image/gif" required></div>
+                <div class="campoForm"><label for="legendaFotoEvento">Legenda</label><input id="legendaFotoEvento" placeholder="Uma lembrança especial..."></div>
+                <button type="submit" class="botaoPrimario">Enviar foto</button>
+            </form>
+            <div class="galeriaMomentus" id="galeriaEvento"></div>
+        </section>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template: evento não encontrado -->
+    <template id="templateEventoVazio">
+        <div class="estadoVazioGeral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <strong data-i18n="eventoNaoEncontradoTitulo">Evento não encontrado</strong>
+            <p data-i18n="eventoNaoEncontradoTexto">Esse evento pode ter sido apagado. Veja todos os seus eventos.</p>
+            <a href="eventos.html" class="botaoPrimario" data-i18n="verTodosEventos">Ver todos os eventos</a>
+        </div>
+    </template>
+
+    <!-- Template: linha de convidado -->
+    <template id="templateLinhaConvidado">
+        <div class="linhaConvidado" data-id="">
+            <div class="avatarConvidado"></div>
+            <div class="infoConvidado">
+                <div class="nomeConvidado"></div>
+                <div class="contatoConvidado"></div>
+                <div class="restricoesConvidado" style="font-size:.68rem;color:var(--tinta-suave);"></div>
+            </div>
+            <button type="button" class="botaoTextoReenviar editarRestricoes">Restrições</button>
+            <button type="button" class="botaoTextoReenviar copiarRsvp">Copiar RSVP</button>
+            <select class="selectStatusConvidado" aria-label="Presença do convidado">
+                <option value="espera" disabled data-i18n="statusConvidadoEspera">Lista de espera</option>
+                <option value="pendente" data-i18n="statusConvidadoPendente">Pendente</option>
+                <option value="confirmado" data-i18n="statusConvidadoConfirmado">Confirmado</option>
+                <option value="recusado" data-i18n="statusConvidadoRecusado">Recusou</option>
+            </select>
+            <button class="botaoRemoverConvidado" data-i18n-aria="removerConvidadoAria" aria-label="Remover convidado">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+        </div>
+    </template>
+
+    <!-- Template: linha de item do catálogo -->
+    <template id="templateLinhaItem">
+        <div class="linhaItemEvento" data-id="">
+            <div class="thumbItemEvento"></div>
+            <div class="infoItemEvento">
+                <div class="nomeItemEvento"></div>
+                <div class="metaItemEvento"></div>
+            </div>
+            <div class="precoItemEvento"></div>
+            <button class="botaoRemoverConvidado" data-i18n-aria="removerItem" aria-label="Remover item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+        </div>
+    </template>
+
+    <!-- Template: linha de colaborador -->
+    <template id="templateLinhaColaborador">
+        <div class="linhaColaborador" data-id="">
+            <div class="avatarConvidado"></div>
+            <div class="infoConvidado">
+                <div class="nomeConvidado"></div>
+                <div class="contatoConvidado"></div>
+                <div class="acoesConviteColaborador" hidden>
+                    <a class="botaoVerConvite" target="_blank" rel="noopener" data-i18n="verConviteColaborador">Ver convite ↗</a>
+                    <button type="button" class="botaoTextoReenviar" data-i18n="copiarLinkColaborador">Copiar link</button>
+                </div>
+            </div>
+            <span class="statusPillColab"></span>
+            <button class="botaoRemoverConvidado" data-i18n-aria="removerColaboradorAria" aria-label="Remover colaborador">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+        </div>
+    </template>
+
+    <!-- Template: linha de item compartilhado (junta-panelas) -->
+    <template id="templateLinhaItemCompartilhado">
+        <div class="linhaItemCompartilhado" data-id="">
+            <div class="infoItemEvento">
+                <div class="nomeItemEvento"></div>
+                <div class="metaItemEvento metaResponsavelItem"></div>
+            </div>
+            <button class="botaoSecundario botaoAssumirItem" style="font-size:.76rem; padding:.55rem .9rem;"></button>
+            <button class="botaoRemoverConvidado" data-i18n-aria="removerItemCompartilhadoAria" aria-label="Remover item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            </button>
+        </div>
+    </template>
+
+    <!-- Modal: adicionar colaborador -->
+    <div class="overlayModal" id="overlayAdicionarColaborador">
+        <div class="caixaModal">
+            <div class="cabecalhoModal">
+                <div>
+                    <h3 data-i18n="modalColaboradorTitulo">Adicionar colaborador</h3>
+                    <p data-i18n="modalColaboradorTexto">Convide alguém para ajudar a organizar este evento e dividir os itens da lista compartilhada.</p>
+                </div>
+                <button class="fecharModalBotao" id="fecharAdicionarColaborador" data-i18n-aria="fecharModal" aria-label="Fechar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="formAdicionarColaborador">
+                <div class="campoForm">
+                    <label for="nomeNovoColaborador" data-i18n="labelNomeColaborador">Nome</label>
+                    <input type="text" id="nomeNovoColaborador" minlength="2" maxlength="160" data-i18n-placeholder="placeholderNomeColaborador" placeholder="Nome do colaborador" required>
+                </div>
+                <div class="campoForm">
+                    <label for="emailNovoColaborador" data-i18n="labelEmailColaborador">E-mail</label>
+                    <input type="email" id="emailNovoColaborador" maxlength="180" data-i18n-placeholder="placeholderEmailColaborador" placeholder="email@exemplo.com" required>
+                </div>
+                <div class="acoesModalColaborador">
+                    <button type="submit" class="botaoPrimario" id="botaoEnviarConviteEmail" data-modo="email">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg>
+                        <span data-i18n="botaoEnviarConviteEmail">Criar convite</span>
+                    </button>
+                    <button type="submit" class="botaoSecundario" id="botaoCopiarLinkConvite" data-modo="link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem;vertical-align:-2px;margin-right:.35rem;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span data-i18n="botaoCopiarLinkConvite">Copiar link de convite</span>
+                    </button>
+                </div>
+                <p class="avisoLinkConvite" data-i18n="avisoLinkConvite">O convite ficará na lista de colaboradores, com as opções Ver convite e Copiar link. Compartilhe o link para a pessoa entrar ou criar conta com o e-mail informado e responder.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: aceitar/recusar convite de colaboração (via link) -->
+    <div class="overlayModal" id="overlayConviteRecebido">
+        <div class="caixaModal caixaModalConvite">
+            <div class="cabecalhoModal">
+                <div>
+                    <h3 data-i18n="convitePopupTitulo">Convite para colaborar</h3>
+                    <p id="textoConviteRecebido"></p>
+                </div>
+                <button class="fecharModalBotao" id="fecharConviteRecebido" data-i18n-aria="fecharModal" aria-label="Fechar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="acoesConviteRecebido">
+                <button class="botaoPrimario" id="botaoAceitarConvite">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span data-i18n="botaoAceitarConvite">Aceitar convite</span>
+                </button>
+                <button class="botaoSecundario" id="botaoRecusarConvite">
+                    <span data-i18n="botaoRecusarConvite">Recusar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: escolher responsável por item compartilhado -->
+    <div class="overlayModal" id="overlayEscolherResponsavel">
+        <div class="caixaModal">
+            <div class="cabecalhoModal">
+                <div>
+                    <h3 id="tituloEscolherResponsavel" data-i18n="escolherResponsavelTitulo">Quem vai levar esse item?</h3>
+                </div>
+                <button class="fecharModalBotao" id="fecharEscolherResponsavel" data-i18n-aria="fecharModal" aria-label="Fechar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div id="corpoEscolherResponsavel"></div>
+        </div>
+    </div>
+
+    <div class="toastMomentus" id="toastMomentus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="toastTexto"></span>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/evento-planejamento.js"></script>
+    <script src="js/evento-recursos.js"></script>
+    <script src="js/evento-interface.js"></script>
+    <script src="js/evento.js"></script>
+
+</body>
+
+</html>

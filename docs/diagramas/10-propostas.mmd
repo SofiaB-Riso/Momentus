@@ -1,0 +1,22 @@
+classDiagram
+direction TB
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class PropostaFornecedor {
+    +int id
+    +int evento_id
+    +String fornecedor
+    +String categoria
+    +Decimal valor
+    +Decimal desconto
+    +Decimal taxas
+    +int parcelas
+}
+Evento "1" *-- "0..*" PropostaFornecedor : orcamentos recebidos

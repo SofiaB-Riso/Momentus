@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1b0d38">
+    <title>Entrar - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+<body class="bodyAuth paginaLogin">
+    <span class="estrelaAuth e1">✦</span><span class="estrelaAuth e2">✦</span><span class="estrelaAuth e3">✦</span><span class="estrelaAuth e4">✦</span>
+    <main class="authShell">
+        <section class="authMarca">
+            <img src="assets/Logo.png" class="authLogo" alt="Momentus">
+            <p class="authFrase">Transforme cada <em>segundo</em> em uma memória eterna.</p>
+            <p>O planejamento do seu evento, elevado ao nível de obra de arte.</p>
+            <span class="authSelo">✦ CADA MOMENTO PERFEITAMENTE PLANEJADO</span>
+        </section>
+        <section class="authFormulario" aria-labelledby="tituloLogin">
+            <div>
+                <a class="authLogoCompacta" href="index.html" aria-label="Momentus — página de entrada"><img src="assets/Logo.png" alt="Momentus"></a>
+                <p class="authEtapa">SEU PRÓXIMO MOMENTO COMEÇA AQUI</p>
+                <h1 class="authTitulo" id="tituloLogin">Bem-vindo</h1>
+                <p class="authSub">Acesse sua conta para continuar criando.</p>
+            </div>
+            <form id="formLogin" class="formAuth">
+                <label>E-mail<input type="email" id="loginEmail" autocomplete="email" required></label>
+                <div class="campoSenhaAuth"><label for="loginSenha">Senha</label><div class="entradaSenha"><input type="password" id="loginSenha" autocomplete="current-password" required><button type="button" class="botaoMostrarSenha" data-mostrar-senha="loginSenha" aria-controls="loginSenha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha"></button></div></div>
+                <button class="authBotao" type="submit"><span>Voltar a planejar</span><b>→</b></button>
+                <p class="authErro" id="erroLogin" role="alert"></p>
+            </form>
+            <p class="authRodape"><a href="recuperar-senha.html">Esqueci minha senha</a></p>
+            <p class="authRodape">Novo por aqui? <a href="cadastro.html">Crie sua conta</a></p>
+        </section>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/senha.js"></script>
+    <script src="js/auth.js"></script>
+<footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</body>
+</html>

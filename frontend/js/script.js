@@ -1,0 +1,904 @@
+/* ================= MENU LATERAL (ativo ao clicar) ================= */
+const itensMenu = document.querySelectorAll('.item');
+
+/* ================= HAMBÚRGUER (tablet/celular) ================= */
+const botaoMenu = document.getElementById('botaoMenu');
+const menuLateral = document.querySelector('.menulateral');
+const overlayMenu = document.getElementById('overlayMenu');
+const menuEmTelaPequena = window.matchMedia('(max-width: 1024px)');
+
+function atualizarAcessoMenu(aberto) {
+    if (!menuLateral || !botaoMenu) return;
+    menuLateral.inert = menuEmTelaPequena.matches && !aberto;
+    menuLateral.setAttribute('aria-hidden', String(menuLateral.inert));
+    document.body.classList.toggle('menuAberto', aberto && menuEmTelaPequena.matches);
+    document.querySelectorAll('body > .conteudo, body > .linksLegais').forEach(el => { el.inert = aberto && menuEmTelaPequena.matches; });
+    botaoMenu.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+}
+
+function alternarMenu() {
+    botaoMenu.classList.toggle('aberto');
+    menuLateral.classList.toggle('aberto');
+    overlayMenu.classList.toggle('aberto');
+    const aberto = menuLateral.classList.contains('aberto');
+    botaoMenu.setAttribute('aria-expanded', aberto);
+    atualizarAcessoMenu(aberto);
+    if (aberto) menuLateral.querySelector('a[href]')?.focus();
+}
+
+function fecharMenu(devolverFoco = false) {
+    botaoMenu.classList.remove('aberto');
+    menuLateral.classList.remove('aberto');
+    overlayMenu.classList.remove('aberto');
+    botaoMenu.setAttribute('aria-expanded', 'false');
+    atualizarAcessoMenu(false);
+    if (devolverFoco === true) botaoMenu.focus();
+}
+
+if (botaoMenu && menuLateral && overlayMenu) {
+    menuLateral.id = 'menuLateral';
+    botaoMenu.setAttribute('aria-controls', menuLateral.id);
+    menuLateral.querySelector('nav')?.setAttribute('aria-label', 'Menu principal');
+    menuLateral.querySelector('.item.ativo')?.setAttribute('aria-current', 'page');
+    atualizarAcessoMenu(false);
+    botaoMenu.addEventListener('click', alternarMenu);
+    overlayMenu.addEventListener('click', () => fecharMenu(true));
+    itensMenu.forEach((item) => item.addEventListener('click', fecharMenu));
+    menuEmTelaPequena.addEventListener('change', () => fecharMenu());
+    document.addEventListener('keydown', e => {
+        if (!menuEmTelaPequena.matches || !menuLateral.classList.contains('aberto')) return;
+        if (e.key === 'Escape') { e.preventDefault(); fecharMenu(true); }
+        if (e.key !== 'Tab') return;
+        const alvos = [botaoMenu, ...menuLateral.querySelectorAll('a[href], button:not(:disabled)')].filter(el => el.getBoundingClientRect().height > 0);
+        const primeiro = alvos[0], ultimo = alvos[alvos.length - 1];
+        if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
+        else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
+    });
+}
+
+/* ================= FORMATAÇÃO AUXILIAR ================= */
+
+function formatarMoeda(valor) {
+    const idioma = Momentus.obterIdioma();
+    const locale = idioma === 'en' ? 'en-US' : idioma === 'es' ? 'es-ES' : 'pt-BR';
+    return 'R$ ' + Number(valor || 0).toLocaleString(locale);
+}
+
+const { escapeHTML, formatarDataBR } = MomentusUtils;
+
+const STATUS_LABEL_CHAVE = {
+    confirmado: 'statusConfirmado',
+    planejamento: 'statusPlanejamento',
+    agendado: 'statusAgendado',
+    rascunho: 'statusRascunho'
+};
+
+const TIPO_EMOJI = {
+    aniversario: '🎂', casamento: '💍', churrasco: '🍖',
+    formatura: '🎓', corporativo: '🏢', chadebebe: '👶',
+    noivado: '💞', batizado: '🕊️', confraternizacao: '🥂', outro: '✨'
+};
+
+/* ================= TOAST GLOBAL ================= */
+let _toastTimeout = null;
+const ICONE_TOAST_SUCESSO = '<path d="M20 6 9 17l-5-5"/>';
+const ICONE_TOAST_ERRO = '<circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16.5" x2="12" y2="16.51"/>';
+function mostrarToast(texto, tipo) {
+    const toast = document.getElementById('toastMomentus');
+    if (!toast) return;
+    const span = document.getElementById('toastTexto');
+    if (span) span.textContent = texto;
+    const ehErro = tipo === 'erro';
+    toast.classList.toggle('toastErro', ehErro);
+    const icone = toast.querySelector('svg path, svg circle') ? toast.querySelector('svg') : null;
+    if (icone) icone.innerHTML = ehErro ? ICONE_TOAST_ERRO : ICONE_TOAST_SUCESSO;
+    toast.classList.add('visivel');
+    clearTimeout(_toastTimeout);
+    _toastTimeout = setTimeout(() => toast.classList.remove('visivel'), 2600);
+}
+
+/* ================= PÁGINA INÍCIO: eventos, calendário e estatísticas ================= */
+
+const gradeCalendario = document.getElementById('calendarioGrid');
+
+if (gradeCalendario) {
+
+    let mesAtual = new Date().getMonth();
+    let anoAtual = new Date().getFullYear();
+    let mesInicializado = false;
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    function eventosOrdenados() {
+        return Momentus.obterEventos().slice().sort((a, b) => (a.data + (a.hora === '—' ? '23:59' : a.hora)).localeCompare(b.data + (b.hora === '—' ? '23:59' : b.hora)));
+    }
+
+    function proximoEvento() {
+        const ativos = eventosOrdenados().filter((ev) => ev.status !== 'rascunho');
+        return ativos.find((ev) => Momentus.diasEntre(ev.data) >= 0) || ativos[ativos.length - 1] || null;
+    }
+
+    function renderizarCabecalho() {
+        const eventos = Momentus.obterEventos();
+        const totalStr = document.getElementById('subtituloEventos');
+        if (totalStr) {
+            const n = eventos.filter((ev) => ev.status !== 'rascunho').length;
+            if (n === 0) totalStr.textContent = Momentus.t('iniSubtitulo0');
+            else if (n === 1) totalStr.textContent = Momentus.t('iniSubtitulo1');
+            else totalStr.textContent = Momentus.t('iniSubtituloN', { n });
+            const rascunhos = eventos.filter((ev) => ev.status === 'rascunho').length;
+            if (rascunhos) totalStr.textContent += ' ' + Momentus.t('resumoRascunhos', { n: rascunhos });
+        }
+        const tituloOla = document.getElementById('tituloOla');
+        if (tituloOla) {
+            const perfil = Momentus.obterPerfil();
+            const primeiroNome = perfil.nome.split(' ')[0];
+            tituloOla.textContent = Momentus.t('iniOla', { nome: primeiroNome });
+        }
+    }
+
+    let assinaturaDestaques = '';
+    const faixa = document.getElementById('blocoEventos');
+    const anterior = document.getElementById('eventosAnterior');
+    const seguinte = document.getElementById('eventosProximo');
+    function atualizarSetas() {
+        if (!faixa || !anterior || !seguinte) return;
+        anterior.disabled = faixa.scrollLeft < 2;
+        seguinte.disabled = faixa.scrollLeft + faixa.clientWidth >= faixa.scrollWidth - 2;
+    }
+    for (const [botao, direcao] of [[anterior, -1], [seguinte, 1]]) {
+        botao?.addEventListener('click', () => {
+            const largura = faixa.firstElementChild?.getBoundingClientRect().width || faixa.clientWidth;
+            faixa.scrollBy({ left: direcao * (largura + 24), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+        });
+    }
+    faixa?.addEventListener('scroll', atualizarSetas, { passive: true });
+    window.addEventListener('resize', atualizarSetas);
+
+    function atualizarCriacoesIngressos() {
+        const idioma = Momentus.obterIdioma();
+        const locale = {pt:'pt-BR', en:'en-US', es:'es-ES'}[idioma];
+        faixa?.querySelectorAll('time[data-criado-em]').forEach(el => {
+            const tempo = MomentusUtils.tempoDecorrido(el.dataset.criadoEm, Date.now(), idioma);
+            el.hidden = !tempo;
+            if (!tempo) return;
+            el.textContent = tempo.recente ? Momentus.t('criadoAgora') : Momentus.t('criadoTempo', {tempo:tempo.relativo});
+            el.title = Momentus.t('criadoEmData', {data:new Date(el.dateTime).toLocaleString(locale)});
+        });
+    }
+    setInterval(() => { if (!document.hidden) atualizarCriacoesIngressos(); }, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) atualizarCriacoesIngressos(); });
+
+    function renderizarDestaquesInicio() {
+        const modelo = document.getElementById('modeloPlanejarEvento');
+        if (!faixa || !modelo || faixa.querySelector('.ingressoRasgando')) return;
+        const eventos = eventosOrdenados();
+        const assinatura = JSON.stringify([eventos, Momentus.obterIdioma()]);
+        if (assinatura === assinaturaDestaques) return;
+        assinaturaDestaques = assinatura;
+        const posicao = faixa.scrollLeft;
+        const foco = document.activeElement?.closest('[data-evento-id]')?.dataset.eventoId;
+        faixa.replaceChildren();
+        eventos.forEach((evento) => {
+            const card = document.createElement('article');
+            card.dataset.eventoId = evento.id;
+            if (evento.status === 'rascunho') {
+                card.className = 'cardRascunho';
+                card.innerHTML = `<span class="statusPill">${Momentus.t('statusRascunho')}</span>
+                    <h3>${escapeHTML(evento.nome || evento.tipoLabel)}</h3>
+                    <p>${Momentus.t('dataPrevista')}: ${formatarDataBR(evento.data)}</p>
+                    <a class="botaoSecundario" href="planejar.html?id=${encodeURIComponent(evento.id)}">${Momentus.t('continuarPlanejamento')}</a>`;
+            } else renderizarCardIngresso(card, evento);
+            faixa.appendChild(card);
+        });
+        const planejador = modelo.content.firstElementChild.cloneNode(true);
+        planejador.querySelectorAll('[data-i18n]').forEach((el) => el.textContent = Momentus.t(el.dataset.i18n));
+        planejador.querySelector('.botaoCriarEvento')?.setAttribute('aria-label', Momentus.t('planejarEvento'));
+        faixa.appendChild(planejador);
+        atualizarCriacoesIngressos();
+        faixa.scrollLeft = posicao;
+        if (foco) {
+            [...faixa.children].find((el) => el.dataset.eventoId === foco)?.querySelector('button, a')?.focus({ preventScroll: true });
+        }
+        requestAnimationFrame(atualizarSetas);
+    }
+
+    function renderizarCardIngresso(container, evento) {
+        container.className = 'cardEvento cardIngresso';
+        container.removeAttribute('aria-busy');
+        const dataObj = new Date(evento.data + 'T00:00:00');
+        const meses = Momentus.obterMesesAbrev();
+
+        container.innerHTML = `
+            <div class="corpoIngresso">
+                <div class="cabecalhoCard">
+                    <div>
+                        <span class="tagCard">${Momentus.t(STATUS_LABEL_CHAVE[evento.status] || 'statusAgendado')}</span>
+                        <div class="nomeEvento">${escapeHTML(evento.nome || evento.tipoLabel)}</div>
+                    </div>
+                </div>
+                <div class="infoEvento">
+                    <div class="linhaInfo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        ${escapeHTML(evento.local || '—')}
+                    </div>
+                    <div class="linhaInfo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span>${formatarDataBR(evento.data)}${evento.criadoEm ? `<time class="criacaoIngresso" data-criado-em="${escapeHTML(evento.criadoEm)}" datetime="${escapeHTML(evento.criadoEm)}" hidden></time>` : ''}</span>
+                    </div>
+                </div>
+                <div class="barraProgresso">
+                    <div class="rotulo"><span>${Momentus.t('preparativos')}</span><span>${evento.progresso || 0}%</span></div>
+                    <div class="trilhaProgresso"><div class="preenchimentoProgresso" style="width:${evento.progresso || 0}%"></div></div>
+                </div>
+                <span class="faixaRasgo" aria-hidden="true"><span class="bordaRasgo"></span></span>
+            </div>
+            <div class="canhotoIngresso">
+                <span class="faixaRasgo" aria-hidden="true"><span class="bordaRasgo"></span></span>
+                <span class="numeroCanhoto">Nº ${String(evento.numero || 1).padStart(3, '0')}</span>
+                <button type="button" class="setaCard" aria-label="${escapeHTML(Momentus.t('verEvento') + ': ' + (evento.nome || evento.tipoLabel))}">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+                <span class="dataCanhoto">${dataObj.getDate()}<br>${meses[dataObj.getMonth()]}</span>
+            </div>`;
+        container.style.cursor = 'pointer';
+        const botaoIngresso = container.querySelector('.setaCard');
+        const previa = (ativa) => {
+            if (container.classList.contains('ingressoRasgando')) return;
+            const podeAnimar = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            container.classList.toggle('ingressoPreview', ativa && podeAnimar);
+        };
+        botaoIngresso.addEventListener('mouseenter', () => {
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) previa(true);
+        });
+        botaoIngresso.addEventListener('mouseleave', () => previa(false));
+        botaoIngresso.addEventListener('focus', () => previa(true));
+        botaoIngresso.addEventListener('blur', () => previa(false));
+        container.onclick = () => {
+            if (container.classList.contains('ingressoRasgando')) return;
+            const destino = 'evento.html?id=' + encodeURIComponent(evento.id);
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                window.location.href = destino;
+                return;
+            }
+
+            const canhoto = container.querySelector('.canhotoIngresso');
+            const botao = canhoto.querySelector('button');
+            let abriu = false;
+            let espera;
+            const abrirEvento = () => {
+                if (abriu) return;
+                abriu = true;
+                clearTimeout(espera);
+                window.location.href = destino;
+            };
+            canhoto.addEventListener('animationend', (e) => {
+                if (e.target === canhoto && e.animationName === 'destacarCanhoto') abrirEvento();
+            });
+            container.style.transform = '';
+            container.querySelector('.corpoIngresso').style.transform = '';
+            container.setAttribute('aria-busy', 'true');
+            botao.disabled = true;
+            container.classList.add('ingressoRasgando');
+            // Garante o acesso mesmo se o navegador não finalizar a animação.
+            espera = setTimeout(abrirEvento, 1000);
+        };
+    }
+
+    // Ao voltar pelo navegador, permite destacar novamente um ingresso em cache.
+    window.addEventListener('pageshow', (e) => {
+        if (!e.persisted) return;
+        document.querySelectorAll('#blocoEventos .cardIngresso').forEach((card) => {
+            card.classList.remove('ingressoRasgando', 'ingressoPreview');
+            card.removeAttribute('aria-busy');
+        });
+        assinaturaDestaques = '';
+        renderizarDestaquesInicio();
+    });
+
+    function classeGrupo(indice) {
+        return ['g1', 'g2', 'g3'][indice % 3];
+    }
+
+    function renderizarListaProximos() {
+        const lista = document.getElementById('listaProximosEventos');
+        if (!lista) return;
+        const proximos = eventosOrdenados().filter((ev) => ev.status !== 'rascunho' && Momentus.diasEntre(ev.data) >= -1).slice(0, 4);
+
+        if (!proximos.length) {
+            lista.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('semProximos')}</p>`;
+            return;
+        }
+
+        const meses = Momentus.obterMesesAbrev();
+        lista.innerHTML = proximos.map((ev, i) => {
+            const d = new Date(ev.data + 'T00:00:00');
+            const statusChave = STATUS_LABEL_CHAVE[ev.status] || 'statusAgendado';
+            return `
+            <div class="itemProximo" data-id="${ev.id}" style="cursor:pointer;">
+                <div class="badgeData ${classeGrupo(i)}">${d.getDate()} ${meses[d.getMonth()]}</div>
+                <div class="detalhesProximo">
+                    <div class="nomeItem">${escapeHTML(ev.nome || ev.tipoLabel)}</div>
+                    <div class="subItem">${escapeHTML(ev.local || '—')} · ${escapeHTML(ev.hora || '')}</div>
+                </div>
+                <span class="statusPill">${Momentus.t(statusChave)}</span>
+            </div>`;
+        }).join('');
+        lista.querySelectorAll('.itemProximo').forEach((el) => {
+            el.addEventListener('click', () => { window.location.href = 'evento.html?id=' + encodeURIComponent(el.dataset.id); });
+        });
+    }
+
+    function renderizarEstatisticas() {
+        const eventos = Momentus.obterEventos().filter((ev) => ev.status !== 'rascunho');
+        const totalConvidados = eventos.reduce((soma, ev) => soma + (Number(ev.confirmados) || 0), 0);
+        const totalOrcamento = eventos.reduce((soma, ev) => soma + (Number(ev.orcamento) || 0), 0);
+        const prox = proximoEvento();
+        const dias = prox ? Math.max(0, Momentus.diasEntre(prox.data)) : 0;
+
+        definirContador('statEventos', eventos.length);
+        definirContador('statConvidados', totalConvidados);
+        definirContador('statDias', dias);
+        definirContador('statOrcamento', totalOrcamento, 'R$ ');
+    }
+
+    function definirContador(id, valor, prefixo) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.dataset.count = valor;
+        if (prefixo) el.dataset.prefix = prefixo;
+        el.textContent = (prefixo || '') + '0';
+        animarNumero(el);
+    }
+
+    function renderizarCalendario() {
+        gradeCalendario.innerHTML = '';
+        const meses = Momentus.obterMeses();
+        document.getElementById('mesAnoAtual').textContent = `${meses[mesAtual]} ${anoAtual}`;
+
+        const eventosCalendario = {};
+        Momentus.obterEventos().filter((ev) => ev.status !== 'rascunho').forEach((ev, i) => {
+            const [a, m, d] = ev.data.split('-').map(Number);
+            const chave = `${a}-${m - 1}-${d}`;
+            eventosCalendario[chave] = classeGrupo(i) === 'g2' ? 'evento2' : 'evento';
+        });
+
+        const primeiroDiaSemana = new Date(anoAtual, mesAtual, 1).getDay();
+        const totalDias = new Date(anoAtual, mesAtual + 1, 0).getDate();
+        const diasMesAnterior = new Date(anoAtual, mesAtual, 0).getDate();
+
+        for (let i = primeiroDiaSemana - 1; i >= 0; i--) {
+            const el = document.createElement('div');
+            el.className = 'dia fora';
+            el.textContent = diasMesAnterior - i;
+            gradeCalendario.appendChild(el);
+        }
+
+        for (let dia = 1; dia <= totalDias; dia++) {
+            const el = document.createElement('div');
+            el.className = 'dia';
+            el.textContent = dia;
+
+            const chave = `${anoAtual}-${mesAtual}-${dia}`;
+            if (eventosCalendario[chave]) {
+                el.classList.add(eventosCalendario[chave]);
+            }
+
+            if (dia === hoje.getDate() && mesAtual === hoje.getMonth() && anoAtual === hoje.getFullYear()) {
+                el.classList.add('hoje');
+            }
+
+            gradeCalendario.appendChild(el);
+        }
+
+        const totalCelulas = primeiroDiaSemana + totalDias;
+        const restante = (7 - (totalCelulas % 7)) % 7;
+        for (let i = 1; i <= restante; i++) {
+            const el = document.createElement('div');
+            el.className = 'dia fora';
+            el.textContent = i;
+            gradeCalendario.appendChild(el);
+        }
+    }
+
+    function renderizarTudoInicio() {
+        renderizarCabecalho();
+        renderizarDestaquesInicio();
+        renderizarListaProximos();
+        renderizarEstatisticas();
+        renderizarCalendario();
+    }
+
+    document.getElementById('mesAnterior').addEventListener('click', () => {
+        mesAtual--;
+        if (mesAtual < 0) { mesAtual = 11; anoAtual--; }
+        renderizarCalendario();
+    });
+
+    document.getElementById('mesProximo').addEventListener('click', () => {
+        mesAtual++;
+        if (mesAtual > 11) { mesAtual = 0; anoAtual++; }
+        renderizarCalendario();
+    });
+
+    Momentus.aguardarEventosProntos().then(() => {
+
+        const prox0 = proximoEvento();
+        if (prox0) {
+            const [a, m] = prox0.data.split('-').map(Number);
+            anoAtual = a; mesAtual = m - 1;
+        }
+        renderizarTudoInicio();
+    });
+
+    document.addEventListener('momentus:eventos-alterados', renderizarTudoInicio);
+    document.addEventListener('momentus:idioma-alterado', renderizarTudoInicio);
+    document.addEventListener('momentus:perfil-alterado', renderizarCabecalho);
+}
+
+
+/* ================= BUSCA NO CATÁLOGO (início) =================
+   A busca em si (com dados reais do Google) é feita por js/inicio-fornecedores.js;
+   aqui só ficou a barra de busca do topo, que leva para o catálogo completo. */
+const buscaTopoGeral = document.getElementById('buscaTopoGeral');
+if (buscaTopoGeral) {
+    buscaTopoGeral.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        const termo = buscaTopoGeral.value.trim();
+        window.location.href = termo ? `catalogo.html?busca=${encodeURIComponent(termo)}` : 'catalogo.html';
+    });
+}
+
+/* ================= CATEGORIAS - PLANEJAR EVENTO ================= */
+const CATEGORIA_LABEL_CHAVE = {
+    aniversario: 'catAniversario', casamento: 'catCasamento', churrasco: 'catChurrasco',
+    formatura: 'catFormatura', corporativo: 'catCorporativo', chadebebe: 'catChaBebe',
+    noivado: 'catNoivado', batizado: 'catBatizado', confraternizacao: 'catConfraternizacao', outro: 'catOutro'
+};
+
+let tipoSelecionado = 'aniversario';
+const campoTipoOutro = document.getElementById('campoTipoOutro');
+const tipoEventoOutro = document.getElementById('tipoEventoOutro');
+
+function rotuloTipoSelecionado() {
+    if (tipoSelecionado === 'outro') return tipoEventoOutro?.value.trim() || Momentus.t('catOutro');
+    return Momentus.t(CATEGORIA_LABEL_CHAVE[tipoSelecionado] || 'catOutro');
+}
+
+function atualizarTipoSelecionado() {
+    document.querySelectorAll('.chipCategoria').forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.tipo === tipoSelecionado)));
+    const outro = tipoSelecionado === 'outro';
+    if (campoTipoOutro) campoTipoOutro.hidden = !outro;
+    if (tipoEventoOutro) {
+        tipoEventoOutro.disabled = !outro;
+        tipoEventoOutro.required = outro;
+        tipoEventoOutro.setCustomValidity(outro && !tipoEventoOutro.value.trim() ? Momentus.t('erroTipoOutro') : '');
+    }
+    const resumoTipo = document.getElementById('resumoTipo');
+    if (resumoTipo) resumoTipo.textContent = rotuloTipoSelecionado();
+}
+
+tipoEventoOutro?.addEventListener('input', atualizarTipoSelecionado);
+document.addEventListener('momentus:idioma-alterado', atualizarTipoSelecionado);
+
+
+document.querySelectorAll('.chipCategoria').forEach((chip) => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('.chipCategoria').forEach((c) => c.classList.remove('selecionado'));
+        chip.classList.add('selecionado');
+        tipoSelecionado = chip.dataset.tipo || 'aniversario';
+        atualizarTipoSelecionado();
+    });
+});
+
+/* ================= RESUMO AO VIVO + SALVAR - PLANEJAR EVENTO ================= */
+const formPlanejar = document.getElementById('formPlanejar');
+if (formPlanejar) {
+    formPlanejar.setAttribute('aria-busy', 'true');
+    (async () => {
+    await Momentus.aguardarEventosProntos();
+
+    const paramsPlanejar = new URLSearchParams(window.location.search);
+    const idEdicao = paramsPlanejar.get('id');
+    const eventoEmEdicao = idEdicao ? await Momentus.sincronizarEvento(idEdicao, true) : null;
+    if (idEdicao && (!eventoEmEdicao || eventoEmEdicao.podeEditar === false)) {
+        window.location.replace('eventos.html');
+        return;
+    }
+    const nomeEvento = document.getElementById('nomeEvento');
+    const dataEvento = document.getElementById('dataEvento');
+    const horaEvento = document.getElementById('horaEvento');
+    const duracaoEvento = document.getElementById('duracaoEvento');
+    const localEvento = document.getElementById('localEvento');
+    const convidados = document.getElementById('convidados');
+    const estiloEvento = document.getElementById('estiloEvento');
+    const observacoes = document.getElementById('observacoes');
+    const orcamento = document.getElementById('orcamento');
+    const valorOrcamento = document.getElementById('valorOrcamento');
+    let revisaoAgenda = 0;
+    [dataEvento, horaEvento, duracaoEvento, localEvento].forEach(campo => campo.addEventListener('input', () => {
+        revisaoAgenda++;
+        document.getElementById('resultadoConflitos').textContent = 'Dados alterados. Verifique a agenda novamente.';
+    }));
+    document.getElementById('verificarConflitos')?.addEventListener('click', async e => {
+        if (!dataEvento.value || !horaEvento.value) { mostrarToast('Informe a data e o horário para verificar a agenda.', 'erro'); return; }
+        if (!dataEvento.reportValidity() || !horaEvento.reportValidity() || !duracaoEvento.reportValidity()) return;
+        const alvo = document.getElementById('resultadoConflitos');
+        const revisaoConsultada = revisaoAgenda;
+        e.currentTarget.disabled = true; alvo.textContent = 'Conferindo sua agenda…';
+        try {
+            const dados = await MomentusAPI.requisitar('/eventos/conflitos', {method:'POST', body:JSON.stringify({
+                data_evento:dataEvento.value,hora_evento:horaEvento.value,duracao_minutos:Number(duracaoEvento.value),
+                endereco_evento:localEvento.value,cidade_evento:eventoEmEdicao?.cidade || '',evento_id:eventoEmEdicao?.id})});
+            if (revisaoConsultada !== revisaoAgenda) return;
+            const periodo = `${new Date(dados.inicio).toLocaleString('pt-BR')} até ${new Date(dados.fim).toLocaleString('pt-BR')}`;
+            alvo.innerHTML = `<p><strong>Data e horário consultados:</strong> ${escapeHTML(periodo)}</p>` + (dados.conflitos.length ? '<strong>Há eventos com data e horário sobrepostos:</strong><ul>'+dados.conflitos.map(c=>
+                `<li><a href="evento.html?id=${encodeURIComponent(c.id)}">${escapeHTML(c.nome)}</a> · ${escapeHTML(new Date(c.inicio).toLocaleString('pt-BR'))} até ${escapeHTML(new Date(c.fim).toLocaleString('pt-BR'))}${c.mesmo_local ? ' · Mesmo endereço' : ''}</li>`).join('')+'</ul>' : '<strong>Nenhum conflito de data e horário encontrado.</strong>');
+            alvo.insertAdjacentHTML('beforeend', `<p>${escapeHTML(dados.escopo)}</p>`);
+            if (dados.eventos_sem_horario) alvo.insertAdjacentHTML('beforeend', `<p>${dados.eventos_sem_horario} evento(s) no período ainda sem horário definido.</p>`);
+        } catch(erro) { alvo.textContent = erro.message; }
+        finally { document.getElementById('verificarConflitos').disabled = false; }
+    });
+
+    atualizarTipoSelecionado();
+
+    // Sugere uma data padrão a partir de hoje (em vez de uma data fixa do protótipo)
+    (function sugerirDataPadrao() {
+        const d = new Date();
+        d.setDate(d.getDate() + 14);
+        dataEvento.value = d.toISOString().slice(0, 10);
+        document.getElementById('resumoData').textContent = formatarDataBR(dataEvento.value);
+    })();
+
+    // Modo edição: pré-preenche o formulário com os dados do evento existente
+    if (eventoEmEdicao) {
+        const eyebrow = document.getElementById('eyebrowPlanejar');
+        const titulo = document.getElementById('tituloPlanejar');
+        if (eyebrow) eyebrow.textContent = Momentus.t('editarEventoTitulo');
+        if (titulo) titulo.textContent = eventoEmEdicao.nome || eventoEmEdicao.tipoLabel;
+
+        const tipoSalvo = eventoEmEdicao.tipo || 'aniversario';
+        const tipoPadrao = Object.hasOwn(CATEGORIA_LABEL_CHAVE, tipoSalvo);
+        tipoSelecionado = tipoPadrao ? tipoSalvo : 'outro';
+        if (tipoEventoOutro) tipoEventoOutro.value = tipoPadrao ? '' : tipoSalvo;
+        document.querySelectorAll('.chipCategoria').forEach((chip) => {
+            chip.classList.toggle('selecionado', chip.dataset.tipo === tipoSelecionado);
+        });
+
+        nomeEvento.value = eventoEmEdicao.nome || '';
+        duracaoEvento.value = eventoEmEdicao.duracaoMinutos || 180;
+        dataEvento.value = eventoEmEdicao.data || dataEvento.value;
+        horaEvento.value = eventoEmEdicao.hora && eventoEmEdicao.hora !== '—' ? eventoEmEdicao.hora : '';
+        localEvento.value = eventoEmEdicao.local || '';
+        convidados.value = eventoEmEdicao.convidados || '';
+        if (eventoEmEdicao.estilo) {
+            const opcoes = Array.from(estiloEvento.options);
+            const encontrada = opcoes.find((op) => op.textContent.trim() === eventoEmEdicao.estilo);
+            if (encontrada) estiloEvento.value = encontrada.value;
+        }
+        orcamento.value = eventoEmEdicao.orcamento ?? orcamento.value;
+        observacoes.value = eventoEmEdicao.observacoes || '';
+
+        atualizarTipoSelecionado();
+        document.getElementById('resumoNome').textContent = nomeEvento.value || '—';
+        document.getElementById('resumoData').textContent = formatarDataBR(dataEvento.value);
+        document.getElementById('resumoConvidados').textContent = convidados.value ? `${convidados.value} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
+
+        const botaoSalvarSpan = formPlanejar.querySelector('.botaoPrimario span');
+        if (botaoSalvarSpan) botaoSalvarSpan.textContent = Momentus.t(eventoEmEdicao.status === 'rascunho' ? 'finalizarEvento' : 'salvarAlteracoesEvento');
+        const botaoRascunhoEl = document.getElementById('botaoRascunho');
+        if (botaoRascunhoEl) botaoRascunhoEl.hidden = eventoEmEdicao.status !== 'rascunho';
+    }
+
+    nomeEvento.addEventListener('input', () => {
+        document.getElementById('resumoNome').textContent = nomeEvento.value || '—';
+    });
+
+    dataEvento.addEventListener('input', () => {
+        document.getElementById('resumoData').textContent = formatarDataBR(dataEvento.value);
+    });
+
+    convidados.addEventListener('input', () => {
+        document.getElementById('resumoConvidados').textContent = convidados.value ? `${convidados.value} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
+    });
+
+    function atualizarOrcamento() {
+        const val = Number(orcamento.value) || 0;
+        const idioma = Momentus.obterIdioma();
+        const locale = idioma === 'en' ? 'en-US' : idioma === 'es' ? 'es-ES' : 'pt-BR';
+        const moeda = 'R$ ' + val.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        valorOrcamento.textContent = moeda;
+        document.getElementById('resumoOrcamento').textContent = moeda;
+    }
+    orcamento.addEventListener('input', atualizarOrcamento);
+    document.addEventListener('momentus:idioma-alterado', atualizarOrcamento);
+    atualizarOrcamento();
+
+    function montarEventoDoFormulario(status) {
+        return {
+            tipo: tipoSelecionado === 'outro' ? tipoEventoOutro.value.trim() : tipoSelecionado,
+            tipoLabel: rotuloTipoSelecionado(),
+            nome: nomeEvento.value.trim() || rotuloTipoSelecionado(),
+            data: dataEvento.value || new Date().toISOString().slice(0, 10),
+            hora: horaEvento.value.trim() || '—',
+            local: localEvento.value.trim(),
+            convidados: Number(convidados.value) || 0,
+            estilo: estiloEvento.value,
+            duracaoMinutos: Number(duracaoEvento.value) || 180,
+            orcamento: Number(orcamento.value) || 0,
+            observacoes: observacoes.value.trim(),
+            status: status,
+            progresso: status === 'rascunho' ? 5 : 20
+        };
+    }
+
+    formPlanejar.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!horaEvento.reportValidity() || !duracaoEvento.reportValidity() || !orcamento.reportValidity() || (tipoSelecionado === 'outro' && !tipoEventoOutro.reportValidity())) return;
+        const botao = formPlanejar.querySelector('.botaoPrimario');
+        const textoOriginalBotao = botao.innerHTML;
+
+        if (eventoEmEdicao) {
+            const dadosAtualizados = montarEventoDoFormulario(eventoEmEdicao.status === 'rascunho' ? 'confirmado' : eventoEmEdicao.status);
+            dadosAtualizados.progresso = eventoEmEdicao.progresso || 0;
+            const resultado = await Momentus.atualizarEvento(eventoEmEdicao.id, dadosAtualizados);
+            if (!resultado) { botao.innerHTML = textoOriginalBotao; return; }
+            botao.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ${Momentus.t('alteracoesSalvasEvento')}`;
+            setTimeout(() => { window.location.href = 'evento.html?id=' + encodeURIComponent(eventoEmEdicao.id); }, 700);
+            return;
+        }
+
+        const criado = await Momentus.salvarEvento(montarEventoDoFormulario('confirmado'));
+        if (!criado) { botao.innerHTML = textoOriginalBotao; return; }
+        botao.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> ${Momentus.t('botaoSalvarEventoOk')}`;
+        setTimeout(() => { window.location.href = 'inicio.html'; }, 900);
+    });
+
+    const botaoRascunho = document.getElementById('botaoRascunho');
+    if (botaoRascunho && (!eventoEmEdicao || eventoEmEdicao.status === 'rascunho')) {
+        botaoRascunho.addEventListener('click', async () => {
+            if (!horaEvento.reportValidity() || !duracaoEvento.reportValidity() || !orcamento.reportValidity() || (tipoSelecionado === 'outro' && !tipoEventoOutro.reportValidity())) return;
+            const dados = montarEventoDoFormulario('rascunho');
+            const criado = eventoEmEdicao ? await Momentus.atualizarEvento(eventoEmEdicao.id, dados) : await Momentus.salvarEvento(dados);
+            if (!criado) return;
+            botaoRascunho.textContent = Momentus.t('botaoRascunhoOk');
+            setTimeout(() => { window.location.href = 'inicio.html'; }, 900);
+        });
+    }
+    formPlanejar.hidden = false;
+    document.getElementById('carregandoPlanejamento').hidden = true;
+    formPlanejar.setAttribute('aria-busy', 'false');
+    })();
+}
+
+/* ================= CATÁLOGO =================
+   Os cards do catálogo agora vêm de fornecedores reais buscados no Google
+   (perto do usuário), carregados dinamicamente. Toda a lógica de filtro,
+   busca, favoritos e o popup de "adicionar a um evento" para essa página
+   ficam em js/catalogo-google.js, que sabe lidar com cards que só existem
+   depois de uma resposta da API. */
+
+/* ================= CONFIGURAÇÕES: perfil e preferências ================= */
+const formPerfil = document.getElementById('formPerfil');
+if (formPerfil) {
+    const nomeConfig = document.getElementById('nomeConfig');
+    const emailConfig = document.getElementById('emailConfig');
+    const telefoneConfig = document.getElementById('telefoneConfig');
+    const nomeGrandeConfig = document.getElementById('nomeGrandeConfig');
+    const emailGrandeConfig = document.getElementById('emailGrandeConfig');
+    const avatarGrandeConfig = document.getElementById('avatarGrandeConfig');
+
+    function carregarPerfilNoFormulario() {
+        const perfil = Momentus.obterPerfil();
+        nomeConfig.value = perfil.nome;
+        emailConfig.value = perfil.email;
+        telefoneConfig.value = MomentusTelefone.limpar(perfil.telefone);
+        nomeGrandeConfig.textContent = perfil.nome;
+        emailGrandeConfig.textContent = perfil.email;
+        if (!document.getElementById('iniciaisAvatarConfig') && avatarGrandeConfig.firstChild && avatarGrandeConfig.firstChild.nodeType === 3) {
+            avatarGrandeConfig.firstChild.textContent = Momentus.iniciais(perfil.nome) + ' ';
+        }
+    }
+    carregarPerfilNoFormulario();
+
+    formPerfil.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const salvo = await Momentus.salvarPerfil({ nome: nomeConfig.value.trim(), email: emailConfig.value.trim(), telefone: telefoneConfig.value.trim() });
+        if (!salvo) return;
+        carregarPerfilNoFormulario();
+        const botao = formPerfil.querySelector('.botaoPrimario span');
+        botao.textContent = Momentus.t('confAlteracoesSalvas');
+        setTimeout(() => { botao.textContent = Momentus.t('confSalvarAlteracoes'); }, 2000);
+    });
+    document.addEventListener('momentus:perfil-alterado', carregarPerfilNoFormulario);
+
+    document.addEventListener('momentus:idioma-alterado', () => {
+        // Mantém o rótulo do botão sincronizado se não estiver em estado "salvo"
+    });
+}
+
+const botaoExcluirConta = document.getElementById('botaoExcluirConta');
+if (botaoExcluirConta) {
+    botaoExcluirConta.addEventListener('click', async () => {
+        if (!window.confirm('Excluir sua conta e os eventos que pertencem a você? Essa ação não pode ser desfeita.')) return;
+        botaoExcluirConta.disabled = true;
+        await Momentus.excluirConta();
+        botaoExcluirConta.disabled = false;
+    });
+}
+
+const togglesPreferencia = {
+    prefRsvp: 'rsvp',
+    prefLembretes: 'lembretes'
+};
+const algumToggle = Object.keys(togglesPreferencia).some((id) => document.getElementById(id));
+if (algumToggle) {
+    function atualizarPreferencias() {
+        const prefs = Momentus.obterPreferencias();
+        Object.entries(togglesPreferencia).forEach(([id,chave]) => {const el=document.getElementById(id);if(el)el.checked=!!prefs[chave];});
+    }
+    atualizarPreferencias();
+    document.addEventListener('momentus:perfil-alterado', atualizarPreferencias);
+    Object.entries(togglesPreferencia).forEach(([id, chave]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('change', async () => {
+            const atual = Momentus.obterPreferencias();
+            atual[chave] = el.checked;
+            el.disabled=true;
+            try {await Momentus.salvarPreferencias(atual);}
+            finally {atualizarPreferencias();el.disabled=false;}
+        });
+    });
+}
+
+/* ================= CONTADORES ANIMADOS (estatísticas) ================= */
+function animarNumero(el) {
+    const alvo = Number(el.dataset.count);
+    const prefixo = el.dataset.prefix || '';
+    const duracao = 900;
+    const inicio = performance.now();
+    const idioma = Momentus.obterIdioma();
+    const locale = idioma === 'en' ? 'en-US' : idioma === 'es' ? 'es-ES' : 'pt-BR';
+
+    function passo(agora) {
+        const progresso = Math.min((agora - inicio) / duracao, 1);
+        const facilitado = 1 - Math.pow(1 - progresso, 3);
+        const valor = Math.round(alvo * facilitado);
+        el.textContent = prefixo + valor.toLocaleString(locale);
+        if (progresso < 1) requestAnimationFrame(passo);
+    }
+    requestAnimationFrame(passo);
+}
+
+const numerosStatEstaticos = document.querySelectorAll('.numeroStat[data-count]:not(#statEventos):not(#statConvidados):not(#statDias):not(#statOrcamento)');
+if (numerosStatEstaticos.length) {
+    const observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada) => {
+            if (entrada.isIntersecting) {
+                animarNumero(entrada.target);
+                observador.unobserve(entrada.target);
+            }
+        });
+    }, { threshold: 0.4 });
+
+    numerosStatEstaticos.forEach((el) => observador.observe(el));
+}
+
+/* ================= INCLINAÇÃO 3D SUAVE NOS CARDS ================= */
+const cardsComInclinacao = document.querySelectorAll('.cardEvento:not(.cardIngresso), .cardProduto, .blocoCriarEvento');
+
+cardsComInclinacao.forEach((card) => {
+    const alvo = card;
+
+    card.addEventListener('mousemove', (e) => {
+        if (card.closest('.ingressoRasgando')) return;
+        const retangulo = alvo.getBoundingClientRect();
+        const x = (e.clientX - retangulo.left) / retangulo.width - 0.5;
+        const y = (e.clientY - retangulo.top) / retangulo.height - 0.5;
+        const inclinacaoX = (y * -5).toFixed(2);
+        const inclinacaoY = (x * 6).toFixed(2);
+        alvo.style.transform = `perspective(60rem) rotateX(${inclinacaoX}deg) rotateY(${inclinacaoY}deg) translateY(-0.3rem)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+        alvo.style.transform = '';
+    });
+});
+
+/* ================= CAIXA DE NOTIFICAÇÕES (sino) ================= */
+const botaoNotificacoes = document.getElementById('botaoNotificacoes');
+if (botaoNotificacoes) {
+    const painelNotificacoes = document.getElementById('painelNotificacoes');
+    const corpoPainelNotificacoes = document.getElementById('corpoPainelNotificacoes');
+    const bolinhaNotificacoes = document.getElementById('bolinhaNotificacoes');
+    // O cabeçalho animado cria um contexto de posição; o popover usa a janela.
+    document.body.appendChild(painelNotificacoes);
+    botaoNotificacoes.setAttribute('aria-controls', painelNotificacoes.id);
+    botaoNotificacoes.setAttribute('aria-expanded', 'false');
+    painelNotificacoes.setAttribute('aria-label', 'Notificações');
+    painelNotificacoes.setAttribute('role', 'region');
+    painelNotificacoes.tabIndex = -1;
+    painelNotificacoes.inert = true;
+    painelNotificacoes.setAttribute('aria-hidden', 'true');
+
+    function posicionarNotificacoes() {
+        if (!painelNotificacoes.classList.contains('aberto')) return;
+        const botao = botaoNotificacoes.getBoundingClientRect();
+        const largura = painelNotificacoes.getBoundingClientRect().width;
+        const topo = Math.max(16, Math.min(botao.bottom + 10, window.innerHeight - 160));
+        painelNotificacoes.style.left = Math.max(16, Math.min(botao.right - largura, window.innerWidth - largura - 16)) + 'px';
+        painelNotificacoes.style.top = topo + 'px';
+        painelNotificacoes.style.maxHeight = Math.max(100, window.innerHeight - topo - 16) + 'px';
+    }
+
+    function fecharNotificacoes(devolverFoco = false) {
+        painelNotificacoes.classList.remove('aberto');
+        painelNotificacoes.inert = true;
+        painelNotificacoes.setAttribute('aria-hidden', 'true');
+        botaoNotificacoes.setAttribute('aria-expanded', 'false');
+        if (devolverFoco) botaoNotificacoes.focus();
+    }
+
+    function renderizarPainelNotificacoes() {
+        const notificacoes = Momentus.obterNotificacoes();
+        bolinhaNotificacoes.classList.toggle('temNotificacao', notificacoes.some((n) => !n.lida));
+
+        if (!notificacoes.length) {
+            corpoPainelNotificacoes.innerHTML = `<div class="estadoVazioNotif">${Momentus.t('nenhumaNotificacao')}</div>`;
+            return;
+        }
+
+        corpoPainelNotificacoes.innerHTML = notificacoes.map((n) => {
+            if (n.tipo === 'convite-colaborador') {
+                return `<div class="itemNotificacao"><strong>Convite para colaborar</strong><p>Para aceitar, abra o link privado compartilhado pelo dono do evento.</p></div>`;
+            }
+            const linkEvento = n.eventoId ? `<a class="linkNotifEvento" href="evento.html?id=${encodeURIComponent(n.eventoId)}">Abrir evento →</a>` : '';
+            return `<div class="itemNotificacao ${n.lida ? '' : 'naoLida'}"><strong>${escapeHTML(n.titulo || 'Momentus')}</strong><p>${escapeHTML(n.mensagem || '')}</p>${linkEvento}</div>`;
+        }).join('');
+
+
+    }
+
+    function alternarPainelNotificacoes() {
+        const abrindo = !painelNotificacoes.classList.contains('aberto');
+        if (!abrindo) { fecharNotificacoes(); return; }
+        painelNotificacoes.classList.add('aberto');
+        painelNotificacoes.inert = false;
+        painelNotificacoes.setAttribute('aria-hidden', 'false');
+        botaoNotificacoes.setAttribute('aria-expanded', 'true');
+        if (abrindo) {
+            renderizarPainelNotificacoes();
+            posicionarNotificacoes();
+            painelNotificacoes.focus({preventScroll:true});
+            Momentus.marcarNotificacoesLidas();
+            bolinhaNotificacoes.classList.remove('temNotificacao');
+        }
+    }
+
+    botaoNotificacoes.addEventListener('click', (e) => {
+        e.stopPropagation();
+        alternarPainelNotificacoes();
+    });
+    document.addEventListener('click', (e) => {
+        if (painelNotificacoes.classList.contains('aberto') && !painelNotificacoes.contains(e.target) && e.target !== botaoNotificacoes) {
+            fecharNotificacoes();
+        }
+    });
+    window.addEventListener('resize', posicionarNotificacoes);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && painelNotificacoes.classList.contains('aberto')) { e.preventDefault(); fecharNotificacoes(true); }
+    });
+    document.addEventListener('momentus:notificacoes-alteradas', () => {
+        bolinhaNotificacoes.classList.toggle('temNotificacao', Momentus.obterNotificacoes().some((n) => !n.lida));
+        if (painelNotificacoes.classList.contains('aberto')) renderizarPainelNotificacoes();
+    });
+    document.addEventListener('momentus:eventos-alterados', () => {
+        if (painelNotificacoes.classList.contains('aberto')) renderizarPainelNotificacoes();
+    });
+    document.addEventListener('momentus:idioma-alterado', () => {
+        if (painelNotificacoes.classList.contains('aberto')) renderizarPainelNotificacoes();
+    });
+
+    bolinhaNotificacoes.classList.toggle('temNotificacao', Momentus.obterNotificacoes().some((n) => !n.lida));
+}

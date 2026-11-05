@@ -1,0 +1,47 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class ColaboradorEvento {
+    +int id
+    +int evento_id
+    +int usuario_id
+    +String nome
+    +String email
+    +String status
+    +bool pode_editar
+}
+class Convidado {
+    +int id
+    +int evento_id
+    +String nome
+    +String status
+    +String restricoes_alimentares
+    +String token_rsvp
+}
+class AvisoConvidado {
+    +int id
+    +int convidado_id
+    +String chave
+    +String titulo
+    +String mensagem
+}
+Usuario "1" --> "0..*" Evento : cria
+Evento "1" *-- "0..*" ColaboradorEvento : participantes
+Usuario "0..1" o-- "0..*" ColaboradorEvento : vinculo de conta
+Evento "1" *-- "0..*" Convidado : convidados
+Convidado "1" *-- "0..*" AvisoConvidado : avisos

@@ -1,0 +1,330 @@
+/* Acabamento compartilhado. Os módulos de evento e planejamento mantêm suas regras. */
+body {
+    --ui-acento:#6541b4; --ui-suave:#f3effc; --ui-acao:#7651c5;
+    --ui-acao-hover:#6441ad; --ui-sobre-acao:#fff;
+    --ui-sombra:0 12px 35px -26px rgba(48,25,81,.32);
+}
+html[data-tema="escuro"] body {
+    --ui-acento:#c6b2ff; --ui-suave:#261b40; --ui-acao:#ad91ff;
+    --ui-acao-hover:#bca5ff; --ui-sobre-acao:#201334;
+    --ui-sombra:0 12px 35px -24px rgba(0,0,0,.6);
+}
+:where(button,a,input,select,textarea,summary):focus-visible { outline:2px solid var(--ui-acento); outline-offset:4px; }
+button, a, input, select, textarea { -webkit-tap-highlight-color:transparent; }
+button:disabled { cursor:default; }
+.conteudo { padding:2rem 2.5rem; gap:1.65rem; }
+.conteudo > :is(.linhaTopo,.grelhaStats,.grid-principal,.grid-config,.cabecalhoFaixaEventos,.rodapePagina,.linksLegais) { width:100%; max-width:1440px; margin-left:auto; margin-right:auto; }
+.linhaTopo { gap:1.5rem; align-items:center; }
+.linhaTopo #divtitulo { min-width:0; }
+.linhaTopo .titulo { font-size:clamp(2.15rem,3.2vw,3.3rem); line-height:1.12; letter-spacing:-.035em; overflow-wrap:anywhere; }
+.linhaTopo .eyebrow { color:var(--ui-acento); font:600 .64rem/1.7 "Poppins",sans-serif; letter-spacing:.13em; }
+.linhaTopo .subtitulo { font-size:.82rem; line-height:1.85; max-width:41rem; }
+.linhaTopo .flourish { width:6rem; margin:.65rem 0; opacity:.8; }
+.painel { border:1px solid var(--linha); border-radius:1.15rem; box-shadow:var(--ui-sombra); }
+.cabecalhoPainel h2 { letter-spacing:-.02em; line-height:1.35; }
+.botaoPrimario { background:var(--ui-acao); color:var(--ui-sobre-acao); border-radius:.7rem; min-height:2.85rem; box-shadow:0 7px 17px -12px rgba(98,55,166,.6); font-size:.77rem; text-decoration:none; }
+.botaoPrimario:hover { background:var(--ui-acao-hover); }
+.botaoPrimario svg { stroke:currentColor; }
+.botaoSecundario { border:1px solid var(--linha); border-radius:.7rem; min-height:2.65rem; color:var(--tinta); font-size:.74rem; text-decoration:none; }
+.botaoSecundario:hover { border-color:var(--ui-acento); color:var(--ui-acento); background:var(--ui-suave); }
+.botaoIcone { border:1px solid var(--linha); box-shadow:var(--ui-sombra); }
+.buscaTopo { border:1px solid var(--linha); border-radius:2rem; box-shadow:var(--ui-sombra); }
+.campoForm label { color:var(--tinta); line-height:1.7; }
+.campoForm :is(input,select,textarea) { border-radius:.7rem; border:1px solid var(--linha); background:var(--fundo); color:var(--tinta); }
+.campoForm :is(input,select,textarea):focus { border-color:var(--ui-acento); background:var(--superficie); }
+.menulateral .item { font-size:.88rem; }
+.menulateral .perfilNome { font-size:.77rem; }
+.menulateral .rodapeMenu .linkSair { min-height:2.85rem; font-size:.75rem; }
+.rodapePagina { color:var(--tinta-suave); border-top:1px solid var(--linha); font-size:.68rem; }
+.linksLegais { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.65rem; font-size:.72rem; line-height:1.8; }
+.linksLegais a { padding:.35rem .1rem; text-underline-offset:4px; }
+.caixaModal { border:1px solid var(--linha); border-radius:1.2rem; box-shadow:0 30px 80px -35px rgba(25,10,48,.7); }
+.caixaModal .cabecalhoModal h3 { font-family:"Playfair Display",serif; font-size:1.55rem; letter-spacing:-.02em; }
+.caixaModal .cabecalhoModal p { font-size:.76rem; line-height:1.8; }
+.opcaoEventoCatalogoBanco { border-radius:.8rem; min-height:4rem; }
+.estadoVazioGeral { border:1px dashed var(--linha); border-radius:1.1rem; background:var(--superficie); padding:2.5rem 1.5rem; }
+.estadoVazioGeral > strong { font:500 1.6rem/1.3 "Playfair Display",serif; color:var(--tinta); }
+.estadoVazioGeral p { max-width:35rem; margin:.8rem auto 1.3rem; font-size:.8rem; line-height:1.8; }
+
+/* Início: os ingressos e sua animação preservam tamanho e estrutura. */
+.paginaInicio .cabecalhoFaixaEventos h2 { font:600 1.5rem/1.4 "Playfair Display",serif; letter-spacing:-.02em; }
+.paginaInicio .cardStat { border:1px solid var(--linha); border-radius:1rem; padding:1.15rem; box-shadow:var(--ui-sombra); }
+.paginaInicio .cardStat .valor { font:600 1.6rem/1.25 "Poppins",sans-serif; letter-spacing:-.045em; font-variant-numeric:tabular-nums; }
+.paginaInicio .cardStat .rotulo { line-height:1.7; font-size:.7rem; }
+.paginaInicio .calendario .cabecalhoPainel { margin-bottom:1.25rem; }
+.paginaInicio .dia { border-radius:.75rem; }
+.paginaInicio .itemProximo { border-radius:.8rem; border:1px solid var(--linha); padding:.8rem; }
+.paginaInicio .itemProximo:hover { background:var(--ui-suave); }
+.paginaInicio .itemCatalogo { padding:.85rem; border:1px solid var(--linha); border-radius:.85rem; background:var(--superficie); }
+.paginaInicio .itemCatalogo .nomeCatalogo { font-size:.78rem; line-height:1.6; }
+.paginaInicio .itemCatalogo .descCatalogo { font-size:.65rem; line-height:1.7; }
+.paginaInicio .blocoCriarEvento { border-color:var(--linha); }
+
+/* Listagem e catálogo. */
+.paginaEventos .cardEventoResumo { border:1px solid var(--linha); border-radius:1.1rem; box-shadow:var(--ui-sombra); overflow:hidden; }
+.paginaEventos .capaEventoResumo { padding:1.4rem; }
+.paginaEventos .nomeEventoResumo { font:600 1.55rem/1.25 "Playfair Display",serif; letter-spacing:-.02em; }
+.paginaEventos .corpoEventoResumo { padding:1.25rem; }
+.paginaEventos .linhaInfoResumo { font-size:.75rem; line-height:1.7; }
+.paginaEventos .rodapeEventoResumo { border-top:1px solid var(--linha); padding:.75rem 1.25rem; gap:.7rem; }
+.paginaEventos .botaoResumoAcao { min-height:2.4rem; border-radius:.5rem; font-size:.7rem; }
+.paginaCatalogo .barraLocalizacao { border:1px solid var(--linha); border-radius:1rem; padding:1rem; background:var(--superficie); box-shadow:var(--ui-sombra); }
+.paginaCatalogo .barraLocalizacao input { border-radius:.65rem; min-height:2.7rem; }
+.botaoLocalizacao { border-radius:.7rem; min-height:2.7rem; font-size:.72rem; }
+.botaoLocalizacaoSecundario { border-radius:.65rem; min-height:2.7rem; color:var(--ui-acento); background:var(--ui-suave); }
+.paginaCatalogo .filtrosCatalogo { gap:.55rem; margin:1.2rem 0 .8rem; }
+.paginaCatalogo .filtroChip { min-height:2.65rem; border-radius:2rem; padding:.55rem .9rem; font-size:.72rem; border:1px solid var(--linha); }
+.paginaCatalogo .filtroChip.ativoFiltro { background:var(--ui-acao); border-color:var(--ui-acao); color:var(--ui-sobre-acao); }
+.paginaCatalogo .criterioCatalogo { font-size:.71rem; line-height:1.8; color:var(--tinta-suave); margin-bottom:1rem; }
+.paginaCatalogo .cardProduto { border:1px solid var(--linha); border-radius:1.1rem; box-shadow:var(--ui-sombra); transition:transform .2s,border-color .2s; }
+.paginaCatalogo .cardProduto:hover { border-color:var(--ui-acento); }
+.paginaCatalogo .capaProduto { position:relative; min-height:6.5rem; overflow:hidden; }
+.paginaCatalogo .capaProduto::before, .paginaCatalogo .capaProduto::after { content:""; position:absolute; width:9rem; height:9rem; border:1px solid rgba(255,255,255,.25); border-radius:50%; right:-2rem; top:-4rem; pointer-events:none; }
+.paginaCatalogo .capaProduto::after { width:12rem; height:12rem; right:-3.5rem; top:-5.5rem; }
+.paginaCatalogo .tagFavorito { z-index:1; width:2.25rem; height:2.25rem; background:rgba(255,255,255,.9); color:#5c397c; }
+.paginaCatalogo .corpoProduto { padding:1.1rem 1.2rem; }
+.paginaCatalogo .nomeProduto { font-size:.88rem; line-height:1.55; font-weight:600; }
+.paginaCatalogo .descProduto { font-size:.71rem; line-height:1.85; margin-top:.5rem; }
+.paginaCatalogo .linksEstabelecimento { padding:.8rem 1.2rem 0; }
+.paginaCatalogo .linksEstabelecimento a { font-size:.65rem; min-height:2rem; border-radius:.5rem; }
+.paginaCatalogo .rodapeProduto { border-top:1px solid var(--linha); padding:.8rem 1.2rem; }
+.paginaCatalogo .precoCatalogo { font:500 .65rem/1.5 "Poppins",sans-serif; color:var(--tinta-suave); }
+.paginaCatalogo .botaoAdicionar { border-radius:.7rem; background:var(--ui-acao); color:var(--ui-sobre-acao); }
+.paginaCatalogo .paginacaoCatalogo { padding:1.4rem; margin-top:1.25rem; border:1px solid var(--linha); border-radius:1rem; background:var(--superficie); }
+.paginaCatalogo .statusPaginacaoCatalogo { font-size:.74rem; line-height:1.8; }
+
+/* Perfil e preferências: preserva as duas colunas e a zona de risco. */
+.paginaConfiguracoes .grid-config { gap:1.25rem; align-items:start; }
+.paginaConfiguracoes .colunaConfig { gap:1.25rem; }
+.paginaConfiguracoes .painel { padding:1.6rem; }
+.paginaConfiguracoes .cardConfigPerfil { position:relative; overflow:hidden; }
+.paginaConfiguracoes .cardConfigPerfil::before { content:""; display:block; height:3px; position:absolute; left:0; right:0; top:0; background:var(--grad-1); }
+.paginaConfiguracoes .avatarGrande { width:5.5rem; height:5.5rem; font-size:1.6rem; box-shadow:0 8px 25px -15px rgba(95,42,156,.6); }
+.paginaConfiguracoes #nomeGrandeConfig { font:600 1.4rem/1.4 "Playfair Display",serif; margin-top:.7rem; }
+.paginaConfiguracoes #emailGrandeConfig, .paginaConfiguracoes #statusAvatarConfig { color:var(--tinta-suave); font-size:.72rem; line-height:1.8; }
+.paginaConfiguracoes .linhaConfig { padding:1.15rem 0; gap:1rem; }
+.paginaConfiguracoes .nomeConfig { font-size:.8rem; font-weight:500; }
+.paginaConfiguracoes .descConfig { font-size:.7rem; line-height:1.85; }
+.paginaConfiguracoes .painel > p, .paginaConfiguracoes .blocoAutorizacao p { font-size:.75rem; line-height:1.85; color:var(--tinta-suave); }
+.paginaConfiguracoes .acoesPrivacidade { gap:.5rem .85rem; }
+.paginaConfiguracoes .acoesPrivacidade a { font-size:.72rem; color:var(--ui-acento); }
+.paginaConfiguracoes .blocoAutorizacao { border:1px solid var(--linha); border-radius:.8rem; background:var(--fundo); padding:1.15rem; }
+.paginaConfiguracoes .blocoAutorizacao h3 { font-size:.86rem; line-height:1.7; }
+.paginaConfiguracoes :is(.zonaRisco,.painelRisco) { border-top:3px solid #cc637b; }
+.paginaConfiguracoes #botaoExcluirConta { min-height:2.75rem; border-radius:.7rem; }
+
+/* Entrada e cadastro. */
+.bodyAuth { padding:2.25rem; }
+.bodyAuth .authShell { width:min(72rem,100%); border:1px solid rgba(231,210,255,.15); border-radius:1.65rem; box-shadow:0 35px 95px -38px rgba(0,0,0,.8); }
+.bodyAuth .authShellCadastro { width:min(78rem,100%); }
+.bodyAuth .authMarca { position:relative; background:radial-gradient(ellipse at 0% 100%,rgba(145,99,225,.19),transparent 70%),rgba(46,29,81,.96); }
+.bodyAuth .authMarca .authFrase { font-size:clamp(2.4rem,3.5vw,3.7rem); letter-spacing:-.035em; }
+.bodyAuth .authMarca > p:not(.authFrase) { color:#cbbadd; font-size:.81rem; line-height:1.9; }
+.bodyAuth .authSelo { color:#f1d29d; font-size:.51rem; letter-spacing:.09em; line-height:1.7; }
+.bodyAuth .authFormulario { background:rgba(35,21,62,.94); }
+.bodyAuth .authTitulo { font:500 2.1rem/1.15 "Playfair Display",serif; letter-spacing:-.025em; color:#fff; }
+.bodyAuth .authSub { color:#cbbadd; font-size:.78rem; line-height:1.8; margin-top:.6rem; }
+.bodyAuth .authEtapa { color:#ead0a9; font-size:.54rem; line-height:1.7; letter-spacing:.11em; }
+.bodyAuth .formAuth label, .bodyAuth .campoSenhaAuth > label { color:#e8def1; font-size:.76rem; }
+.bodyAuth .formAuth :is(input:not([type="checkbox"]):not([type="hidden"]),select) { min-height:2.95rem; border:1px solid rgba(226,204,251,.2); border-radius:.7rem; padding:.75rem .85rem; color:#fff; background:rgba(13,7,28,.27); font-size:.88rem; }
+.bodyAuth .formAuth input::placeholder { color:#bfb0d2; }
+.bodyAuth .formAuth .entradaSenha input { padding-right:3.25rem; }
+.bodyAuth .formAuth :is(input,select):focus { border-color:#d7b7ff; outline:2px solid rgba(215,183,255,.23); outline-offset:2px; }
+.bodyAuth .camposCadastro small, .bodyAuth .notaTermoCadastro { color:#cbbadd; font-size:.7rem; line-height:1.8; }
+.bodyAuth .termosCadastro { border-radius:.9rem; border-color:rgba(226,204,251,.18); padding:1.1rem; }
+.bodyAuth .authBotao { border-radius:.75rem; min-height:3rem; font-size:.8rem; }
+.bodyAuth .authRodape { color:#cbbadd; font-size:.75rem; line-height:1.8; }
+.bodyAuth .authRodape a { color:#f4d2a1; }
+.authErro:empty { display:none; }
+
+/* Convites públicos. */
+.bodyConvitePublico { padding:2.5rem 1.25rem; }
+.cartaoConvitePublico { width:min(39rem,100%); border-radius:1.4rem; border-color:rgba(226,204,251,.17); padding:2.6rem; }
+.marcaConvite { display:block; width:max-content; max-width:100%; margin-bottom:1.6rem; }
+.marcaConvite .logoConvitePublico { display:block; margin:0; width:10rem; }
+.cartaoConvitePublico .eyebrowConvite { display:block; color:#efce9d; font-size:.56rem; letter-spacing:.13em; }
+.cartaoConvitePublico h1 { font-size:clamp(1.9rem,3.5vw,2.6rem); line-height:1.15; letter-spacing:-.025em; overflow-wrap:anywhere; }
+.cartaoConvitePublico .conviteSaudacao { color:#d4c3e6; line-height:1.8; font-size:.8rem; margin-top:1.2rem; }
+.cartaoConvitePublico .detalhesConvitePublico { gap:.65rem; margin-bottom:1.4rem; }
+.cartaoConvitePublico .detalhesConvitePublico > div { padding:.9rem 1rem; border-color:rgba(226,204,251,.14); background:rgba(255,255,255,.035); }
+.cartaoConvitePublico .detalhesConvitePublico small { color:#cbbadd; font-size:.61rem; }
+.cartaoConvitePublico .detalhesConvitePublico strong { font-size:.78rem; line-height:1.8; }
+.bodyConvitePublico .botaoSecundario { color:#f0e3ff; border-color:rgba(226,204,251,.25); background:rgba(255,255,255,.045); }
+.bodyConvitePublico .formRsvp h2 { font-size:1.2rem; margin-top:1.5rem; }
+.bodyConvitePublico .formRsvp :is(select,textarea,input:not([type="radio"]):not([type="checkbox"])) { width:100%; min-width:0; border:1px solid rgba(226,204,251,.23); border-radius:.7rem; padding:.8rem .9rem; background:rgba(13,7,28,.25); color:#fff; font:inherit; font-size:.85rem; }
+.bodyConvitePublico :is(select,textarea):focus-visible { outline-color:#d3b3ff; }
+.bodyConvitePublico .opcoesRsvp { gap:.65rem; }
+.bodyConvitePublico .opcoesRsvp span { padding:.9rem 1rem; border-color:rgba(226,204,251,.2); font-size:.78rem; color:#e1d4ed; }
+.opcoesRsvp label:has(input:focus-visible) span { outline:2px solid #e3c0ff; outline-offset:3px; }
+.bodyConvitePublico .campoRestricaoRsvp { color:#d9c9e9; font-size:.73rem; line-height:1.8; }
+.bodyConvitePublico .aceiteCadastro { color:#d9c9e9; font-size:.71rem; line-height:1.8; }
+.bodyConvitePublico .blocoAutorizacao { padding:1.1rem; border:1px solid rgba(226,204,251,.2); background:rgba(255,255,255,.035); border-radius:.85rem; }
+.bodyConvitePublico .blocoAutorizacao summary { color:#eee1fa; font-size:.75rem; line-height:1.8; }
+.bodyConvitePublico .blocoAutorizacao p { font-size:.72rem; line-height:1.85; color:#cbbadd; }
+.bodyConvitePublico .blocoAutorizacao a { color:#ecd0ff; }
+.bodyConvitePublico .formRsvp .authBotao { width:100%; min-height:3rem; border-radius:.75rem; margin-top:1.2rem; }
+.bodyConvitePublico .rsvpSucesso { border:1px solid rgba(118,222,195,.25); padding:1.2rem; border-radius:.9rem; line-height:1.8; }
+.estadoConvitePublico { padding-top:.5rem; }
+.estadoConvitePublico p, .erroCarregamentoConvite p { color:#d4c3e6; font-size:.8rem; line-height:1.9; margin:1.2rem 0; }
+.estadoConvitePublico .botaoSecundario { display:inline-flex; align-items:center; margin-top:.5rem; }
+
+/* Termos, privacidade e autorização: o conteúdo dos documentos é preservado. */
+.bodyPaginaLegal { background:radial-gradient(ellipse at 90% 0%,var(--ui-suave),transparent 36rem),var(--fundo); color:var(--tinta); }
+.bodyPaginaLegal .paginaLegal { width:100%; max-width:76rem; padding:2rem 2.5rem; }
+.paginaLegal .topoLegal { padding:0 0 1.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--linha); min-height:4rem; }
+.paginaLegal .topoLegal > a:first-child { background:#2b1a45; padding:.65rem 1rem; border-radius:.8rem; }
+.paginaLegal .topoLegal img { display:block; width:8.5rem; max-width:35vw; }
+.paginaLegal .topoLegal > a:last-child:not(:first-child) { font-size:.73rem; line-height:1.7; text-decoration:none; color:var(--ui-acento); padding:.5rem; }
+.seloDocumento { display:block; font:600 .58rem/1.8 "Poppins",sans-serif; letter-spacing:.13em; color:var(--ui-acento); margin-bottom:.8rem; }
+.heroDocumento { max-width:48rem; padding:1.2rem 0 2rem; }
+.paginaLegal .heroDocumento h1 { font:500 clamp(2.35rem,4.5vw,3.8rem)/1.1 "Playfair Display",serif; letter-spacing:-.035em; margin:0 0 .9rem; }
+.paginaLegal .heroDocumento > p { font-size:.83rem; color:var(--tinta-suave); line-height:1.85; margin:0; }
+.layoutDocumento { display:grid; grid-template-columns:14rem minmax(0,1fr); align-items:start; gap:1.3rem; }
+.paginaLegal .layoutDocumento > .indiceDocumento { position:sticky; top:1.5rem; min-width:0; padding:1.1rem; margin:0; border:1px solid var(--linha); border-radius:.9rem; background:var(--superficie); }
+.indiceDocumento summary { color:var(--tinta); font-size:.78rem; font-weight:600; cursor:pointer; }
+.indiceDocumento nav { display:grid; gap:.2rem; margin-top:.75rem; }
+.paginaLegal .indiceDocumento a { display:grid; grid-template-columns:1.2rem minmax(0,1fr); align-items:baseline; gap:.5rem; padding:.55rem .35rem; border-radius:.5rem; text-decoration:none; font-size:.68rem; color:var(--tinta-suave); line-height:1.7; }
+.indiceDocumento a > span { color:var(--ui-acento); font-size:.54rem; font-variant-numeric:tabular-nums; }
+.paginaLegal .indiceDocumento a:hover { background:var(--ui-suave); color:var(--ui-acento); }
+.paginaLegal .textoDocumento { min-width:0; padding:2rem; border-radius:1rem; }
+.textoDocumento :is(h2,section[id],.tabelaDados) { scroll-margin-top:1.5rem; }
+.paginaLegal .textoDocumento h2 { font:600 1.4rem/1.4 "Playfair Display",serif; margin:1.8rem 0 .8rem; letter-spacing:-.02em; }
+.paginaLegal .textoDocumento > h2:first-child { margin-top:0; }
+.paginaLegal .textoDocumento :is(p,li,dd) { font-size:.82rem; line-height:1.95; color:var(--tinta-suave); }
+.paginaLegal a { color:var(--ui-acento); }
+.paginaLegal .textoDocumento strong { color:var(--tinta); }
+.paginaLegal .documentosPdf li { border-radius:.85rem; background:var(--fundo); padding:1.2rem; }
+.documentosPdf li::before { content:"PDF"; display:block; width:max-content; border:1px solid var(--linha); border-radius:.35rem; padding:.15rem .35rem; color:var(--ui-acento); font-size:.53rem; font-weight:600; letter-spacing:.06em; margin-bottom:.6rem; }
+.paginaLegal .documentosPdf li > strong { display:block; font-size:.85rem; line-height:1.7; }
+.paginaLegal .documentosPdf .acoesPrivacidade { margin-top:.8rem; font-size:.73rem; }
+.paginaLegal .tabelaDados { border:1px solid var(--linha); border-radius:.85rem; margin-top:0; }
+.paginaLegal .tabelaDados th, .paginaLegal .tabelaDados td { border:0; border-bottom:1px solid var(--linha); padding:1rem; font-size:.77rem; line-height:1.8; }
+.paginaLegal .tabelaDados th { background:var(--ui-suave); color:var(--ui-acento); font-size:.68rem; font-weight:600; }
+.paginaLegal .tabelaDados tr:nth-child(even) td { background:var(--fundo); }
+.paginaLegal .tabelaDados td:first-child { color:var(--tinta); font-weight:500; }
+.paginaLegal .tabelaDados tr:last-child td { border-bottom:0; }
+.contatoPrivacidade { display:grid; grid-template-columns:minmax(8rem,.8fr) minmax(0,1.2fr); gap:.7rem 1rem; padding:1.2rem; border:1px solid var(--linha); border-radius:.85rem; background:var(--fundo); margin-bottom:1rem; }
+.paginaLegal .contatoPrivacidade dt { color:var(--tinta); font-size:.72rem; line-height:1.9; }
+.paginaLegal .contatoPrivacidade dd { margin:0; font-size:.78rem; }
+.paginaLegal .textoDocumento > details { padding:1.1rem; border:1px solid var(--linha); border-radius:.8rem; background:var(--fundo); }
+.paginaLegal > .linksLegais { margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--linha); }
+.paginaAutorizacao .paginaLegal { max-width:54rem; }
+.paginaAutorizacao .painel { padding:2rem; }
+.paginaAutorizacao .cabecalhoAutorizacao h1 { font-size:clamp(2rem,4vw,3rem); letter-spacing:-.03em; }
+.paginaAutorizacao .formAuth { max-width:none; }
+.paginaAutorizacao .formAuth > label { font-size:.78rem; }
+.paginaAutorizacao .formAuth input:not([type="radio"]):not([type="checkbox"]), .paginaAutorizacao .formAuth select, .paginaAutorizacao .formAuth textarea { min-height:2.9rem; padding:.85rem; font:inherit; font-size:.85rem; }
+.paginaAutorizacao .formAuth fieldset { background:var(--fundo); padding:1.2rem; border-radius:.85rem; }
+.paginaAutorizacao .formAuth fieldset fieldset { background:var(--superficie); }
+.paginaAutorizacao .formAuth fieldset label { font-size:.76rem; line-height:1.85; }
+.paginaAutorizacao :is(#statusAutorizacao,#titularAutorizacao) { font-size:.81rem; line-height:1.85; color:var(--tinta-suave); }
+
+/* Recuperar e redefinir senha. */
+.bodyPaginaLegal .acessoConta { max-width:62rem; }
+.paginaLegal .cartaoAcesso { max-width:33rem; padding:2.3rem; margin:2.5rem auto; border-radius:1.3rem; }
+.iconeAcesso { display:grid; place-items:center; width:3.4rem; height:3.4rem; border-radius:1.1rem; color:var(--ui-acento); background:var(--ui-suave); margin-bottom:1.5rem; }
+.iconeAcesso svg { width:1.6rem; height:1.6rem; }
+.paginaLegal .cartaoAcesso h1 { font:500 clamp(2rem,4vw,2.6rem)/1.15 "Playfair Display",serif; letter-spacing:-.035em; margin:0 0 1rem; }
+.paginaLegal .introducaoAcesso { color:var(--tinta-suave); font-size:.8rem; line-height:1.9; }
+.paginaLegal .cartaoAcesso .formAuth { width:100%; margin:1.7rem 0 1rem; gap:1rem; }
+.paginaLegal .cartaoAcesso label { font-size:.75rem; color:var(--tinta); }
+.paginaLegal .cartaoAcesso input { min-height:3.1rem; padding:.85rem .95rem; font:inherit; font-size:.88rem; background:var(--fundo); color:var(--tinta); border:1px solid var(--linha); }
+.paginaLegal .cartaoAcesso .entradaSenha input { padding-right:3.2rem; }
+.paginaLegal .cartaoAcesso .botaoMostrarSenha { color:var(--ui-acento); }
+.paginaLegal .cartaoAcesso .authBotao { border-radius:.75rem; background:var(--ui-acao); color:var(--ui-sobre-acao); min-height:3rem; font-size:.8rem; box-shadow:var(--ui-sombra); }
+.paginaLegal .cartaoAcesso .authBotao:hover { background:var(--ui-acao-hover); }
+.paginaLegal .ajudaAcesso { font-size:.69rem; line-height:1.8; color:var(--tinta-suave); margin:0; }
+.notaAcesso { padding:1rem; background:var(--fundo); border:1px solid var(--linha); border-radius:.8rem; margin:1.4rem 0; }
+.notaAcesso strong { display:block; font-size:.75rem; color:var(--tinta); margin-bottom:.4rem; }
+.paginaLegal .notaAcesso p { color:var(--tinta-suave); font-size:.71rem; line-height:1.85; margin:0; }
+.paginaLegal .retornoAcesso { display:inline-block; padding:.45rem 0; font-size:.74rem; line-height:1.8; color:var(--ui-acento); }
+.acoesAcesso { display:flex; align-items:center; flex-wrap:wrap; gap:.6rem 1rem; margin-top:1.2rem; }
+.paginaLegal .retornoFormulario { padding:1rem; border-radius:.8rem; border:1px solid var(--linha); background:var(--ui-suave); color:var(--tinta); font-size:.77rem; line-height:1.85; margin:1rem 0; overflow-wrap:anywhere; }
+.retornoFormulario:empty { display:none; }
+.paginaLegal .retornoFormulario[data-estado="sucesso"] { border-left:3px solid #439783; }
+.paginaLegal .retornoFormulario[data-estado="erro"] { border-left:3px solid #cb647d; }
+
+@media(max-width:1100px) {
+    .layoutDocumento { grid-template-columns:minmax(0,1fr); }
+    .paginaLegal .layoutDocumento > .indiceDocumento { position:static; }
+    .indiceDocumento nav { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:1024px) {
+    .conteudo { padding:1.25rem 1.5rem; }
+    .bodyAuth { padding:1.5rem; }
+}
+@media(max-width:650px) {
+    .conteudo { padding:1rem; gap:1.35rem; }
+    .linhaTopo .titulo { font-size:2.2rem; }
+    .linhaTopo .subtitulo { font-size:.76rem; }
+    .paginaInicio .cardStat { padding:.9rem; }
+    .paginaInicio .cardStat .valor { font-size:1.2rem; }
+    .paginaConfiguracoes .painel { padding:1.2rem; }
+    .paginaConfiguracoes .linhaConfig { flex-wrap:wrap; }
+    .paginaCatalogo .barraLocalizacao { padding:.85rem; }
+    .paginaCatalogo .cardProduto .corpoProduto { padding:1rem; }
+    .bodyAuth { padding:1rem; }
+    .bodyAuth .authShell { border-radius:1.2rem; }
+    .bodyAuth .authFormulario { padding:1.5rem 1.25rem; }
+    .bodyAuth .formAuth :is(input:not([type="checkbox"]):not([type="hidden"]),select) { font-size:1rem; }
+    .bodyConvitePublico { padding:1rem; }
+    .cartaoConvitePublico { padding:1.35rem; border-radius:1.15rem; }
+    .bodyConvitePublico .formRsvp :is(select,textarea,input:not([type="radio"]):not([type="checkbox"])) { font-size:1rem; }
+    .bodyPaginaLegal .paginaLegal { padding:1.1rem 1rem; }
+    .paginaLegal .topoLegal { gap:.65rem; margin-bottom:.5rem; }
+    .paginaLegal .topoLegal > a:first-child { padding:.6rem .7rem; }
+    .paginaLegal .topoLegal > a:last-child:not(:first-child) { font-size:.67rem; }
+    .paginaLegal .heroDocumento { padding:1.5rem 0; }
+    .paginaLegal .heroDocumento h1 { font-size:2.5rem; }
+    .paginaLegal .textoDocumento { padding:1.25rem; }
+    .paginaLegal .textoDocumento :is(p,li,dd) { font-size:.8rem; }
+    .indiceDocumento nav { grid-template-columns:minmax(0,1fr); }
+    .paginaLegal .tabelaDados th, .paginaLegal .tabelaDados td { padding:.7rem .6rem; font-size:.71rem; }
+    .paginaLegal .contatoPrivacidade { grid-template-columns:minmax(0,1fr); gap:.25rem; }
+    .paginaLegal .contatoPrivacidade dd { margin-bottom:.6rem; }
+    .paginaLegal .cartaoAcesso { padding:1.5rem; margin:1.5rem auto; }
+    .paginaLegal .cartaoAcesso input, .paginaAutorizacao .formAuth input:not([type="radio"]):not([type="checkbox"]), .paginaAutorizacao .formAuth select, .paginaAutorizacao .formAuth textarea { font-size:1rem; }
+    .paginaAutorizacao .painel { padding:1.3rem; }
+    .paginaAutorizacao .formAuth fieldset { padding:1rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .paginaCatalogo .cardProduto { transition:none; }
+}
+
+/* Alinhamento consistente das áreas principais com o título de cada página. */
+.paginaInicio #blocoEventos.faixaEventos,
+.paginaEventos .buscaEventosTopo,
+.paginaEventos .conteudo > section,
+.paginaCatalogo .conteudo > section {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.paginaInicio #blocoEventos.faixaEventos {
+    justify-self: stretch;
+}
+
+.paginaEventos .buscaEventosTopo {
+    margin-top: 0;
+    /* Replica o recuo aplicado ao título e à grade quando o conteúdo
+       ultrapassa 1440px, sem centralizar a própria barra. */
+    margin-left: max(0px, calc((100% - 1440px) / 2));
+    margin-right: 0;
+}
+
+.paginaEventos .conteudo > section,
+.paginaCatalogo .conteudo > section {
+    min-width: 0;
+}
+
+@media (max-width: 700px) {
+    .paginaInicio #blocoEventos.faixaEventos,
+    .paginaEventos .buscaEventosTopo,
+    .paginaEventos .conteudo > section,
+    .paginaCatalogo .conteudo > section {
+        max-width: 100%;
+    }
+}

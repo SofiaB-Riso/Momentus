@@ -1,0 +1,45 @@
+classDiagram
+direction TB
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class DespesaEvento {
+    +int id
+    +int evento_id
+    +String descricao
+    +Decimal valor
+    +String comprovante
+}
+class FotoEvento {
+    +int id
+    +int evento_id
+    +int usuario_id
+    +String arquivo
+    +String legenda
+}
+class LocalEvento {
+    +int id
+    +int evento_id
+    +String nome
+    +String cidade
+    +int capacidade
+    +Decimal preco
+    +String estilo
+}
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+Evento "1" *-- "0..*" DespesaEvento : despesas
+Evento "1" *-- "0..*" FotoEvento : galeria
+Evento "1" *-- "0..*" LocalEvento : espacos salvos
+Usuario "0..1" o-- "0..*" FotoEvento : autoria opcional

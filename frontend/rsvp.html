@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar presença - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+<body class="bodyConvitePublico paginaRsvp">
+    <span class="estrelaAuth e1">✦</span><span class="estrelaAuth e3">✦</span>
+    <main class="cartaoConvitePublico">
+        <a href="index.html" class="marcaConvite" aria-label="Momentus — início"><img src="assets/Logo.png" alt="Momentus" class="logoConvitePublico"></a>
+        <span class="eyebrowConvite">CONVITE ✦</span>
+        <section id="rsvpEstado" class="estadoConvitePublico">
+            <h1 id="rsvpTituloEstado">Seu convite está chegando</h1>
+            <p id="rsvpCarregando" role="status" aria-live="polite">Carregando as informações do evento…</p>
+            <a id="rsvpVoltar" class="botaoSecundario" href="index.html" hidden>Voltar ao Momentus</a>
+        </section>
+        <div id="rsvpConteudo" hidden>
+            <p class="conviteSaudacao">Olá, <strong id="rsvpNome"></strong>.</p>
+            <h1 id="rsvpEvento"></h1>
+            <div class="detalhesConvitePublico">
+                <div><small>Data</small><strong id="rsvpData">—</strong></div>
+                <div><small>Horário</small><strong id="rsvpHora">—</strong></div>
+                <div class="linhaCompleta"><small>Local</small><strong id="rsvpLocal">—</strong></div>
+                <div class="linhaCompleta"><small>Organizado por</small><strong id="rsvpOrganizador">—</strong></div>
+            </div>
+            <div id="rsvpMapas" class="acoesDescoberta"></div>
+            <section id="rsvpAvisos" class="avisosConvite" aria-live="polite" hidden><h2>Avisos do seu evento</h2><ul id="rsvpListaAvisos"></ul></section>
+            <div id="rsvpConfirmadosPublicos" class="confirmadosPublicos" hidden></div>
+            <section id="rsvpItensCompartilhados" class="itensPublicosRsvp" hidden>
+                <h2>Quer ajudar levando algo?</h2>
+                <p>Escolha um item da lista sem precisar virar colaborador do evento.</p>
+                <div id="rsvpListaItens"></div>
+            </section>
+            <form id="formRsvp" class="formRsvp">
+                <p id="rsvpVagas" class="avisoVagas" role="status" hidden></p>
+                <h2>Você vai?</h2>
+                <div class="opcoesRsvp">
+                    <label><input type="radio" name="status" value="confirmado" required><span>✓ Sim, estarei lá</span></label>
+                    <label><input type="radio" name="status" value="recusado"><span>Não poderei ir</span></label>
+                    <label><input type="radio" name="status" value="pendente"><span>Ainda não sei</span></label>
+                </div>
+                <label class="campoRestricaoRsvp">Preferências alimentares (opcional)<textarea id="rsvpRestricoes" rows="3" maxlength="4000" placeholder="Vegetariano, sem carne…"></textarea></label>
+                <label class="aceiteCadastro"><input type="checkbox" id="rsvpPreferenciasSemSaude"><span>Confirmo que estas preferências não contêm informações de saúde. Alergias e intolerâncias devem ser informadas na seção abaixo.</span></label>
+                <details class="blocoAutorizacao"><summary>Informações de saúde para a alimentação — opcional</summary>
+                    <p>Informe apenas os cuidados necessários a este evento. Sua presença não depende de fornecer essas informações.</p>
+                    <label for="rsvpFaixaEtaria">Declaração de idade</label><select id="rsvpFaixaEtaria"><option value="">Não informar dados de saúde</option><option value="adulto">Declaro ter 18 anos ou mais</option><option value="menor">Tenho menos de 18 anos</option></select>
+                    <div id="rsvpSaudeAdulto" hidden><label class="aceiteCadastro"><input id="rsvpAutorizarSaude" type="checkbox"><span>Autorizo especificamente o registro das informações de saúde abaixo para o planejamento da alimentação deste evento, com acesso às pessoas autorizadas a organizá-lo. Li o <a href="documentos/termo-consentimento-momentus.pdf" target="_blank" rel="noopener">Termo de Consentimento</a>.</span></label><label id="campoSaudeRsvp" class="campoRestricaoRsvp" hidden>Alergias, intolerâncias e cuidados necessários<textarea id="rsvpSaude" rows="3" maxlength="4000"></textarea></label></div>
+                    <div id="rsvpSaudeMenor" hidden><p>Peça ao responsável legal que registre a decisão pelo link privado. Não escreva informações de saúde neste formulário.</p><button type="button" id="rsvpGerarResponsavel" class="botaoSecundario">Gerar link para responsável</button><div id="rsvpCompartilharResponsavel" hidden><label for="rsvpLinkResponsavel">Link privado, válido por sete dias</label><input id="rsvpLinkResponsavel" readonly><button type="button" id="rsvpCopiarResponsavel" class="botaoSecundario">Copiar link</button></div></div>
+                    <button type="button" id="rsvpRevogarSaude" class="botaoSecundario">Revogar autorização e apagar dados de saúde</button>
+                    <p class="notaPrivacidade">A autorização é opcional e pode ser revogada aqui ou pelo <a href="privacidade.html" target="_blank" rel="noopener">canal de privacidade</a>.</p>
+                </details>
+                <button class="authBotao" type="submit"><span>Enviar resposta</span><b>→</b></button>
+                <p class="authErro" id="rsvpErro"></p>
+            </form>
+            <div class="rsvpSucesso" id="rsvpSucesso" hidden><strong>Presença atualizada!</strong><span>Sua resposta já apareceu para quem está organizando o evento.</span></div>
+        </div>
+    </main>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script><script src="js/rsvp.js"></script>
+<footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</body>
+</html>

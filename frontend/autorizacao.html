@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Autorização de responsável - Momentus</title>
+    <link rel="stylesheet" href="css/style.css"><script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/acabamento.css">
+</head>
+<body class="bodyPaginaLegal paginaAutorizacao">
+<main class="paginaLegal">
+    <header class="topoLegal"><a href="index.html"><img src="assets/Logo.png" alt="Momentus"></a><a href="index.html">Voltar ao Momentus</a></header>
+    <section class="painel">
+        <header class="cabecalhoAutorizacao"><span class="seloDocumento">UMA DECISÃO COM CUIDADO</span><h1>Autorização de responsável</h1></header>
+        <p id="statusAutorizacao" role="status">Consultando o link…</p>
+        <form id="formAutorizacao" class="formAuth" hidden>
+            <p id="titularAutorizacao"></p>
+            <label>Seu nome completo<input id="responsavelNome" required minlength="2" maxlength="160" autocomplete="name"></label>
+            <label>Seu e-mail<input id="responsavelEmail" type="email" required maxlength="180" autocomplete="email"></label>
+            <label>Vínculo com a pessoa menor de idade<input id="responsavelVinculo" required minlength="2" maxlength="100" placeholder="Pai, mãe ou responsável legal"></label>
+            <fieldset id="decisaoConta"><legend>Uso da conta</legend><label><input type="radio" name="decisao" value="sim" required>Autorizo o uso do Momentus para organização de eventos conforme os documentos abaixo.</label><label><input type="radio" name="decisao" value="nao">Não autorizo o uso da conta.</label></fieldset>
+            <fieldset id="decisaoSaude" hidden><legend>Participação e alimentação no evento</legend>
+                <fieldset><legend>Dados para a participação no evento</legend><label><input type="radio" name="participacao" value="sim">Autorizo o uso do nome, resposta de presença e preferências alimentares para a organização deste evento.</label><label><input type="radio" name="participacao" value="nao">Não autorizo. A participação ficará recusada.</label></fieldset>
+                <p><strong>Informações de saúde — opcionais:</strong> autorize somente o necessário para planejar a alimentação deste evento. Os dados ficam disponíveis às pessoas autorizadas a organizar o evento.</p>
+                <label class="aceiteCadastro"><input type="checkbox" id="autorizarSaudeResponsavel"><span>Autorizo especificamente o registro das informações de saúde abaixo para essa finalidade.</span></label>
+                <label id="campoSaudeResponsavel" hidden>Cuidados alimentares necessários<textarea id="saudeResponsavel" maxlength="4000" rows="3"></textarea></label>
+                <p>Sem esta autorização, informações de saúde não serão salvas. A revogação pode ser solicitada pelo RSVP ou pelo canal de privacidade.</p>
+            </fieldset>
+            <p><a href="documentos/termo-uso-momentus.pdf" target="_blank" rel="noopener">Termos de Uso (PDF)</a> · <a href="documentos/termo-consentimento-momentus.pdf" target="_blank" rel="noopener">Termo de Consentimento (PDF)</a> · <a href="privacidade.html" target="_blank" rel="noopener">Privacidade e contato</a></p>
+            <label class="aceiteCadastro"><input type="checkbox" id="declaracaoResponsavel" required><span>Declaro ter 18 anos ou mais, ser responsável legal pela pessoa identificada e ter lido os documentos. Confirmo minha decisão expressa.</span></label>
+            <button type="submit" class="botaoPrimario">Registrar decisão</button>
+        </form>
+    </section>
+<footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</main>
+<script src="js/api.js"></script><script src="js/autorizacao.js"></script>
+</body>
+</html>

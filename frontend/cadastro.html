@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1b0d38">
+    <title>Criar conta - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+<body class="bodyAuth paginaCadastro">
+    <span class="estrelaAuth e1" aria-hidden="true">✦</span><span class="estrelaAuth e2" aria-hidden="true">✦</span><span class="estrelaAuth e3" aria-hidden="true">✦</span><span class="estrelaAuth e4" aria-hidden="true">✦</span>
+    <main class="authShell authShellCadastro">
+        <section class="authMarca">
+            <img src="assets/Logo.png" class="authLogo" alt="Momentus">
+            <p class="authFrase">Transforme cada <em>segundo</em> em uma memória eterna.</p>
+            <p>Crie sua conta e comece a planejar.</p>
+            <span class="authSelo">✦ CADA MOMENTO PERFEITAMENTE PLANEJADO</span>
+        </section>
+        <section class="authFormulario" aria-labelledby="tituloCadastro">
+            <div id="etapaCadastro">
+                <a class="authLogoCompacta" href="index.html" aria-label="Momentus — entrar"><img src="assets/Logo.png" alt="Momentus"></a>
+                <span class="authEtapa">SEUS PRÓXIMOS MOMENTOS COMEÇAM AQUI</span>
+                <h1 id="tituloCadastro" class="authTitulo">Crie sua conta</h1>
+                <p class="authSub">Preencha seus dados. O próximo grande momento é seu.</p>
+                <form id="formCadastro" class="formAuth formAuthCadastro" action="/auth/cadastro" method="post" autocomplete="off" aria-describedby="erroCadastro">
+                    <div class="camposCadastro">
+                        <label for="cadastroNome">Nome completo<input type="text" id="cadastroNome" name="nome" autocomplete="off" minlength="2" maxlength="160" placeholder="Como você se chama?" required></label>
+                        <label for="cadastroEmail">E-mail<input type="email" id="cadastroEmail" name="email" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="180" placeholder="seuemail@exemplo.com" required></label>
+                        <div class="campoSenhaAuth"><label for="cadastroSenha">Nova senha</label><div class="entradaSenha"><input type="password" id="cadastroSenha" name="new-password" minlength="6" maxlength="256" autocomplete="new-password" placeholder="Crie uma senha" aria-describedby="ajudaSenhaCadastro" required><button type="button" class="botaoMostrarSenha" data-mostrar-senha="cadastroSenha" aria-controls="cadastroSenha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha"></button></div><small id="ajudaSenhaCadastro">Use pelo menos 6 caracteres.</small></div>
+                        <div class="campoSenhaAuth"><label for="cadastroSenha2">Confirmar nova senha</label><div class="entradaSenha"><input type="password" id="cadastroSenha2" name="confirm-new-password" minlength="6" maxlength="256" autocomplete="new-password" placeholder="Repita a senha" required><button type="button" class="botaoMostrarSenha" data-mostrar-senha="cadastroSenha2" aria-controls="cadastroSenha2" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha"></button></div></div>
+                        <label for="cadastroTelefone"><span>Telefone <small>(opcional)</small></span><input type="tel" id="cadastroTelefone" name="telefone" autocomplete="off" inputmode="tel" maxlength="40" pattern="\+?[0-9]+" placeholder="+5531999999999" aria-describedby="ajudaTelefoneCadastro" title="Use apenas números, com + no início para o código do país."><small id="ajudaTelefoneCadastro">Somente números e + para o código do país.</small></label>
+                        <label for="cadastroFaixaEtaria">Declaração de idade<select id="cadastroFaixaEtaria" name="faixa_etaria" aria-describedby="avisoIdadeCadastro" required><option value="">Selecione sua situação</option><option value="adulto">Declaro ter 18 anos ou mais</option><option value="menor">Tenho menos de 18 anos</option></select></label>
+                    </div>
+                    <p class="notaTermoCadastro" id="avisoIdadeCadastro">Contas de menores aguardam a autorização de um responsável antes de organizar ou acessar eventos.</p>
+                    <fieldset class="termosCadastro">
+                        <legend>Termos e privacidade</legend>
+                        <label class="aceiteCadastro"><input type="checkbox" id="aceiteTermosCadastro" name="aceite_termos" required><span>Li e aceito os <a href="documentos/termo-uso-momentus.pdf" target="_blank" rel="noopener">Termos de Uso (PDF)</a> e li o <a href="privacidade.html" target="_blank" rel="noopener">Aviso de Privacidade</a>.</span></label>
+                        <p class="notaTermoCadastro">Consulte também o <a href="documentos/termo-consentimento-momentus.pdf" target="_blank" rel="noopener">Termo de Consentimento (PDF)</a>.</p>
+                        <p class="notaTermoCadastro" id="statusTermosCadastro" role="status">Carregando a versão dos termos…</p>
+                        <button type="button" id="recarregarTermosCadastro" class="authTentarNovamente" hidden>Tentar carregar novamente</button>
+                    </fieldset>
+                    <input type="hidden" id="versaoTermosCadastro">
+                    <button class="authBotao" type="submit" disabled><span>Criar conta</span><b>→</b></button>
+                    <p class="authErro" id="erroCadastro" role="alert" tabindex="-1"></p>
+                </form>
+                <p class="authRodape">Já possui conta? <a href="index.html">Entre agora</a></p>
+            </div>
+        </section>
+    </main>
+    <script src="js/api.js"></script>
+    <script src="js/senha.js"></script>
+    <script src="js/telefone.js"></script>
+    <script src="js/auth.js"></script>
+<footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</body>
+</html>

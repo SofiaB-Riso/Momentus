@@ -1,0 +1,47 @@
+classDiagram
+direction TB
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class ItemCompartilhado {
+    +int id
+    +int evento_id
+    +String nome
+    +int quantidade
+    +String responsavel_tipo
+    +int responsavel_id
+}
+class ItemEvento {
+    +int id
+    +int evento_id
+    +int produto_id
+    +String nome
+    +Decimal preco
+    +int quantidade
+}
+class TarefaEvento {
+    +int id
+    +int evento_id
+    +String titulo
+    +bool feita
+    +DateTime prazo
+    +int ordem
+}
+class ProdutoFornecedor {
+    +int id
+    +int fornecedor_id
+    +String nome
+    +String categoria
+    +Decimal preco
+    +bool ativo
+}
+Evento "1" *-- "0..*" ItemCompartilhado : lista compartilhada
+Evento "1" *-- "0..*" ItemEvento : itens contratados
+Evento "1" *-- "0..*" TarefaEvento : checklist
+ProdutoFornecedor "0..1" o-- "0..*" ItemEvento : origem opcional

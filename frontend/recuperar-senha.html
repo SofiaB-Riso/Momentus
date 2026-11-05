@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Recuperar senha - Momentus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/acabamento.css">
+</head>
+<body class="bodyPaginaLegal paginaRecuperar">
+<main class="paginaLegal acessoConta">
+    <header class="topoLegal"><a href="index.html" aria-label="Momentus — entrar"><img src="assets/Logo.png" alt="Momentus"></a><a href="index.html" class="voltarLegal">Voltar para entrar</a></header>
+    <article class="painel cartaoAcesso">
+        <span class="iconeAcesso" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span>
+        <span class="seloDocumento">CUIDADO COM A SUA CONTA</span>
+        <h1>Vamos recuperar seu acesso</h1>
+        <p class="introducaoAcesso">Informe o e-mail da sua conta. Enviaremos um link para você criar uma nova senha e voltar a planejar.</p>
+        <form id="formRecuperarSenha" class="formAuth">
+            <label for="recuperarEmail">E-mail da conta<input id="recuperarEmail" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="seuemail@exemplo.com" required maxlength="180"></label>
+            <button class="authBotao" type="submit"><span>Enviar link de recuperação</span><span aria-hidden="true">→</span></button>
+        </form>
+        <p id="statusRecuperacao" class="retornoFormulario" role="status" aria-live="polite"></p>
+        <div class="notaAcesso"><strong>O link é pessoal e temporário.</strong><p>Use o link mais recente recebido. Ele expira em 30 minutos e pode ser utilizado uma única vez.</p></div>
+        <a href="index.html" class="retornoAcesso">Lembrou sua senha? Voltar para entrar ↗</a>
+    </article>
+    <footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</main>
+<script src="js/api.js"></script><script src="js/recuperacao.js"></script>
+</body>
+</html>

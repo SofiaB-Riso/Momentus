@@ -1,0 +1,895 @@
+/* ================= PÁGINA DO EVENTO (individual) ================= */
+(function () {
+    const container = document.getElementById('conteudoEvento');
+    if (!container) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const eventoId = params.get('id');
+    const enviosDespesas = new Map();
+    const modais = [...document.querySelectorAll('.overlayModal')];
+    const focosModais = new WeakMap();
+    modais.forEach(overlay => {
+        const caixa = overlay.querySelector('.caixaModal');
+        if (!caixa) return;
+        caixa.setAttribute('role', 'dialog');
+        caixa.setAttribute('aria-modal', 'true');
+        const titulo = caixa.querySelector('h3');
+        if (titulo) { titulo.id ||= overlay.id + 'Titulo'; caixa.setAttribute('aria-labelledby', titulo.id); }
+        overlay.inert = !overlay.classList.contains('aberto');
+        overlay.setAttribute('aria-hidden', String(overlay.inert));
+        new MutationObserver(() => {
+            const aberto = overlay.classList.contains('aberto');
+            overlay.inert = !aberto;
+            overlay.setAttribute('aria-hidden', String(!aberto));
+            if (aberto) {
+                focosModais.set(overlay, document.activeElement);
+                caixa.querySelector('button:not(:disabled), input:not(:disabled), select:not(:disabled)')?.focus();
+            } else {
+                const anterior = focosModais.get(overlay);
+                if (anterior?.isConnected) anterior.focus();
+            }
+        }).observe(overlay, {attributes:true, attributeFilter:['class']});
+    });
+    document.addEventListener('keydown', e => {
+        const overlay = modais.find(el => el.classList.contains('aberto'));
+        if (!overlay) return;
+        if (e.key === 'Escape') { e.preventDefault(); overlay.querySelector('.fecharModalBotao')?.click(); }
+        if (e.key !== 'Tab') return;
+        const alvos = [...overlay.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]')].filter(el => el.getBoundingClientRect().height > 0);
+        const primeiro = alvos[0], ultimo = alvos[alvos.length - 1];
+        if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo?.focus(); }
+        else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro?.focus(); }
+    });
+
+    const botaoVoltar = document.getElementById('botaoVoltar');
+    if (botaoVoltar) {
+        botaoVoltar.addEventListener('click', () => {
+            if (document.referrer && document.referrer.indexOf(window.location.origin) === 0) {
+                window.history.back();
+            } else {
+                window.location.href = 'eventos.html';
+            }
+        });
+    }
+
+    const CATEGORIA_COR = {
+        salgados: 'var(--grad-2)', doces: 'var(--grad-1)', bebidas: 'linear-gradient(135deg,#6a8dff,#8a5cf6)',
+        decoracao: 'linear-gradient(135deg,#f0a63a,#f7cf6e)', buffet: 'var(--grad-3)'
+    };
+
+    function montarVazio() {
+        const tpl = document.getElementById('templateEventoVazio');
+        container.innerHTML = '';
+        container.appendChild(tpl.content.cloneNode(true));
+        Momentus.aplicarIdioma(Momentus.obterIdioma(), false);
+    }
+
+    function abaAtivaAtual() {
+        const ativa = container.querySelector('.abaEvento.abaAtiva');
+        return ativa ? ativa.dataset.aba : 'informacoes';
+    }
+
+    function renderizarEvento(atualizacao) {
+        // Toda atualização de dados pode chegar enquanto outro formulário é preenchido.
+        const preservar = !!atualizacao;
+        const valores = preservar ? [...container.querySelectorAll('input,select,textarea')].map(el => ({
+            id:el.id, valor:el.value, checked:el.checked, arquivo:el.type === 'file' ? el : null
+        })).filter(v => v.id) : [];
+        const detalhesAbertos = preservar ? [...container.querySelectorAll('details[open]')].map(el => el.id).filter(Boolean) : [];
+        const foco = preservar && container.contains(document.activeElement) ? document.activeElement.id : null;
+        const selecao = foco ? [document.activeElement.selectionStart, document.activeElement.selectionEnd] : null;
+        const evento = Momentus.obterEvento(eventoId);
+        if (!evento) { montarVazio(); return; }
+
+        const abaAntes = container.querySelector('.abaEvento') ? abaAtivaAtual() : null;
+        const rolagemAbas = container.querySelector('.abasEvento')?.scrollTop || 0;
+
+        const tpl = document.getElementById('templateEvento');
+        container.innerHTML = '';
+        container.appendChild(tpl.content.cloneNode(true));
+
+        document.title = (evento.nome || evento.tipoLabel) + ' - Momentus';
+
+        container.querySelector('#tagTipoEvento').textContent = evento.tipoLabel || '';
+        container.querySelector('#tituloEvento').textContent = evento.nome || evento.tipoLabel;
+        container.querySelector('#localEventoTexto').textContent = [evento.local, evento.cidade].filter(Boolean).join(', ') || '—';
+        container.querySelector('#dataHoraEventoTexto').textContent = `${formatarDataBR(evento.data)}${evento.hora && evento.hora !== '—' ? ' · ' + evento.hora : ''}`;
+
+        const statusChave = STATUS_LABEL_CHAVE[evento.status] || 'statusAgendado';
+        container.querySelector('#statusPillEvento').textContent = Momentus.t(statusChave);
+
+        // Informações
+        container.querySelector('#infoLocal').textContent = [evento.local, evento.cidade].filter(Boolean).join(', ') || '—';
+        container.querySelector('#infoDataHora').textContent = `${formatarDataBR(evento.data)}${evento.hora && evento.hora !== '—' ? ' · ' + evento.hora : ''}`;
+        container.querySelector('#infoConvidados').textContent = evento.convidados ? `${evento.convidados} ${Momentus.t('resumoConvidadosSufixo')}` : '—';
+        container.querySelector('#infoEstilo').textContent = evento.estilo || '—';
+        container.querySelector('#infoOrcamento').textContent = formatarMoeda(evento.orcamento || 0);
+        const gasto = Number(evento.totalDespesas || 0);
+        container.querySelector('#infoGasto').textContent = formatarMoeda(gasto);
+        container.querySelector('#infoObservacoes').textContent = evento.observacoes && evento.observacoes.trim() ? evento.observacoes : Momentus.t('semObservacoes');
+
+        MomentusEventoUI.ligar(evento, container, abaAntes);
+        container.querySelector('.abasEvento').scrollTop = rolagemAbas;
+
+        // Ações do cabeçalho
+        const botaoEditarEvento = container.querySelector('#botaoEditarEvento');
+        const botaoApagarEvento = container.querySelector('#botaoApagarEvento');
+        const podeEditarEvento = evento.permissao === 'dono' || evento.podeEditar !== false;
+        if (podeEditarEvento) botaoEditarEvento.addEventListener('click', () => { window.location.href = 'planejar.html?id=' + encodeURIComponent(evento.id); });
+        else botaoEditarEvento.style.display = 'none';
+        if (evento.permissao === 'dono') {
+            botaoApagarEvento.addEventListener('click', async () => {
+                if (window.confirm(Momentus.t('confirmarApagarEvento', { nome: evento.nome || evento.tipoLabel }))) {
+                    const removeu = await Momentus.removerEvento(evento.id);
+                    if (removeu) window.location.href = 'eventos.html';
+                }
+            });
+        } else botaoApagarEvento.style.display = 'none';
+
+        renderizarConvidados(evento);
+        renderizarColaboradores(evento);
+        renderizarItensCompartilhados(evento);
+        renderizarItens(evento);
+        renderizarTarefas(evento);
+        renderizarFinanceiro(evento);
+        renderizarGaleria(evento);
+        ligarRateio(evento);
+        MomentusPlanejamento.ligar(evento, container);
+        MomentusRecursos.ligar(evento, container);
+
+        // Botão de adicionar colaborador (dentro do template, precisa ser religado a cada render)
+        const botaoAddColab = container.querySelector('#botaoAdicionarColaborador');
+        if (botaoAddColab) {
+            if (evento.permissao !== 'dono') botaoAddColab.style.display = 'none';
+            else botaoAddColab.addEventListener('click', () => abrirModalColaborador());
+        }
+        ligarFormularioItemCompartilhado(evento);
+
+        // Formulário de convidado
+        const formConvidado = container.querySelector('#formConvidado');
+        const preferenciasConvidado=container.querySelector('#restricoesNovoConvidado');
+        preferenciasConvidado.addEventListener('input',()=>{container.querySelector('#preferenciasSemSaudeConvidado').required=!!preferenciasConvidado.value.trim();});
+        MomentusUtils.protegerFormulario(formConvidado, async (e) => {
+            e.preventDefault();
+            const nome = container.querySelector('#nomeNovoConvidado').value.trim();
+            const contato = container.querySelector('#contatoNovoConvidado').value.trim();
+            const restricoes = container.querySelector('#restricoesNovoConvidado').value.trim();
+            if (!nome) return;
+            const criado = await Momentus.adicionarConvidado(evento.id, { nome, contato, restricoes, preferencias_sem_saude:container.querySelector('#preferenciasSemSaudeConvidado').checked });
+            if (criado) {
+                container.querySelector('#nomeNovoConvidado').value = '';
+                container.querySelector('#contatoNovoConvidado').value = '';
+                container.querySelector('#restricoesNovoConvidado').value = '';
+                container.querySelector('#preferenciasSemSaudeConvidado').checked=false;
+                container.querySelector('#preferenciasSemSaudeConvidado').required=false;
+                if (criado.link_rsvp) mostrarToast('Convidado adicionado! O link de RSVP foi criado.');
+            }
+        });
+
+        const privacidade = container.querySelector('#privacidadeListaConvidados');
+        if (privacidade) {
+            privacidade.value = evento.privacidadeConvidados || 'organizador';
+            privacidade.disabled = evento.permissao !== 'dono';
+            if (evento.permissao === 'dono') privacidade.addEventListener('change', () => Momentus.atualizarEvento(evento.id, { privacidadeConvidados: privacidade.value }));
+        }
+        if (!podeEditarEvento) {
+            container.querySelectorAll('form:not([data-consulta])').forEach((form) => { form.style.display = 'none'; });
+            container.querySelectorAll('.botaoRemoverConvidado, .removerFotoEvento, .botaoAssumirItem, .editarRestricoes').forEach((b) => { b.style.display = 'none'; });
+            container.querySelectorAll('#caixaRateio input').forEach(el => { el.disabled = true; });
+            container.querySelectorAll('.itemTarefaEvento').forEach(el => { el.style.pointerEvents = 'none'; });
+            container.querySelectorAll('.selectStatusConvidado').forEach((el) => { if (el.id !== 'privacidadeListaConvidados') el.disabled = true; });
+        }
+
+        if (preservar && podeEditarEvento) {
+            valores.forEach(v => {
+                const novo = document.getElementById(v.id);
+                if (!novo || !container.contains(novo)) return;
+                if (v.arquivo) { novo.replaceWith(v.arquivo); return; }
+                // Não sobrescreve seletores de status/permissões com estado antigo.
+                if (novo.closest('form')) { novo.value = v.valor; novo.checked = v.checked; }
+            });
+            detalhesAbertos.forEach(id => { const el=document.getElementById(id); if(el) el.open=true; });
+            const el = foco && document.getElementById(foco);
+            if (el) {
+                el.focus({preventScroll:true});
+                if (selecao && el.setSelectionRange && ['text','search','tel','url','password'].includes(el.type)) el.setSelectionRange(...selecao);
+            }
+        }
+
+        MomentusRecursos.ajustarCampos(evento, container);
+        if (preservar && foco && !podeEditarEvento) {
+            const alvo = document.getElementById(foco);
+            if (alvo && container.contains(alvo) && alvo.matches('.abaEvento, #seletorAbaEvento')) alvo.focus({preventScroll:true});
+        }
+
+        // Mesmo motivo do comentário em montarVazio(): só re-traduz o DOM,
+        // não notifica (evita o loop infinito de re-render).
+        Momentus.aplicarIdioma(Momentus.obterIdioma(), false);
+    }
+
+    function renderizarConvidados(evento) {
+        const lista = evento.listaConvidados || [];
+        const listaEl = container.querySelector('#listaConvidados');
+        const resumoEl = container.querySelector('#resumoConvidadosLinha');
+
+        const confirmados = lista.filter((c) => c.status === 'confirmado').length;
+        const pendentes = lista.filter((c) => c.status === 'pendente').length;
+        const recusados = lista.filter((c) => c.status === 'recusado').length;
+        const naEspera = lista.filter((c) => c.status === 'espera').length;
+        resumoEl.innerHTML = lista.length
+            ? `<span><strong>${confirmados}</strong> ${Momentus.t('statusConvidadoConfirmado').toLowerCase()}</span><span><strong>${pendentes}</strong> ${Momentus.t('statusConvidadoPendente').toLowerCase()}</span><span><strong>${recusados}</strong> ${Momentus.t('statusConvidadoRecusado').toLowerCase()}</span><span><strong>${naEspera}</strong> ${Momentus.t('statusConvidadoEspera').toLowerCase()}</span>`
+            : '';
+
+        if (!lista.length) {
+            listaEl.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('nenhumConvidado')}</p>`;
+            return;
+        }
+
+        const tplLinha = document.getElementById('templateLinhaConvidado');
+        listaEl.innerHTML = '';
+        lista.forEach((conv) => {
+            const linha = tplLinha.content.cloneNode(true);
+            const raiz = linha.querySelector('.linhaConvidado');
+            raiz.dataset.id = conv.id;
+            raiz.querySelector('.avatarConvidado').textContent = Momentus.iniciais(conv.nome || '?');
+            raiz.querySelector('.nomeConvidado').textContent = conv.nome || '—';
+            raiz.querySelector('.contatoConvidado').textContent = conv.contato || '—';
+            const restr = raiz.querySelector('.restricoesConvidado');
+            if (restr) restr.textContent = conv.restricoes ? 'Restrições: ' + conv.restricoes : '';
+            const editar = raiz.querySelector('.editarRestricoes');
+            editar.addEventListener('click', () => {
+                if (raiz.querySelector('.formRestricoes')) return;
+                const form = document.createElement('form'); form.className='formRestricoes';
+                const input = document.createElement('textarea'); input.value=conv.preferencias_alimentares || ''; input.maxLength=4000;
+                input.setAttribute('aria-label', 'Preferências alimentares de ' + conv.nome);
+                const declaracao=document.createElement('label');declaracao.className='aceiteCadastro';
+                const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.required=!!input.value.trim();
+                declaracao.append(checkbox,document.createTextNode('Confirmo que estas preferências não contêm informações de saúde.'));
+                input.addEventListener('input',()=>{checkbox.required=!!input.value.trim();});
+                const salvar=document.createElement('button'); salvar.type='submit'; salvar.className='botaoSecundario'; salvar.textContent='Salvar restrições';
+                const cancelar=document.createElement('button'); cancelar.type='button'; cancelar.className='botaoSecundario'; cancelar.textContent='Cancelar'; cancelar.onclick=()=>form.remove();
+                form.append(input,declaracao,salvar,cancelar); raiz.querySelector('.infoConvidado').append(form); input.focus();
+                form.onsubmit=async e=>{
+                    e.preventDefault(); salvar.disabled=true;
+                    try { await MomentusAPI.atualizarConvidado(evento.id,conv.id,{restricoes:input.value.trim(),preferencias_sem_saude:checkbox.checked}); await Momentus.sincronizarEventos(); }
+                    catch(e) { mostrarToast(e.message,'erro'); } finally { salvar.disabled=false; }
+                };
+            });
+            const copiar = raiz.querySelector('.copiarRsvp');
+            if (copiar && !conv.token_rsvp) copiar.hidden = true;
+            if (copiar) copiar.addEventListener('click', async () => {
+                const link = new URL('rsvp.html#token=' + encodeURIComponent(conv.token_rsvp || ''), window.location.href).toString();
+                try { await navigator.clipboard.writeText(link); mostrarToast('Link de RSVP copiado!'); }
+                catch (_) { mostrarToast(link); }
+            });
+            const select = raiz.querySelector('.selectStatusConvidado');
+            select.setAttribute('aria-label', 'Presença de ' + conv.nome);
+            select.value = conv.status || 'pendente';
+            select.querySelectorAll('option').forEach((op) => { op.textContent = Momentus.t(op.getAttribute('data-i18n')); });
+            select.addEventListener('change', () => {
+                Momentus.definirStatusConvidado(evento.id, conv.id, select.value);
+            });
+            raiz.querySelector('.botaoRemoverConvidado').addEventListener('click', () => {
+                Momentus.removerConvidado(evento.id, conv.id);
+            });
+            listaEl.appendChild(linha);
+        });
+    }
+
+    function renderizarItens(evento) {
+        const lista = evento.itensCatalogo || [];
+        const listaEl = container.querySelector('#listaItensEvento');
+        const rodape = container.querySelector('#rodapeTotalItens');
+
+        if (!lista.length) {
+            listaEl.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('nenhumItemCatalogo')}</p>`;
+            rodape.style.display = 'none';
+            return;
+        }
+
+        const tplLinha = document.getElementById('templateLinhaItem');
+        listaEl.innerHTML = '';
+        let total = 0;
+        let itensComPreco = 0;
+        lista.forEach((item) => {
+            // O Places salva estabelecimentos sem preço. Zero é o padrão de
+            // persistência, não uma oferta gratuita. Mantém preços reais legados.
+            const temPreco = Number(item.preco) > 0;
+            const subtotal = temPreco ? Number(item.preco) * (item.qtd || 1) : 0;
+            if (temPreco) { total += subtotal; itensComPreco++; }
+            const linha = tplLinha.content.cloneNode(true);
+            const raiz = linha.querySelector('.linhaItemEvento');
+            raiz.dataset.id = item.id;
+            const thumb = raiz.querySelector('.thumbItemEvento');
+            thumb.style.background = CATEGORIA_COR[item.categoria] || 'var(--grad-1)';
+            raiz.querySelector('.nomeItemEvento').textContent = item.nome || '—';
+            raiz.querySelector('.metaItemEvento').textContent = temPreco
+                ? ((item.qtd || 1) > 1 ? `${item.qtd}x` : '')
+                : Momentus.t('catalogoConsultarValores');
+            const preco = raiz.querySelector('.precoItemEvento');
+            preco.hidden = !temPreco;
+            if (temPreco) preco.textContent = formatarMoeda(subtotal);
+            raiz.querySelector('.botaoRemoverConvidado').addEventListener('click', () => {
+                Momentus.removerItemCatalogo(evento.id, item.id);
+            });
+            listaEl.appendChild(linha);
+        });
+        rodape.style.display = itensComPreco ? 'flex' : 'none';
+        container.querySelector('#totalItensValor').textContent = formatarMoeda(total);
+    }
+
+    const STATUS_COLAB_CHAVE = {
+        pendente: 'statusColabPendente',
+        ativo: 'statusColabAtivo',
+        recusado: 'statusColabRecusado'
+    };
+
+    function renderizarColaboradores(evento) {
+        const lista = evento.colaboradores || [];
+        const listaEl = container.querySelector('#listaColaboradores');
+        if (!listaEl) return;
+
+        if (!lista.length) {
+            listaEl.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('nenhumColaborador')}</p>`;
+            return;
+        }
+
+        const tplLinha = document.getElementById('templateLinhaColaborador');
+        listaEl.innerHTML = '';
+        lista.forEach((colab) => {
+            const linha = tplLinha.content.cloneNode(true);
+            const raiz = linha.querySelector('.linhaColaborador');
+            raiz.dataset.id = colab.id;
+            raiz.querySelector('.avatarConvidado').textContent = Momentus.iniciais(colab.nome || '?');
+            raiz.querySelector('.nomeConvidado').textContent = colab.nome || '—';
+            raiz.querySelector('.contatoConvidado').textContent = colab.contato || '—';
+
+            const pill = raiz.querySelector('.statusPillColab');
+            pill.textContent = Momentus.t(STATUS_COLAB_CHAVE[colab.status] || 'statusColabPendente');
+            pill.classList.add(colab.status || 'pendente');
+
+            const acoesConvite = raiz.querySelector('.acoesConviteColaborador');
+            const botaoReenviar = acoesConvite.querySelector('.botaoTextoReenviar');
+            if (evento.permissao === 'dono' && colab.status === 'pendente' && colab.token) {
+                acoesConvite.hidden = false;
+                acoesConvite.querySelector('.botaoVerConvite').href = construirLinkConvite(colab.token);
+                botaoReenviar.addEventListener('click', async () => {
+                    const atual = Momentus.reenviarConviteColaborador(evento.id, colab.id) || colab;
+                    const link = construirLinkConvite(atual.token || colab.token);
+                    const copiou = await copiarLink(link);
+                    mostrarToast(copiou ? Momentus.t('linkCopiado') : Momentus.t('linkNaoCopiado', { link }));
+                });
+            }
+
+            const botaoRemover = raiz.querySelector('.botaoRemoverConvidado');
+            if (evento.permissao === 'dono') {
+                const permissao = document.createElement('label');
+                permissao.className = 'permissaoColaborador';
+                permissao.innerHTML = `<input type="checkbox" ${colab.pode_editar !== false ? 'checked' : ''}><span>Pode editar</span>`;
+                permissao.querySelector('input').addEventListener('change', (e) => Momentus.definirPermissaoColaborador(evento.id, colab.id, e.target.checked));
+                raiz.insertBefore(permissao, botaoRemover);
+                botaoRemover.addEventListener('click', () => {
+                    if (window.confirm(Momentus.t('confirmarRemoverColaborador', { nome: colab.nome || '' }))) {
+                        Momentus.removerColaborador(evento.id, colab.id);
+                    }
+                });
+            } else {
+                botaoRemover.style.display = 'none';
+            }
+            listaEl.appendChild(linha);
+        });
+    }
+
+    /* ---- Módulo: rateio de despesas ---- */
+
+    function renderizarRateio(evento) {
+        const dados = Momentus.calcularRateio(evento.id);
+        if (!dados) return;
+
+        const opcoes = container.querySelector('#opcoesRateio');
+        opcoes.style.display = dados.ativo ? '' : 'none';
+        if (!dados.ativo) return;
+
+        const locale = { pt: 'pt-BR', en: 'en-US', es: 'es-ES' }[Momentus.obterIdioma()];
+        const moeda = valor => Number(valor || 0).toLocaleString(locale, { style: 'currency', currency: 'BRL' });
+        const valores = dados.pessoas.map(pessoa => pessoa.valor);
+        const minimo = Math.min(...valores), maximo = Math.max(...valores);
+        container.querySelector('#rateioTotalDespesasValor').textContent = moeda(dados.totalDespesas);
+        container.querySelector('#rateioQtdPessoasValor').textContent = dados.qtdPessoas;
+        container.querySelector('#rateioValorPorPessoaValor').textContent = minimo === maximo
+            ? moeda(minimo) : `${moeda(minimo)} – ${moeda(maximo)}`;
+        container.querySelector('#rateioTotalCotasValor').textContent = moeda(dados.totalArrecadado);
+        container.querySelector('#rateioEscopoResumo').textContent = Momentus.t('rateioContagem', {
+            ativos: dados.qtdPessoas - 1, convidados: (evento.listaConvidados || []).length
+        });
+        container.querySelector('#rateioCalculoTexto').textContent = Momentus.t(
+            dados.modo === 'fixo' ? 'rateioCalculoFixo' : 'rateioCalculoAuto', {
+                despesas: moeda(dados.totalDespesas), pessoas: dados.qtdPessoas,
+                valor: moeda(dados.valorFixo), total: moeda(dados.totalArrecadado)
+            });
+        container.querySelector('#rateioCentavosTexto').hidden = minimo === maximo;
+        container.querySelector('#rateioAvisoSemDespesas').hidden = dados.modo !== 'auto' || dados.totalDespesas > 0;
+
+        const listaEl = container.querySelector('#listaRateioPessoas');
+        listaEl.innerHTML = '';
+        dados.pessoas.forEach((pessoa) => {
+            const linha = document.createElement('div');
+            linha.className = 'itemRateioPessoa';
+            linha.innerHTML = `
+                <span class="nomeRateioPessoa">${escapeHTML(pessoa.nome)}${pessoa.organizador ? `<span class="tagOrganizador">${escapeHTML(Momentus.t('rateioResponsavel'))}</span>` : ''}</span>
+                <span class="valorRateioPessoa">${moeda(pessoa.valor)}</span>`;
+            listaEl.appendChild(linha);
+        });
+    }
+
+    function ligarRateio(evento) {
+        const checkboxAtivar = container.querySelector('#checkboxAtivarRateio');
+        const radioAuto = container.querySelector('#radioRateioAuto');
+        const radioFixo = container.querySelector('#radioRateioFixo');
+        const campoValorFixo = container.querySelector('#campoValorFixoRateio');
+        const inputValorFixo = container.querySelector('#valorFixoRateio');
+        if (!checkboxAtivar) return;
+        const convidar = container.querySelector('#convidarNoRateio');
+        convidar.hidden = evento.permissao !== 'dono';
+        if (!convidar.hidden) convidar.addEventListener('click', abrirModalColaborador);
+        container.querySelector('#verFinancasRateio').addEventListener('click', () => {
+            container.querySelector('[data-aba="financeiro"]').click();
+        });
+
+        const rateio = Momentus.obterRateio(evento.id);
+        checkboxAtivar.checked = !!rateio.ativo;
+        radioAuto.checked = rateio.modo !== 'fixo';
+        radioFixo.checked = rateio.modo === 'fixo';
+        campoValorFixo.style.display = rateio.modo === 'fixo' ? '' : 'none';
+        if (rateio.valorFixo) inputValorFixo.value = rateio.valorFixo;
+
+        renderizarRateio(evento);
+
+        checkboxAtivar.addEventListener('change', () => {
+            Momentus.definirRateio(evento.id, { ativo: checkboxAtivar.checked });
+        });
+
+        [radioAuto, radioFixo].forEach((radio) => {
+            radio.addEventListener('change', () => {
+                const modo = radioFixo.checked ? 'fixo' : 'auto';
+                campoValorFixo.style.display = modo === 'fixo' ? '' : 'none';
+                Momentus.definirRateio(evento.id, { modo });
+            });
+        });
+
+        inputValorFixo.addEventListener('change', () => {
+            Momentus.definirRateio(evento.id, { modo: 'fixo', valorFixo: Number(inputValorFixo.value) || 0 });
+        });
+    }
+
+    function renderizarItensCompartilhados(evento) {
+        const lista = evento.itensCompartilhados || [];
+        const listaEl = container.querySelector('#listaItensCompartilhados');
+        if (!listaEl) return;
+
+        if (!lista.length) {
+            listaEl.innerHTML = `<p class="estadoVazioClaro" style="text-align:left; padding-left:0;">${Momentus.t('nenhumItemCompartilhado')}</p>`;
+            return;
+        }
+
+        const tplLinha = document.getElementById('templateLinhaItemCompartilhado');
+        listaEl.innerHTML = '';
+        lista.forEach((item) => {
+            const linha = tplLinha.content.cloneNode(true);
+            const raiz = linha.querySelector('.linhaItemCompartilhado');
+            raiz.dataset.id = item.id;
+            const qtdTexto = (item.quantidade || 1) > 1 ? `${item.quantidade}x` : '';
+            raiz.querySelector('.nomeItemEvento').textContent = qtdTexto ? `${item.nome} · ${qtdTexto}` : item.nome;
+
+            const metaEl = raiz.querySelector('.metaResponsavelItem');
+            const botaoAssumir = raiz.querySelector('.botaoAssumirItem');
+
+            if (item.responsavelNome) {
+                metaEl.textContent = Momentus.t('levadoPor', { nome: item.responsavelNome });
+                metaEl.classList.add('temResponsavel');
+                botaoAssumir.textContent = Momentus.t('botaoLiberarItem');
+                botaoAssumir.addEventListener('click', () => {
+                    Momentus.liberarItemCompartilhado(evento.id, item.id);
+                });
+            } else {
+                metaEl.textContent = Momentus.t('itemSemResponsavel');
+                botaoAssumir.textContent = Momentus.t('botaoEuVouLevar');
+                botaoAssumir.addEventListener('click', () => abrirModalEscolherResponsavel(evento, item));
+            }
+
+            raiz.querySelector('.botaoRemoverConvidado').addEventListener('click', () => {
+                Momentus.removerItemCompartilhado(evento.id, item.id);
+            });
+            listaEl.appendChild(linha);
+        });
+    }
+
+    /* ---- Formulário: novo item da lista compartilhada (junta-panelas) ---- */
+    function ligarFormularioItemCompartilhado(evento) {
+        const form = container.querySelector('#formItemCompartilhado');
+        if (!form) return;
+        MomentusUtils.protegerFormulario(form, async (e) => {
+            e.preventDefault();
+            const nomeInput = container.querySelector('#nomeNovoItemCompartilhado');
+            const qtdInput = container.querySelector('#qtdNovoItemCompartilhado');
+            const nome = nomeInput.value.trim();
+            if (!nome) return;
+            const resultado = await Momentus.adicionarItemCompartilhado(evento.id, { nome, quantidade: qtdInput.value });
+            if (resultado && resultado.duplicado) {
+                mostrarToast(Momentus.t('itemJaExisteAviso', { nome: resultado.item.nome }));
+            }
+            if (resultado) container.querySelector('#formItemCompartilhado').reset();
+        });
+    }
+
+    /* ---- Modal: escolher responsável por um item da lista compartilhada ---- */
+    const overlayEscolherResponsavel = document.getElementById('overlayEscolherResponsavel');
+    const corpoEscolherResponsavel = document.getElementById('corpoEscolherResponsavel');
+    const tituloEscolherResponsavel = document.getElementById('tituloEscolherResponsavel');
+    const fecharEscolherResponsavelBtn = document.getElementById('fecharEscolherResponsavel');
+
+    function fecharModalEscolherResponsavel() {
+        if (overlayEscolherResponsavel) overlayEscolherResponsavel.classList.remove('aberto');
+    }
+    if (fecharEscolherResponsavelBtn) fecharEscolherResponsavelBtn.addEventListener('click', fecharModalEscolherResponsavel);
+    if (overlayEscolherResponsavel) {
+        overlayEscolherResponsavel.addEventListener('click', (e) => {
+            if (e.target === overlayEscolherResponsavel) fecharModalEscolherResponsavel();
+        });
+    }
+
+    function abrirModalEscolherResponsavel(evento, item) {
+        if (!overlayEscolherResponsavel) return;
+        tituloEscolherResponsavel.textContent = Momentus.t('escolherResponsavelTitulo', { item: item.nome });
+        const colaboradoresAtivos = (evento.colaboradores || []).filter((c) => c.status === 'ativo');
+
+        const perfil = Momentus.obterPerfil();
+        const opcoes = [{ id: null, nome: perfil.nome || Momentus.t('opcaoEuMesma') }].concat(
+            colaboradoresAtivos.map((c) => ({ id: c.id, nome: c.nome }))
+        );
+
+        corpoEscolherResponsavel.innerHTML = `<div class="listaEscolhaResponsavel">${opcoes.map((op) => `
+            <button type="button" class="opcaoResponsavel" data-id="${op.id || ''}">
+                <span class="avatarConvidado" style="width:2.1rem;height:2.1rem;font-size:.78rem;">${Momentus.iniciais(op.nome || '?')}</span>
+                <span>${escapeHTML(op.nome || '—')}</span>
+            </button>`).join('')}</div>${!colaboradoresAtivos.length ? `<p style="font-size:.76rem; color:var(--tinta-suave); margin-top:.9rem;">${Momentus.t('semColaboradoresParaAssumir')}</p>` : ''}`;
+
+        corpoEscolherResponsavel.querySelectorAll('.opcaoResponsavel').forEach((botao) => {
+            botao.addEventListener('click', () => {
+                const escolhido = opcoes.find((op) => (op.id || '') === botao.dataset.id);
+                Momentus.assumirItemCompartilhado(evento.id, item.id, {
+                    responsavelTipo: escolhido && escolhido.id ? 'colaborador' : 'usuario',
+                    responsavelId: escolhido && escolhido.id,
+                    responsavelNome: escolhido ? escolhido.nome : ''
+                });
+                fecharModalEscolherResponsavel();
+            });
+        });
+
+        overlayEscolherResponsavel.classList.add('aberto');
+    }
+
+    /* ---- Modal: adicionar colaborador (convite por e-mail ou link) ---- */
+    const overlayAddColab = document.getElementById('overlayAdicionarColaborador');
+    const formAddColab = document.getElementById('formAdicionarColaborador');
+    const fecharAddColabBtn = document.getElementById('fecharAdicionarColaborador');
+
+    function fecharModalColaborador() {
+        if (overlayAddColab) overlayAddColab.classList.remove('aberto');
+        if (formAddColab) formAddColab.reset();
+    }
+    function abrirModalColaborador() {
+        if (!overlayAddColab) return;
+        overlayAddColab.classList.add('aberto');
+        const campoNome = document.getElementById('nomeNovoColaborador');
+        if (campoNome) campoNome.focus();
+    }
+    if (fecharAddColabBtn) fecharAddColabBtn.addEventListener('click', fecharModalColaborador);
+    if (overlayAddColab) {
+        overlayAddColab.addEventListener('click', (e) => {
+            if (e.target === overlayAddColab) fecharModalColaborador();
+        });
+    }
+
+    function construirLinkConvite(token) {
+        return new URL('convite.html#token=' + encodeURIComponent(token), window.location.href).toString();
+    }
+
+    async function copiarLink(link) {
+        try {
+            await navigator.clipboard.writeText(link);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    if (formAddColab) {
+        MomentusUtils.protegerFormulario(formAddColab, async (e) => {
+            e.preventDefault();
+            const evento = Momentus.obterEvento(eventoId);
+            if (!evento) return;
+
+            const modo = (e.submitter && e.submitter.dataset && e.submitter.dataset.modo) || 'email';
+            const nome = document.getElementById('nomeNovoColaborador').value.trim();
+            const email = document.getElementById('emailNovoColaborador').value.trim();
+
+            if (!nome) {
+                mostrarToast(Momentus.t('erroPreencherNomeColaborador'));
+                return;
+            }
+            if (!email) {
+                mostrarToast(Momentus.t('erroPreencherEmailColaborador'));
+                return;
+            }
+
+            const colaborador = await Momentus.adicionarColaborador(evento.id, { nome, contato: email });
+            if (!colaborador) return;
+
+            const link = colaborador.link_convite ? new URL(colaborador.link_convite, window.location.href).toString() : construirLinkConvite(colaborador.token);
+
+            if (modo === 'email') {
+                const copiou = await copiarLink(link);
+                const mensagem = copiou
+                    ? 'Convite criado e link copiado. Compartilhe com a pessoa convidada.'
+                    : `Convite criado. Compartilhe este link com a pessoa: ${link}`;
+                mostrarToast(mensagem);
+                fecharModalColaborador();
+            } else {
+                const copiou = await copiarLink(link);
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title: 'Momentus', text: Momentus.t('convitePopupTexto', { evento: evento.nome || evento.tipoLabel }), url: link });
+                    } catch (err) { /* usuário cancelou o compartilhamento */ }
+                }
+                mostrarToast(copiou ? Momentus.t('linkCopiado') : Momentus.t('linkNaoCopiado', { link }));
+                fecharModalColaborador();
+            }
+        });
+    }
+
+    /* ---- Modal: aceitar/recusar convite recebido por link ---- */
+    const overlayConvite = document.getElementById('overlayConviteRecebido');
+    const textoConviteRecebido = document.getElementById('textoConviteRecebido');
+    const botaoAceitarConvite = document.getElementById('botaoAceitarConvite');
+    const botaoRecusarConvite = document.getElementById('botaoRecusarConvite');
+    const fecharConviteBtn = document.getElementById('fecharConviteRecebido');
+
+    function fecharModalConvite() {
+        if (overlayConvite) overlayConvite.classList.remove('aberto');
+        const url = new URL(window.location.href);
+        url.searchParams.delete('convite');
+        window.history.replaceState({}, '', url.toString());
+    }
+
+    function verificarConviteNaUrl() {
+        const tokenConvite = params.get('convite');
+        if (!tokenConvite || !overlayConvite) return;
+
+        const encontrado = Momentus.obterConvitePorToken(tokenConvite);
+        if (!encontrado || encontrado.colaborador.status !== 'pendente') {
+            if (encontrado) mostrarToast(Momentus.t('conviteInvalido'));
+            fecharModalConvite();
+            return;
+        }
+
+        const { evento, colaborador } = encontrado;
+        textoConviteRecebido.textContent = Momentus.t('convitePopupTexto', { evento: evento.nome || evento.tipoLabel });
+
+        botaoAceitarConvite.onclick = () => {
+            Momentus.responderColaborador(evento.id, colaborador.id, 'ativo');
+            mostrarToast(Momentus.t('conviteAceitoToast'));
+            fecharModalConvite();
+        };
+        botaoRecusarConvite.onclick = () => {
+            Momentus.responderColaborador(evento.id, colaborador.id, 'recusado');
+            mostrarToast(Momentus.t('conviteRecusadoToast'));
+            fecharModalConvite();
+        };
+
+        overlayConvite.classList.add('aberto');
+    }
+    if (fecharConviteBtn) fecharConviteBtn.addEventListener('click', fecharModalConvite);
+    if (overlayConvite) {
+        overlayConvite.addEventListener('click', (e) => {
+            if (e.target === overlayConvite) fecharModalConvite();
+        });
+    }
+
+    function renderizarTarefas(evento) {
+        const tarefas = evento.tarefas || [];
+        const listaEl = container.querySelector('#listaTarefasEvento');
+        const podeEditar = evento.permissao === 'dono' || evento.podeEditar !== false;
+        if (!tarefas.length) {
+            listaEl.innerHTML = `<p class="estadoVazioClaro">${Momentus.t('nenhumaTarefa')}</p>`;
+        } else listaEl.innerHTML = tarefas.map((tf) => {
+            const traducao = tf.chave ? Momentus.t(tf.chave) : '';
+            const texto = traducao && traducao !== tf.chave ? traducao : (tf.titulo || 'Tarefa');
+            const prazo = tf.prazo ? `<small class="prazoTarefa">${new Date(tf.prazo).toLocaleString('pt-BR', {dateStyle:'short', timeStyle:'short'})}</small>` : '';
+            return `
+            <div class="itemTarefaEvento ${tf.feita ? 'feita' : ''}" data-id="${tf.id}">
+                <button type="button" class="botaoAlternarTarefa" aria-pressed="${!!tf.feita}" ${podeEditar ? '' : 'disabled'}>
+                    <span class="checkTarefa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+                    <span class="textoTarefa">${escapeHTML(texto)}</span>${prazo}
+                </button>
+                <button type="button" class="botaoRemoverTarefa" aria-label="${escapeHTML(Momentus.t('removerTarefa'))}: ${escapeHTML(texto)}" ${podeEditar ? '' : 'hidden'}>×</button>
+            </div>`;
+        }).join('');
+        listaEl.querySelectorAll('.botaoAlternarTarefa').forEach(botao => {
+            botao.addEventListener('click', async () => {
+                botao.disabled = true;
+                await Momentus.alternarTarefa(evento.id, botao.closest('[data-id]').dataset.id);
+                if (botao.isConnected) botao.disabled = false;
+            });
+        });
+        listaEl.querySelectorAll('.botaoRemoverTarefa').forEach(botao => {
+            botao.addEventListener('click', async () => {
+                botao.disabled = true;
+                await Momentus.removerTarefa(evento.id, botao.closest('[data-id]').dataset.id);
+                if (botao.isConnected) botao.disabled = false;
+            });
+        });
+
+        const form = container.querySelector('#formNovaTarefa');
+        if (form) MomentusUtils.protegerFormulario(form, async (e) => {
+            e.preventDefault();
+            const titulo = container.querySelector('#tituloNovaTarefa').value.trim();
+            const prazo = container.querySelector('#prazoNovaTarefa').value;
+            if (!titulo) return;
+            const criada = await Momentus.adicionarTarefa(evento.id, { titulo, prazo: prazo || null });
+            if (criada) container.querySelector('#formNovaTarefa').reset();
+        });
+    }
+
+    function renderizarFinanceiro(evento) {
+        const orcamento = Number(evento.orcamento || 0);
+        const total = Number(evento.totalDespesas || 0);
+        const restante = orcamento - total;
+        const finOrcamento = container.querySelector('#finOrcamento');
+        if (!finOrcamento) return;
+        finOrcamento.textContent = formatarMoeda(orcamento);
+        container.querySelector('#finGasto').textContent = formatarMoeda(total);
+        container.querySelector('#finRestante').textContent = formatarMoeda(restante);
+        const situacao = container.querySelector('#finSituacao');
+        situacao.textContent = orcamento > 0 && total > orcamento ? 'Orçamento ultrapassado' : 'Dentro do orçamento';
+        situacao.style.color = orcamento > 0 && total > orcamento ? '#d64545' : '';
+
+        const lista = container.querySelector('#listaDespesasEvento');
+        const despesas = evento.despesas || [];
+        lista.innerHTML = despesas.length ? despesas.map((d) => `
+            <div class="linhaItemEvento linhaDespesaEvento" data-despesa="${d.id}">
+                <div class="thumbItemEvento" style="background:var(--grad-1)"></div>
+                <div style="flex:1;min-width:0;"><strong>${escapeHTML(d.descricao)}</strong><div class="metaItemEvento">${escapeHTML(d.categoria || 'geral')} · ${escapeHTML(d.pago_por || '')}${d.comprovante_url ? ` · <a href="${escapeHTML(d.comprovante_url)}" target="_blank" rel="noopener">ver comprovante</a>` : ''}</div>${evento.podeEditar !== false ? `<label class="anexarComprovante"><span>${d.comprovante_url ? 'Trocar' : 'Anexar'} comprovante</span><input type="file" class="arquivoComprovanteExistente" data-despesa-id="${d.id}" accept=".pdf,.png,.jpg,.jpeg,.webp,.gif" aria-label="Comprovante de ${escapeHTML(d.descricao)}"></label>` : ''}</div>
+                <span class="precoItemEvento">${formatarMoeda(Number(d.valor || 0))}</span>
+                <button type="button" class="botaoRemoverConvidado removerDespesa" aria-label="Remover despesa">×</button>
+            </div>`).join('') : '<p class="estadoVazioClaro" style="text-align:left;padding-left:0;">Nenhuma despesa real registrada.</p>';
+        lista.querySelectorAll('.removerDespesa').forEach((btn) => btn.addEventListener('click', async () => {
+            const linha = btn.closest('[data-despesa]');
+            await Momentus.removerDespesa(evento.id, linha.dataset.despesa);
+        }));
+        lista.querySelectorAll('.arquivoComprovanteExistente').forEach(input=>input.addEventListener('change',async()=>{
+            const arquivo=input.files[0];if(!arquivo)return;
+            input.disabled=true;
+            try {const enviado=await Momentus.enviarComprovanteDespesa(evento.id,input.dataset.despesaId,arquivo);if(enviado)mostrarToast('Comprovante anexado à despesa existente.');}
+            finally {input.disabled=false;input.value='';}
+        }));
+
+        const form = container.querySelector('#formDespesaEvento');
+        if (form) MomentusUtils.protegerFormulario(form, async (e) => {
+            e.preventDefault();
+            const descricao = container.querySelector('#descDespesaEvento').value.trim();
+            const categoria = container.querySelector('#categoriaDespesaEvento').value.trim();
+            const valor = Number(container.querySelector('#valorDespesaEvento').value || 0);
+            const inputComprovante = container.querySelector('#comprovanteDespesaEvento');
+            const arquivo=inputComprovante?.files?.[0];
+            if (!descricao || valor <= 0) return;
+            const assinatura=JSON.stringify([descricao,categoria,valor]);
+            if(!enviosDespesas.has(assinatura))enviosDespesas.set(assinatura,MomentusUtils.chaveEnvio());
+            const criado = await Momentus.adicionarDespesa(evento.id, { descricao, categoria, valor }, enviosDespesas.get(assinatura));
+            const despesaId = criado && criado.despesa ? criado.despesa.id : (criado && criado.id);
+            if (despesaId && arquivo) {
+                const enviado=await Momentus.enviarComprovanteDespesa(evento.id, despesaId, arquivo);
+                if(!enviado)mostrarToast('Despesa salva. O arquivo não foi enviado; use Anexar comprovante nessa despesa para tentar novamente.','erro');
+            }
+            if (despesaId) {enviosDespesas.delete(assinatura);container.querySelector('#formDespesaEvento')?.reset();}
+        });
+
+        const pdf = container.querySelector('#baixarPdfEvento');
+        const xlsx = container.querySelector('#baixarExcelEvento');
+        if (pdf) pdf.href = `/eventos/${encodeURIComponent(evento.id)}/relatorio.pdf`;
+        if (xlsx) xlsx.href = `/eventos/${encodeURIComponent(evento.id)}/relatorio.xlsx`;
+
+        const inteligente = container.querySelector('#resumoInteligenteEvento');
+        if (inteligente) {
+            inteligente.innerHTML = '<p class="estadoVazioClaro" style="text-align:left;padding-left:0;">Calculando sugestões...</p>';
+            Momentus.obterResumoEvento(evento.id).then((resumo) => {
+                if (!resumo || !inteligente.isConnected) return;
+                const s = resumo.suprimentos || {};
+                const restricoes = (resumo.convidados && resumo.convidados.restricoes_alimentares) || [];
+                const fornecedores = resumo.fornecedores_recomendados || [];
+                const locais = resumo.locais_recomendados || [];
+                const ob = resumo.orcamento_base || {};
+                inteligente.innerHTML = `
+                    <div class="grelhaInfoEvento">
+                        <div class="blocoInfoEvento"><div class="rotuloInfo">Pessoas consideradas</div><div class="valorInfo">${s.pessoas_consideradas || 0}</div></div>
+                        <div class="blocoInfoEvento"><div class="rotuloInfo">Comida sugerida</div><div class="valorInfo">${s.comida_kg || 0} kg</div></div>
+                        <div class="blocoInfoEvento"><div class="rotuloInfo">Bebidas sugeridas</div><div class="valorInfo">${s.bebidas_litros || 0} L</div></div>
+                        <div class="blocoInfoEvento"><div class="rotuloInfo">Doces sugeridos</div><div class="valorInfo">${s.doces_unidades || 0} un.</div></div>
+                    </div>
+                    <div style="margin-top:1rem;"><strong>Estimativa de orçamento base:</strong><div class="chipsSugestao" style="margin-top:.6rem;"><span>Alimentação ${formatarMoeda(ob.alimentacao || 0)}</span><span>Bebidas ${formatarMoeda(ob.bebidas || 0)}</span><span>Decoração ${formatarMoeda(ob.decoracao || 0)}</span><span>Local ${formatarMoeda(ob.local || 0)}</span><span><b>Total ${formatarMoeda(ob.total_estimado || 0)}</b></span></div></div>
+                    <p style="margin-top:1rem;"><strong>Restrições alimentares:</strong> ${restricoes.length ? restricoes.map(escapeHTML).join(', ') : 'nenhuma informada'}</p>
+                    
+                    ${locais.length ? `<div style="margin-top:1rem;"><strong>Espaços sugeridos${evento.cidade ? ` em ${escapeHTML(evento.cidade)}` : ''}:</strong><div class="chipsSugestao" style="margin-top:.6rem;">${locais.map((f) => `<span>${escapeHTML(f.nome)} · ${f.capacidade} pessoas · ${formatarMoeda(f.preco)}</span>`).join('')}</div></div>` : ''}
+                    ${fornecedores.length ? `<div style="margin-top:1rem;"><strong>Fornecedores recomendados:</strong><div class="chipsSugestao" style="margin-top:.6rem;">${fornecedores.map((f) => `<span>${escapeHTML(f.nome_empresa)} · ${escapeHTML(f.tipo_servico)}</span>`).join('')}</div></div>` : ''}`;
+            });
+        }
+    }
+
+    function renderizarGaleria(evento) {
+        const galeria = container.querySelector('#galeriaEvento');
+        if (!galeria) return;
+        const fotos = evento.fotos || [];
+        galeria.innerHTML = fotos.length ? fotos.map((f) => `
+            <figure class="fotoGaleriaMomentus" data-foto="${f.id}">
+                <img src="${escapeHTML(f.url || '')}" alt="${escapeHTML(f.legenda || 'Foto do evento')}">
+                <figcaption>${escapeHTML(f.legenda || '')}<button type="button" class="removerFotoEvento" aria-label="Remover foto">×</button></figcaption>
+            </figure>`).join('') : '<p class="estadoVazioClaro" style="grid-column:1/-1;text-align:left;padding-left:0;">A galeria ainda está vazia.</p>';
+        galeria.querySelectorAll('.removerFotoEvento').forEach((btn) => btn.addEventListener('click', async () => {
+            await Momentus.removerFoto(evento.id, btn.closest('[data-foto]').dataset.foto);
+        }));
+
+        const form = container.querySelector('#formFotoEvento');
+        if (form) MomentusUtils.protegerFormulario(form, async (e) => {
+            e.preventDefault();
+            const input = container.querySelector('#arquivoFotoEvento');
+            const legenda = container.querySelector('#legendaFotoEvento').value.trim();
+            if (!input.files || !input.files[0]) return;
+            const enviada = await Momentus.enviarFoto(evento.id, input.files[0], legenda);
+            if (enviada) container.querySelector('#formFotoEvento').reset();
+        });
+    }
+
+    Momentus.aguardarEventosProntos().then(async () => {
+        if (eventoId) await Momentus.sincronizarEvento(eventoId);
+        // A listagem inicial pode ter montado a tela antes desta consulta terminar.
+        // Preserve o que a pessoa já começou a preencher nesse intervalo.
+        renderizarEvento(true);
+        verificarConviteNaUrl();
+    });
+    let atualizacaoPendente = null;
+    document.addEventListener('momentus:eventos-alterados', e => {
+        if (e.detail?.automatico && container.querySelector('.formRestricoes')) { atualizacaoPendente=e; return; }
+        renderizarEvento(e);
+    });
+    container.addEventListener('focusout', () => setTimeout(() => {
+        if (atualizacaoPendente && !container.querySelector('.formRestricoes')) {
+            const e=atualizacaoPendente; atualizacaoPendente=null; renderizarEvento(e);
+        }
+    }, 0));
+    let fluxo = null, revisao = null, sincronizando = false;
+    async function atualizarAoVivo() {
+        if (sincronizando || document.hidden) return;
+        sincronizando = true;
+        try { await Momentus.sincronizarEvento(eventoId, true); await Momentus.sincronizarNotificacoes(); }
+        finally { sincronizando=false; }
+    }
+    function conectar() {
+        if (!eventoId || document.hidden || fluxo || !window.EventSource) return;
+        fluxo = new EventSource(`/eventos/${encodeURIComponent(eventoId)}/atualizacoes`);
+        fluxo.addEventListener('alteracao', e => {
+            const nova=JSON.parse(e.data).revisao;
+            if (nova !== revisao) { revisao=nova; atualizarAoVivo(); }
+        });
+        fluxo.addEventListener('encerrado', () => { fluxo.close(); fluxo=null; atualizarAoVivo(); });
+        fluxo.onerror = () => { const el=document.getElementById('atualizacaoEvento'); if(el) el.textContent='Reconectando atualizações...'; };
+        fluxo.onopen = () => { const el=document.getElementById('atualizacaoEvento'); if(el) el.textContent='Atualização automática ativa'; };
+    }
+    Momentus.aguardarEventosProntos().then(conectar);
+    document.addEventListener('visibilitychange', () => {
+        if(document.hidden) { fluxo?.close(); fluxo=null; }
+        else { conectar(); atualizarAoVivo(); }
+    });
+    window.addEventListener('pagehide', () => fluxo?.close());
+    setInterval(atualizarAoVivo, 15000);
+    document.addEventListener('momentus:idioma-alterado', renderizarEvento);
+})();

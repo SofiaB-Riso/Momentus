@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Criar nova senha - Momentus</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/acabamento.css">
+</head>
+<body class="bodyPaginaLegal paginaRedefinir">
+<main class="paginaLegal acessoConta">
+    <header class="topoLegal"><a href="index.html" aria-label="Momentus — entrar"><img src="assets/Logo.png" alt="Momentus"></a><a href="index.html" class="voltarLegal">Voltar para entrar</a></header>
+    <article class="painel cartaoAcesso">
+        <span class="iconeAcesso" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span>
+        <span class="seloDocumento">UM NOVO COMEÇO</span>
+        <h1>Uma nova senha para continuar</h1>
+        <p class="introducaoAcesso">Escolha uma senha para a sua conta e confirme o mesmo valor nos dois campos.</p>
+        <form id="formRedefinirSenha" class="formAuth">
+            <div class="campoSenhaAuth"><label for="novaSenha">Nova senha</label><div class="entradaSenha"><input id="novaSenha" type="password" autocomplete="new-password" minlength="6" maxlength="256" required aria-describedby="ajudaNovaSenha"><button type="button" class="botaoMostrarSenha" data-mostrar-senha="novaSenha" aria-controls="novaSenha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha"></button></div></div>
+            <div class="campoSenhaAuth"><label for="confirmarNovaSenha">Confirmar nova senha</label><div class="entradaSenha"><input id="confirmarNovaSenha" type="password" autocomplete="new-password" minlength="6" maxlength="256" required aria-describedby="ajudaNovaSenha"><button type="button" class="botaoMostrarSenha" data-mostrar-senha="confirmarNovaSenha" aria-controls="confirmarNovaSenha" aria-label="Mostrar senha" aria-pressed="false" title="Mostrar senha"></button></div></div>
+            <p id="ajudaNovaSenha" class="ajudaAcesso">Use pelo menos 6 caracteres. O olhinho permite conferir o que você digitou.</p>
+            <button class="authBotao" type="submit"><span>Salvar nova senha</span><span aria-hidden="true">→</span></button>
+        </form>
+        <p id="statusRecuperacao" class="retornoFormulario" role="status" aria-live="polite"></p>
+        <div class="acoesAcesso"><a href="index.html" class="botaoSecundario">Entrar na conta</a><a href="recuperar-senha.html" class="retornoAcesso">Solicitar outro link ↗</a></div>
+    </article>
+    <footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+</main>
+<script src="js/api.js"></script><script src="js/senha.js"></script><script src="js/recuperacao.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class Fornecedor {
+    +int id
+    +int usuario_id
+    +String nome_empresa
+    +String tipo_servico
+    +String cidade
+    +Decimal avaliacao
+}
+class ProdutoFornecedor {
+    +int id
+    +int fornecedor_id
+    +String nome
+    +String categoria
+    +Decimal preco
+    +bool ativo
+}
+class FavoritoFornecedor {
+    +int id
+    +int usuario_id
+    +String chave
+}
+Usuario "1" *-- "0..1" Fornecedor : perfil comercial legado
+Fornecedor "1" *-- "0..*" ProdutoFornecedor : produtos
+Usuario "1" *-- "0..*" FavoritoFornecedor : favoritos

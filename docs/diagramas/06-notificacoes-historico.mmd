@@ -1,0 +1,38 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class Notificacao {
+    +int id
+    +int usuario_id
+    +int evento_id
+    +String tipo
+    +String titulo
+    +bool lida
+}
+class LogEvento {
+    +int id
+    +int evento_id
+    +int usuario_id
+    +String acao
+    +String detalhe
+    +DateTime criado_em
+}
+Usuario "1" --> "0..*" Notificacao : destinatario
+Evento "0..1" --> "0..*" Notificacao : contexto opcional
+Evento "1" *-- "0..*" LogEvento : historico
+Usuario "0..1" --> "0..*" LogEvento : autoria opcional

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f3f1fa">
+    <title>Planejar evento - Momentus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Podkova:wght@400..800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/planejar.css">
+    <link rel="stylesheet" href="css/acabamento.css">
+    <script src="js/tema-inicial.js"></script>
+    <link rel="icon" href="/favicon.ico?v=20261029" type="image/x-icon" sizes="16x16 32x32 48x48">
+    <link rel="icon" href="/assets/favicon.svg?v=20261029" type="image/svg+xml" sizes="any">
+</head>
+
+<body class="paginaPlanejar">
+    <button class="botaoMenu" id="botaoMenu" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div class="overlayMenu" id="overlayMenu"></div>
+
+    <aside class="menulateral">
+
+        <div class="logo">
+            <img class="logoInicio" src="assets/Logo.png" alt="Logo do Momentus">
+        </div>
+
+        <div class="quadradotransparente"></div>
+
+        <div class="perfilMenu">
+            <a href="configuracoes.html" class="avatarPerfil" data-i18n-aria="navConfig" aria-label="Configurações">JM</a>
+            <div class="perfilTextos">
+                <div class="perfilNome">Usuário</div>
+            </div>
+        </div>
+
+        <nav>
+            <a href="inicio.html" class="item">
+                <img src="assets/icones/inicio.png" alt="">
+                <span data-i18n="navInicio">Início</span>
+            </a>
+            <a href="eventos.html" class="item">
+                <svg class="iconeMenu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18M7 14h3M14 14h3M7 17h3M14 17h3"/></svg>
+                <span data-i18n="todosEventosTitulo">Todos os eventos</span>
+            </a>
+            <a href="planejar.html" class="item ativo">
+                <img src="assets/icones/planejar-ativo.png" alt="">
+                <span data-i18n="navPlanejar">Planejar evento</span>
+            </a>
+            <a href="catalogo.html" class="item">
+                <img src="assets/icones/catalogo.png" alt="">
+                <span data-i18n="navCatalogo">Catálogo</span>
+            </a>
+            <a href="configuracoes.html" class="item">
+                <img src="assets/icones/configuracoes.png" alt="">
+                <span data-i18n="navConfig">Configurações</span>
+            </a>
+        </nav>
+
+        <div class="rodapeMenu">
+            <a href="#" class="linkSair">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span data-i18n="sair">Sair da conta</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <div class="linhaTopo heroPlanejar">
+            <div id="divtitulo">
+                <span class="eyebrow"><svg class="sparkle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/></svg> <span data-i18n="planNovoEvento" id="eyebrowPlanejar">Novo evento</span></span>
+                <h1 class="titulo" data-i18n="planTitulo" id="tituloPlanejar">Vamos planejar seu evento</h1>
+                <svg class="flourish" viewBox="0 0 180 14" fill="none"><path d="M2 8c14-9 24 9 38 2 12-6 20-9 34-1 13 7 24 3 36-3 13-6 24-4 34 2 9 5 18 3 32-4" stroke="url(#gradFlourish)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="gradFlourish" x1="0" y1="0" x2="180" y2="0"><stop offset="0" stop-color="#8a5cf6"/><stop offset="1" stop-color="#ff8f7a"/></linearGradient></defs></svg>
+                <p class="subtitulo" data-i18n="planSubtitulo">Preencha os detalhes abaixo — você pode ajustar tudo depois.</p>
+            </div>
+
+            <div class="acoesTopo">
+                <a href="eventos.html" class="botaoSecundario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem;vertical-align:-2px;margin-right:.4rem;"><path d="M12 2 4 7v10l8 5 8-5V7l-8-5Z"/><path d="M4 7l8 5 8-5"/><path d="M12 22V12"/></svg>
+                    <span data-i18n="verTodosEventos">Ver todos os eventos</span>
+                </a>
+            </div>
+        </div>
+
+        <nav class="etapasPlanejamento" aria-label="Seções do planejamento">
+            <a href="#identidadePlanejar" aria-current="step"><span>01</span>Seu evento</a>
+            <a href="#agendaPlanejar"><span>02</span>Agenda</a>
+            <a href="#detalhesPlanejar"><span>03</span>Detalhes</a>
+            <a href="#orcamentoPlanejar"><span>04</span>Orçamento</a>
+        </nav>
+        <section class="grid-planejar">
+            <div class="painel painelFormularioPlanejar">
+                <div id="carregandoPlanejamento" class="carregandoPlanejamento" role="status"><img src="assets/favicon.svg" alt="">Preparando seu planejamento…</div>
+                <form id="formPlanejar" hidden aria-busy="true">
+                    <section class="secaoPlanejamento" id="identidadePlanejar" aria-labelledby="titulo-identidadePlanejar">
+                        <header class="cabecalhoSecaoPlanejamento"><span class="numeroSecaoPlanejamento" aria-hidden="true">01</span><div><h2 id="titulo-identidadePlanejar">Cada momento tem um jeito</h2><p>Escolha o tipo e dê um nome à sua celebração.</p></div></header>
+                        <div class="chipsCategoria" role="group" aria-label="Tipo de evento">
+                            <button type="button" class="chipCategoria selecionado" data-tipo="aniversario"><span class="emoji">🎂</span><span data-i18n="catAniversario">Aniversário</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="casamento"><span class="emoji">💍</span><span data-i18n="catCasamento">Casamento</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="churrasco"><span class="emoji">🍖</span><span data-i18n="catChurrasco">Churrasco</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="formatura"><span class="emoji">🎓</span><span data-i18n="catFormatura">Formatura</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="corporativo"><span class="emoji">🏢</span><span data-i18n="catCorporativo">Corporativo</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="chadebebe"><span class="emoji">👶</span><span data-i18n="catChaBebe">Chá de bebê</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="noivado"><span class="emoji">💞</span><span data-i18n="catNoivado">Noivado</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="batizado"><span class="emoji">🕊️</span><span data-i18n="catBatizado">Batizado</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="confraternizacao"><span class="emoji">🥂</span><span data-i18n="catConfraternizacao">Confraternização</span></button>
+                            <button type="button" class="chipCategoria" data-tipo="outro"><span class="emoji">✨</span><span data-i18n="catOutro">Outro</span></button>
+                        </div>
+                        <div class="campoForm" id="campoTipoOutro" hidden>
+                            <label for="tipoEventoOutro" data-i18n="labelTipoOutro">Qual é o tipo do evento?</label>
+                            <input type="text" id="tipoEventoOutro" name="tipoEventoOutro" maxlength="100" data-i18n-placeholder="placeholderTipoOutro" placeholder="Ex.: Festa junina, bodas, encontro de amigos" disabled>
+                        </div>
+                        <div class="campoForm">
+                            <label for="nomeEvento" data-i18n="labelNomeEvento">Nome do evento</label>
+                            <input type="text" id="nomeEvento" data-i18n-placeholder="placeholderNomeEvento" placeholder="Ex: Aniversário da Sofia">
+                        </div>
+                    </section>
+                    <section class="secaoPlanejamento" id="agendaPlanejar" aria-labelledby="titulo-agendaPlanejar">
+                        <header class="cabecalhoSecaoPlanejamento"><span class="numeroSecaoPlanejamento" aria-hidden="true">02</span><div><h2 id="titulo-agendaPlanejar">Um lugar na sua agenda</h2><p>Defina quando, por quanto tempo e onde tudo vai acontecer.</p></div></header>
+                        <div class="linhaCampos">
+                            <div class="campoForm">
+                                <label for="dataEvento" data-i18n="labelData">Data</label>
+                                <input type="date" id="dataEvento">
+                            </div>
+                            <div class="campoForm">
+                                <label for="horaEvento" data-i18n="labelHorario">Horário</label>
+                                <div class="campoHorario">
+                                    <input type="time" id="horaEvento" step="60" aria-haspopup="dialog" aria-controls="dialogHorario">
+                                    <button type="button" id="abrirRelogio" data-i18n-aria="selecionarHorario" aria-label="Escolher horário" aria-haspopup="dialog" aria-controls="dialogHorario">
+                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="campoForm">
+                            <label for="duracaoEvento">Duração estimada (minutos)</label>
+                            <input type="number" id="duracaoEvento" min="15" max="1440" step="1" value="180" required aria-describedby="ajudaAgenda">
+                            <p class="ajuda" id="ajudaAgenda">Usada para comparar horários na sua agenda, inclusive eventos que terminam no dia seguinte.</p>
+                        </div>
+                        <div class="campoForm">
+                            <label for="localEvento" data-i18n="labelLocal">Local</label>
+                            <input type="text" id="localEvento" data-i18n-placeholder="placeholderLocal" placeholder="Endereço ou nome do espaço">
+                        </div>
+                        <section class="blocoRecurso" aria-labelledby="tituloConflitos">
+                            <h3 id="tituloConflitos">Conflitos de agenda</h3>
+                            <p>Compare data, horário e duração com seus eventos e os compartilhados com você.</p>
+                            <button type="button" class="botaoSecundario" id="verificarConflitos">Comparar data e horário</button>
+                            <div id="resultadoConflitos" role="status" aria-live="polite"></div>
+                        </section>
+                    </section>
+                    <section class="secaoPlanejamento" id="detalhesPlanejar" aria-labelledby="titulo-detalhesPlanejar">
+                        <header class="cabecalhoSecaoPlanejamento"><span class="numeroSecaoPlanejamento" aria-hidden="true">03</span><div><h2 id="titulo-detalhesPlanejar">As pessoas e a atmosfera</h2><p>Os pequenos detalhes dão personalidade ao seu evento.</p></div></header>
+                        <div class="linhaCampos">
+                            <div class="campoForm">
+                                <label for="convidados" data-i18n="labelConvidados">Número de convidados</label>
+                                <input type="number" id="convidados" min="0" data-i18n-placeholder="placeholderConvidados" placeholder="50">
+                            </div>
+                            <div class="campoForm">
+                                <label for="estiloEvento" data-i18n="labelEstilo">Estilo</label>
+                                <select id="estiloEvento">
+                                    <option data-i18n="estiloIntimista">Intimista</option>
+                                    <option data-i18n="estiloClassico">Clássico</option>
+                                    <option data-i18n="estiloTematico">Temático</option>
+                                    <option data-i18n="estiloArLivre">Ao ar livre</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="campoForm">
+                            <label for="observacoes" data-i18n="labelObservacoes">Observações</label>
+                            <textarea id="observacoes" data-i18n-placeholder="placeholderObservacoes" placeholder="Conte um pouco mais sobre o clima que você imagina para o evento..."></textarea>
+                        </div>
+                    </section>
+                    <section class="secaoPlanejamento" id="orcamentoPlanejar" aria-labelledby="titulo-orcamentoPlanejar">
+                        <header class="cabecalhoSecaoPlanejamento"><span class="numeroSecaoPlanejamento" aria-hidden="true">04</span><div><h2 id="titulo-orcamentoPlanejar">Planeje com tranquilidade</h2><p>Defina seu orçamento inicial. Você acompanha os gastos depois, em Finanças.</p></div></header>
+                        <div class="campoForm">
+                            <label for="orcamento"><span data-i18n="labelOrcamento">Orçamento estimado</span> <span class="ajuda" data-i18n="ajudaOrcamento">(digite o valor em R$)</span></label>
+                            <div class="campoOrcamento">
+                                <input type="number" id="orcamento" name="orcamento" min="0" max="99999999.99" step="0.01" value="3500" inputmode="decimal" required>
+                                <span class="valorOrcamento" id="valorOrcamento" aria-live="polite">R$ 3.500,00</span>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="finalPlanejamento">
+                        <p>Seu evento, no seu tempo.<span>Você pode ajustar os detalhes depois de salvar.</span></p>
+                        <div class="acoesForm">
+                            <button type="submit" class="botaoPrimario">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                                <span data-i18n="botaoSalvarEvento">Salvar evento</span>
+                            </button>
+                            <button type="button" class="botaoSecundario" id="botaoRascunho" data-i18n="botaoRascunho">Salvar como rascunho</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <aside class="colunaResumoPlanejar" aria-label="Prévia do evento">
+                <div class="cardResumo">
+                    <div class="topoPreviaPlanejar"><span>PRÉVIA DO SEU MOMENTO</span><img src="assets/favicon.svg" alt="" aria-hidden="true"></div>
+                    <span class="tipoPreviaPlanejar" id="resumoTipo">Aniversário</span>
+                    <h3 id="resumoNome">Seu próximo momento</h3>
+                    <p class="notaPreviaPlanejar">Um primeiro olhar para o que você está preparando.</p>
+                    <div class="linhasPreviaPlanejar">
+                        <div class="linhaResumo"><span data-i18n="resumoData">Data</span><strong id="resumoData">—</strong></div>
+                        <div class="linhaResumo"><span data-i18n="labelHorario">Horário</span><strong id="resumoHorario">A definir</strong></div>
+                        <div class="linhaResumo"><span data-i18n="resumoConvidados">Convidados</span><strong id="resumoConvidados">—</strong></div>
+                    </div>
+                    <div class="orcamentoPreviaPlanejar"><span data-i18n="resumoOrcamento">Orçamento</span><strong id="resumoOrcamento">R$ 3.500,00</strong><small>Valor estimado por você</small></div>
+                </div>
+                <div class="depoisDeCriarPlanejar">
+                    <span class="rotuloDepoisPlanejar">DEPOIS DE CRIAR</span>
+                    <h3>Uma ideia vira um grande momento.</h3>
+                    <ol class="checklistResumo">
+                        <li><span data-i18n="checklistLocal">Escolha o local</span></li>
+                        <li><span data-i18n="checklistCardapio">Defina o cardápio</span></li>
+                        <li><span data-i18n="checklistConvites">Envie os convites</span></li>
+                        <li><span data-i18n="checklistFornecedores">Confirme os fornecedores</span></li>
+                    </ol>
+                </div>
+            </aside>
+        </section>
+
+        <div class="rodapePagina">
+            <div class="marcaRodape"><span class="pontoRodape"></span><span data-i18n="rodapeMarca">Momentus — momentos planejados com carinho</span></div>
+            <div data-i18n="rodapeDireitos">© 2026 Momentus. Todos os direitos reservados.</div>
+        </div>
+
+    <footer class="linksLegais"><a href="termos.html">Termos de Uso</a><span aria-hidden="true">·</span><a href="privacidade.html">Privacidade e dados</a></footer>
+    </main>
+
+    <div class="toastMomentus" id="toastMomentus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        <span id="toastTexto"></span>
+    </div>
+
+    <dialog id="dialogHorario" class="dialogHorario" aria-labelledby="tituloRelogio">
+        <div class="cabecalhoRelogio">
+            <h2 id="tituloRelogio" data-i18n="selecionarHorario">Escolher horário</h2>
+            <button type="button" class="fecharRelogio" data-i18n-aria="fecharModal" aria-label="Fechar">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
+        <div class="selecaoRelogio">
+            <label><span data-i18n="relogioHoras">Horas</span><select id="relogioHoras"></select></label>
+            <span class="separadorRelogio" aria-hidden="true">:</span>
+            <label><span data-i18n="relogioMinutos">Minutos</span><select id="relogioMinutos"></select></label>
+        </div>
+        <div class="modoRelogio" role="group" data-i18n-aria="labelHorario" aria-label="Horário">
+            <button type="button" id="modoHoras" aria-pressed="true" data-i18n="relogioHoras">Horas</button>
+            <button type="button" id="modoMinutos" aria-pressed="false" data-i18n="relogioMinutos">Minutos</button>
+        </div>
+        <div class="mostradorRelogio">
+            <span class="ponteiroRelogio" aria-hidden="true"></span>
+            <span class="centroRelogio" aria-hidden="true"></span>
+            <div id="numerosRelogio"></div>
+        </div>
+        <div class="acoesRelogio">
+            <button type="button" id="limparHorario" class="botaoSecundario" data-i18n="limparHorario">Sem horário</button>
+            <button type="button" id="confirmarHorario" class="botaoPrimario" data-i18n="confirmarHorario">Confirmar</button>
+        </div>
+    </dialog>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/horario.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/planejar-interface.js"></script>
+
+</body>
+
+</html>

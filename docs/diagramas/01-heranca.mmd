@@ -1,0 +1,30 @@
+classDiagram
+direction TB
+class SQLAlchemyModel
+class CrudModel {
+    +salvar()
+    +atualizar(campos)
+    +deletar()
+    +listar_todos()
+    +buscar_por_id(id)
+}
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+CrudModel <|-- Usuario
+SQLAlchemyModel <|-- Usuario
+CrudModel <|-- Evento
+SQLAlchemyModel <|-- Evento

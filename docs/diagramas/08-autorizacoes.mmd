@@ -1,0 +1,36 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class AutorizacaoConta {
+    +int usuario_id
+    +String faixa_etaria
+    +String status
+    +String versao
+    +DateTime autorizado_em
+    +DateTime revogado_em
+}
+class Convidado {
+    +int id
+    +int evento_id
+    +String nome
+    +String status
+    +String restricoes_alimentares
+    +String token_rsvp
+}
+class ConsentimentoAlimentar {
+    +int convidado_id
+    +String faixa_etaria
+    +String saude
+    +String versao
+    +DateTime autorizado_em
+    +DateTime revogado_em
+    +bool responsavel_autorizou
+}
+Usuario "1" *-- "0..1" AutorizacaoConta : declaracao e responsavel
+Convidado "1" *-- "0..1" ConsentimentoAlimentar : preferencias e saude

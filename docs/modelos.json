@@ -1,0 +1,1476 @@
+{
+  "AutorizacaoConta": {
+    "tabela": "autorizacoes_conta",
+    "arquivo": "models/autorizacao_conta_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "faixa_etaria": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "status": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "versao": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": false,
+        "pk": false
+      },
+      "declarado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      },
+      "autorizado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "revogado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "responsavel_nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "responsavel_email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "vinculo": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "token_hash": {
+        "tipo_sql": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false
+      },
+      "expira_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "AvisoConvidado": {
+    "tabela": "avisos_convidado",
+    "arquivo": "models/aviso_convidado_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "convidado_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "chave": {
+        "tipo_sql": "VARCHAR(150)",
+        "nullable": false,
+        "pk": false
+      },
+      "titulo": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "mensagem": {
+        "tipo_sql": "TEXT",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "convidado_id",
+        "alvo": "convidados.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "ColaboradorEvento": {
+    "tabela": "colaboradores_evento",
+    "arquivo": "models/colaborador_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "status": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "token": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": false,
+        "pk": false
+      },
+      "pode_editar": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "SET NULL"
+      }
+    ]
+  },
+  "ConsentimentoAlimentar": {
+    "tabela": "consentimentos_alimentares",
+    "arquivo": "models/consentimento_alimentar_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "convidado_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "preferencias_sem_saude": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "faixa_etaria": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "saude": {
+        "tipo_sql": "TEXT",
+        "nullable": false,
+        "pk": false
+      },
+      "versao": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": true,
+        "pk": false
+      },
+      "autorizado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "revogado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "origem": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": false,
+        "pk": false
+      },
+      "responsavel_nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "responsavel_email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "vinculo": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "responsavel_autorizou": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": true,
+        "pk": false
+      },
+      "responsavel_autorizado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "token_hash": {
+        "tipo_sql": "VARCHAR(64)",
+        "nullable": true,
+        "pk": false
+      },
+      "expira_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "convidado_id",
+        "alvo": "convidados.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "Convidado": {
+    "tabela": "convidados",
+    "arquivo": "models/convidado_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": true,
+        "pk": false
+      },
+      "telefone": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": true,
+        "pk": false
+      },
+      "vinculo": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": true,
+        "pk": false
+      },
+      "status": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "restricoes_alimentares": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      },
+      "token_rsvp": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "DespesaEvento": {
+    "tabela": "despesas_evento",
+    "arquivo": "models/despesa_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "descricao": {
+        "tipo_sql": "VARCHAR(200)",
+        "nullable": false,
+        "pk": false
+      },
+      "categoria": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": true,
+        "pk": false
+      },
+      "valor": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "comprovante": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false
+      },
+      "pago_por": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": true,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "EntradaEspera": {
+    "tabela": "entradas_espera",
+    "arquivo": "models/entrada_espera_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "convidado_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "solicitado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      },
+      "ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "convidado_id",
+        "alvo": "convidados.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "Evento": {
+    "tabela": "eventos",
+    "arquivo": "models/evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "owner_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "nome_evento": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": false,
+        "pk": false
+      },
+      "tipo_evento": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "data_evento": {
+        "tipo_sql": "DATE",
+        "nullable": false,
+        "pk": false
+      },
+      "hora_evento": {
+        "tipo_sql": "VARCHAR(10)",
+        "nullable": true,
+        "pk": false
+      },
+      "endereco_evento": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false
+      },
+      "cidade_evento": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": true,
+        "pk": false
+      },
+      "orcamento_evento": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "convidados_estimados": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "estilo_evento": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": true,
+        "pk": false
+      },
+      "observacoes": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      },
+      "status": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": false,
+        "pk": false
+      },
+      "progresso": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "privacidade_convidados": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": false,
+        "pk": false
+      },
+      "rateio_ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "rateio_modo": {
+        "tipo_sql": "VARCHAR(20)",
+        "nullable": false,
+        "pk": false
+      },
+      "rateio_valor_fixo": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "dados_evento": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "owner_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "FavoritoFornecedor": {
+    "tabela": "favoritos_fornecedor",
+    "arquivo": "models/favorito_fornecedor_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "chave": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "Fornecedor": {
+    "tabela": "fornecedores",
+    "arquivo": "models/fornecedor_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "nome_empresa": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "cpf_cnpj": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": false,
+        "pk": false
+      },
+      "tipo_servico": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "descricao": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      },
+      "cidade": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": true,
+        "pk": false
+      },
+      "endereco": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false
+      },
+      "avaliacao": {
+        "tipo_sql": "NUMERIC(3, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "FotoEvento": {
+    "tabela": "fotos_evento",
+    "arquivo": "models/foto_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "arquivo": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false
+      },
+      "legenda": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "SET NULL"
+      }
+    ]
+  },
+  "ItemCompartilhado": {
+    "tabela": "itens_compartilhados",
+    "arquivo": "models/item_compartilhado_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "quantidade": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "responsavel_tipo": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": true,
+        "pk": false
+      },
+      "responsavel_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "responsavel_nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": true,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "ItemEvento": {
+    "tabela": "itens_evento",
+    "arquivo": "models/item_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "produto_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "chave_externa": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": true,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "categoria": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": true,
+        "pk": false
+      },
+      "preco": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "quantidade": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "produto_id",
+        "alvo": "produtos_fornecedor.id",
+        "ondelete": "SET NULL"
+      }
+    ]
+  },
+  "LocalEvento": {
+    "tabela": "locais_evento",
+    "arquivo": "models/local_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "chave": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "endereco": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false
+      },
+      "cidade": {
+        "tipo_sql": "VARCHAR(120)",
+        "nullable": false,
+        "pk": false
+      },
+      "capacidade": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "preco": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "estilo": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "LogEvento": {
+    "tabela": "logs_evento",
+    "arquivo": "models/log_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "acao": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "detalhe": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "SET NULL"
+      }
+    ]
+  },
+  "Notificacao": {
+    "tabela": "notificacoes",
+    "arquivo": "models/notificacao_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "tipo": {
+        "tipo_sql": "VARCHAR(60)",
+        "nullable": false,
+        "pk": false
+      },
+      "titulo": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "mensagem": {
+        "tipo_sql": "TEXT",
+        "nullable": false,
+        "pk": false
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "referencia_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "lida": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "PlanejamentoEvento": {
+    "tabela": "planejamento_eventos",
+    "arquivo": "models/planejamento_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "duracao_minutos": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "limite_vagas": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "cronograma_ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "cronograma_gerado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "PreferenciasUsuario": {
+    "tabela": "preferencias_usuarios",
+    "arquivo": "models/preferencias_usuario_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "rsvp": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "lembretes": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "PrivacidadeUsuario": {
+    "tabela": "privacidade_usuarios",
+    "arquivo": "models/privacidade_usuario_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "foto_arquivo": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": true,
+        "pk": false
+      },
+      "termos_versao": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": true,
+        "pk": false
+      },
+      "aceito_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "ProdutoFornecedor": {
+    "tabela": "produtos_fornecedor",
+    "arquivo": "models/produto_fornecedor_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "fornecedor_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "descricao": {
+        "tipo_sql": "TEXT",
+        "nullable": true,
+        "pk": false
+      },
+      "categoria": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": false,
+        "pk": false
+      },
+      "preco": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "unidade": {
+        "tipo_sql": "VARCHAR(60)",
+        "nullable": true,
+        "pk": false
+      },
+      "ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "fornecedor_id",
+        "alvo": "fornecedores.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "PropostaFornecedor": {
+    "tabela": "propostas_fornecedor",
+    "arquivo": "models/proposta_fornecedor_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "fornecedor": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "categoria": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": false,
+        "pk": false
+      },
+      "valor": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "desconto": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "taxas": {
+        "tipo_sql": "NUMERIC(10, 2)",
+        "nullable": false,
+        "pk": false
+      },
+      "parcelas": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "servicos_json": {
+        "tipo_sql": "TEXT",
+        "nullable": false,
+        "pk": false
+      },
+      "observacoes": {
+        "tipo_sql": "TEXT",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "RecuperacaoSenha": {
+    "tabela": "recuperacoes_senha",
+    "arquivo": "models/recuperacao_senha_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "token_hash": {
+        "tipo_sql": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false
+      },
+      "email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      },
+      "expira_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      },
+      "usado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "RequisicaoDespesa": {
+    "tabela": "requisicoes_despesa",
+    "arquivo": "models/requisicao_despesa_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "usuario_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "despesa_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": true,
+        "pk": false
+      },
+      "chave": {
+        "tipo_sql": "VARCHAR(36)",
+        "nullable": false,
+        "pk": false
+      },
+      "assinatura": {
+        "tipo_sql": "VARCHAR(64)",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "despesa_id",
+        "alvo": "despesas_evento.id",
+        "ondelete": "SET NULL"
+      },
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      },
+      {
+        "campo": "usuario_id",
+        "alvo": "usuarios.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "TarefaEvento": {
+    "tabela": "tarefas_evento",
+    "arquivo": "models/tarefa_evento_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "evento_id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      },
+      "titulo": {
+        "tipo_sql": "VARCHAR(200)",
+        "nullable": false,
+        "pk": false
+      },
+      "chave": {
+        "tipo_sql": "VARCHAR(100)",
+        "nullable": true,
+        "pk": false
+      },
+      "feita": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "prazo": {
+        "tipo_sql": "DATETIME",
+        "nullable": true,
+        "pk": false
+      },
+      "ordem": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": [
+      {
+        "campo": "evento_id",
+        "alvo": "eventos.id",
+        "ondelete": "CASCADE"
+      }
+    ]
+  },
+  "Usuario": {
+    "tabela": "usuarios",
+    "arquivo": "models/usuario_model.py",
+    "heranca": [
+      "CrudModel",
+      "db.Model"
+    ],
+    "atributos": {
+      "id": {
+        "tipo_sql": "INTEGER",
+        "nullable": false,
+        "pk": true
+      },
+      "nome": {
+        "tipo_sql": "VARCHAR(160)",
+        "nullable": false,
+        "pk": false
+      },
+      "email": {
+        "tipo_sql": "VARCHAR(180)",
+        "nullable": false,
+        "pk": false
+      },
+      "telefone": {
+        "tipo_sql": "VARCHAR(40)",
+        "nullable": true,
+        "pk": false
+      },
+      "senha_hash": {
+        "tipo_sql": "VARCHAR(255)",
+        "nullable": false,
+        "pk": false
+      },
+      "tipo": {
+        "tipo_sql": "VARCHAR(30)",
+        "nullable": false,
+        "pk": false
+      },
+      "ativo": {
+        "tipo_sql": "BOOLEAN",
+        "nullable": false,
+        "pk": false
+      },
+      "criado_em": {
+        "tipo_sql": "DATETIME",
+        "nullable": false,
+        "pk": false
+      }
+    },
+    "chaves_estrangeiras": []
+  }
+}

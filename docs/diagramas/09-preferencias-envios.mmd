@@ -1,0 +1,42 @@
+classDiagram
+direction TB
+class Usuario {
+    +int id
+    +String nome
+    +String email
+    +String senha_hash
+    +bool ativo
+}
+class PreferenciasUsuario {
+    +int usuario_id
+    +bool rsvp
+    +bool lembretes
+}
+class Evento {
+    +int id
+    +int owner_id
+    +String nome_evento
+    +String tipo_evento
+    +Date data_evento
+    +Decimal orcamento_evento
+    +String status
+}
+class DespesaEvento {
+    +int id
+    +int evento_id
+    +String descricao
+    +Decimal valor
+    +String comprovante
+}
+class RequisicaoDespesa {
+    +int id
+    +int usuario_id
+    +int evento_id
+    +int despesa_id
+    +String chave
+    +String assinatura
+}
+Usuario "1" *-- "0..1" PreferenciasUsuario : notificacoes
+Usuario "1" *-- "0..*" RequisicaoDespesa : reenvios
+Evento "1" *-- "0..*" RequisicaoDespesa : contexto
+DespesaEvento "0..1" <-- "0..*" RequisicaoDespesa : resultado
